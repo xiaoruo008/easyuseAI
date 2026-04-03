@@ -1,0 +1,104 @@
+// easyuse.ai — Prisma Schema
+// 生产环境：Supabase / Neon PostgreSQL
+// 迁移命令（有 DATABASE_URL 后）：pnpm exec prisma migrate dev --name init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── 诊断会话（5步问卷）───────────────────────────────────────
+model DiagnosisSession {
+  id         String   @id @default(cuid())
+  step       Int      @default(1)
+  answers    Json     @default("{}")
+  completed  Boolean  @default(false)
+  resultType String?  // traffic | customer | efficiency | unclear
+  confidence Float?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  lead       Lead?
+  diagnoses  Diagnosis[]
+}
+
+// ─── 诊断存档（submit 时写入，与 session 一一对应）────────────────
+model Diagnosis {
+  id           String   @id @default(cuid())
+  leadId       String
+  sessionId    String
+  painPoint    String   // Q1 答案中文
+  goal         String   // Q4 答案中文
+  currentMethod String  // Q3 答案中文
+  budget       String   // Q5 答案中文
+  resultType   String   // traffic | customer | efficiency | unclear
+  createdAt    DateTime @default(now())
+
+  session      DiagnosisSession @relation(fields: [sessionId], references: [id])
+  lead         Lead             @relation(fields: [leadId], references: [id])
+}
+
+// ─── 客户线索 ─────────────────────────────────────────────────
+model Lead {
+  id                  String   @id @default(cuid())
+  name                String
+  contact             String   // 手机号（唯一 or 索引）
+  businessType        String?  // 对应 resultType / serviceType
+  note                String?
+  status              LeadStatus @default(NEW)
+  diagnosisSessionId  String?  @unique
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  session             DiagnosisSession? @relation(fields: [diagnosisSessionId], references: [id])
+  diagnoses           Diagnosis[]
+  tasks               Task[]
+  conversations       Conversation[]
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  CLOSED
+}
+
+// ─── 执行任务 ─────────────────────────────────────────────────
+model Task {
+  id        String     @id @default(cuid())
+  leadId    String
+  taskType  String     // 内容生成 | 图片生成 | 视频脚本 | 客服话术 | 数据处理 | 咨询规划
+  status    TaskStatus @default(NEW)
+  inputData Json       @default("{}")
+  outputData Json?     // nullable，等生成完再写入
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  lead      Lead       @relation(fields: [leadId], references: [id])
+}
+
+enum TaskStatus {
+  NEW
+  DOING
+  DONE
+}
+
+// ─── 对话存档（预留 AI 客服 / 人工客服）──────────────────────────
+model Conversation {
+  id        String           @id @default(cuid())
+  leadId    String
+  message   String
+  role      ConversationRole
+  createdAt DateTime         @default(now())
+
+  lead      Lead             @relation(fields: [leadId], references: [id])
+}
+
+enum ConversationRole {
+  user
+  ai
+  human
+}

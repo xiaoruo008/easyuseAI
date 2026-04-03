@@ -1,0 +1,209 @@
+"use client";
+
+import { Suspense, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+
+function SubmitContent() {
+  const params = useSearchParams();
+  const sessionId = params.get("session") ?? "";
+
+  const [form, setForm] = useState({ name: "", phone: "", company: "", note: "" });
+  const [uploading, setUploading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.name.trim() || !form.phone.trim()) {
+      setError("姓名和电话为必填项");
+      return;
+    }
+    setError(null);
+    setSubmitting(true);
+
+    try {
+      // 0. 读取 session resultType
+      let serviceType: string | undefined;
+      if (sessionId) {
+        try {
+          const r = await fetch(`/api/diagnosis/session/${sessionId}/result`);
+          if (r.ok) {
+            const d = await r.json();
+            serviceType = d.result?.type ?? d.session?.resultType ?? undefined;
+          }
+        } catch { /* ignore */ }
+      }
+
+      // 1. 创建 Lead
+      const leadRes = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          phone: form.phone,
+          company: form.company || undefined,
+          note: form.note || undefined,
+          diagnosisSessionId: sessionId || undefined,
+          serviceType,
+          contact: form.phone,
+        }),
+      });
+
+      if (!leadRes.ok) throw new Error("提交失败");
+      const lead = await leadRes.json();
+
+      // 2. 上传附件（如果有）
+      if (fileRef.current?.files?.[0]) {
+        setUploading(true);
+        const fd = new FormData();
+        fd.append("file", fileRef.current.files[0]);
+        fd.append("leadId", lead.id);
+        await fetch("/api/assets", { method: "POST", body: fd });
+        setUploading(false);
+      }
+
+      setSubmitted(true);
+    } catch {
+      setError("提交失败，请检查网络后重试");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (submitted) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-sm border p-8 text-center space-y-4">
+          <div className="text-5xl">✅</div>
+          <h1 className="text-2xl font-bold text-gray-900">提交成功！</h1>
+          <p className="text-gray-500 leading-relaxed">
+            我们已收到你的资料，<strong>24小时内</strong>会有专属顾问联系你。
+            请保持电话畅通。
+          </p>
+          <div className="pt-4 space-y-2">
+            <Link href="/" className="block w-full py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-colors">
+              返回首页
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white border-b">
+        <div className="max-w-xl mx-auto px-6 py-4 flex items-center gap-3">
+          <Link href={`/result?session=${sessionId}`} className="text-gray-400 hover:text-gray-600 transition-colors">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </Link>
+          <span className="text-sm text-gray-500">留下联系方式</span>
+        </div>
+      </header>
+
+      <main className="max-w-xl mx-auto px-6 py-10">
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">留下联系方式</h1>
+        <p className="text-gray-500 mb-8">顾问会在24小时内联系你，帮你把事情落地</p>
+
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border p-6 space-y-5">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              姓名 <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              placeholder="你的姓名"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              手机号 <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="tel"
+              placeholder="11位手机号"
+              value={form.phone}
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              公司/店铺（选填）
+            </label>
+            <input
+              type="text"
+              placeholder="公司名称或电商店铺"
+              value={form.company}
+              onChange={(e) => setForm({ ...form, company: e.target.value })}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              补充说明（选填）
+            </label>
+            <textarea
+              placeholder="可以描述你遇到的具体问题，或者想解决的问题"
+              rows={3}
+              value={form.note}
+              onChange={(e) => setForm({ ...form, note: e.target.value })}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              上传资料（选填，最多10MB）
+            </label>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*,.pdf,.doc,.docx"
+              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-700 file:font-medium hover:file:bg-indigo-100 cursor-pointer"
+            />
+          </div>
+
+          {error && (
+            <p className="text-red-600 text-sm bg-red-50 rounded-lg px-4 py-3">{error}</p>
+          )}
+
+          <div className="flex gap-3 pt-2">
+            <Link
+              href={`/result?session=${sessionId}`}
+              className="flex-1 py-3 text-center border border-gray-200 text-gray-600 rounded-xl font-medium hover:bg-gray-50 transition-colors"
+            >
+              上一步
+            </Link>
+            <button
+              type="submit"
+              disabled={submitting || uploading}
+              className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {submitting ? (uploading ? "上传中..." : "提交中...") : "提交资料"}
+            </button>
+          </div>
+        </form>
+      </main>
+    </div>
+  );
+}
+
+export default function SubmitPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gray-50"><p className="text-gray-500">加载中...</p></div>}>
+      <SubmitContent />
+    </Suspense>
+  );
+}
