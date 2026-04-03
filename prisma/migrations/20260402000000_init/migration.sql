@@ -92,7 +92,7 @@ ALTER TABLE "Task" ADD CONSTRAINT "Task_leadId_fkey"
 ALTER TABLE "Conversation" ADD CONSTRAINT "Conversation_leadId_fkey"
     FOREIGN KEY ("leadId") REFERENCES "Lead"("id") ON DELETE RESTRICT;
 
-CREATE INDEX "Lead_diagnosisSessionId_idx" ON "Lead"("diagnosisSessionId");
+CREATE UNIQUE INDEX "Lead_diagnosisSessionId_key" ON "Lead"("diagnosisSessionId");
 CREATE INDEX "Lead_contact_idx" ON "Lead"("contact");
 CREATE INDEX "Diagnosis_leadId_idx" ON "Diagnosis"("leadId");
 CREATE INDEX "Diagnosis_sessionId_idx" ON "Diagnosis"("sessionId");
