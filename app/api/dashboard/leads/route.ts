@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getAllLeads, updateLead } from "@/lib/db";
 
 const Q1_LABELS: Record<string, string> = {
   A: "写了没人看",
@@ -17,36 +17,20 @@ const Q2_LABELS: Record<string, string> = {
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const status = searchParams.get("status");
-  const q = searchParams.get("q")?.toLowerCase() ?? "";
+  const status = searchParams.get("status") ?? undefined;
+  const q = searchParams.get("q") ?? undefined;
 
-  const where: Record<string, unknown> = {};
-  if (status && status !== "ALL") where.status = status;
-  if (q) {
-    where.OR = [
-      { name: { contains: q, mode: "insensitive" } },
-      { contact: { contains: q } },
-      { businessType: { contains: q, mode: "insensitive" } },
-    ];
-  }
+  const leads = await getAllLeads({ status, q });
 
-  const leads = await prisma.lead.findMany({
-    where,
-    orderBy: { createdAt: "desc" },
-    include: {
-      session: { select: { answers: true, updatedAt: true } },
-    },
-  });
-
-  const enriched = leads.map((lead) => {
-    const answers = lead.session?.answers as Record<string, string> | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const enriched = leads.map((lead: any) => {
+    const session = lead.session as { answers?: unknown; updatedAt?: unknown } | undefined;
+    const answers = session?.answers as Record<string, string> | null;
     return {
       ...lead,
-      contact: lead.contact,
-      businessType: lead.businessType,
       painPoint: answers ? (Q1_LABELS[answers["1"] ?? "D"] ?? "未知") : null,
       timeSpent: answers ? (Q2_LABELS[answers["2"] ?? "A"] ?? "未知") : null,
-      completedAt: lead.session?.updatedAt ?? null,
+      completedAt: session?.updatedAt ?? null,
     };
   });
 
@@ -58,17 +42,7 @@ export async function PATCH(req: NextRequest) {
     const body = await req.json();
     const { id, ...patch } = body;
     if (!id) return NextResponse.json({ error: "缺少 id" }, { status: 400 });
-
-    const lead = await prisma.lead.update({
-      where: { id },
-      data: {
-        ...(patch.name !== undefined && { name: patch.name }),
-        ...(patch.contact !== undefined && { contact: patch.contact }),
-        ...(patch.businessType !== undefined && { businessType: patch.businessType }),
-        ...(patch.note !== undefined && { note: patch.note }),
-        ...(patch.status !== undefined && { status: patch.status }),
-      },
-    });
+    const lead = await updateLead(id, patch);
     return NextResponse.json(lead);
   } catch {
     return NextResponse.json({ error: "更新失败" }, { status: 500 });

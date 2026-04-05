@@ -36,7 +36,7 @@ function ProContent() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center space-y-4">
-          <div className="w-14 h-14 rounded-full border-4 border-indigo-600 border-t-transparent animate-spin mx-auto" />
+          <div className="w-14 h-14 rounded-full border-4 border-gray-900 border-t-transparent animate-spin mx-auto" />
           <p className="text-gray-500">正在加载...</p>
         </div>
       </div>
@@ -48,7 +48,7 @@ function ProContent() {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center space-y-4">
           <p className="text-red-600">{error ?? "未找到结果"}</p>
-          <Link href="/diagnosis" className="px-6 py-3 bg-indigo-600 text-white rounded-xl">重新开始</Link>
+          <Link href="/diagnosis" className="px-6 py-3 bg-gray-900 text-white rounded-xl">重新开始</Link>
         </div>
       </div>
     );
@@ -73,7 +73,7 @@ function ProContent() {
               <p className="font-semibold text-gray-900">帮你做成可用系统</p>
             </div>
           </div>
-          <span className="text-sm font-bold text-indigo-600">¥299</span>
+          <span className="text-sm font-bold text-gray-900">¥299</span>
         </div>
       </header>
 
@@ -81,11 +81,11 @@ function ProContent() {
 
         {/* 执行步骤 */}
         <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-4">执行步骤（共{pro.steps.length}步）</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-4">服务流程（共{pro.steps.length}步）</h2>
           <div className="space-y-3">
             {pro.steps.map((step) => (
               <div key={step.step} className="flex gap-4 p-4 bg-white rounded-xl border border-gray-100">
-                <div className="w-9 h-9 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold shrink-0">
+                <div className="w-9 h-9 rounded-full bg-gray-900 text-white flex items-center justify-center text-sm font-bold shrink-0">
                   {step.step}
                 </div>
                 <div>
@@ -122,7 +122,7 @@ function ProContent() {
           <div className="space-y-2">
             {pro.headlines.map((h, i) => (
               <div key={i} className="flex items-start gap-3 p-4 bg-white rounded-xl border border-gray-100">
-                <span className="text-indigo-500 font-bold text-sm mt-0.5">{i + 1}.</span>
+                <span className="text-gray-400 font-bold text-sm mt-0.5">{i + 1}.</span>
                 <p className="text-sm text-gray-800 leading-relaxed">{h}</p>
               </div>
             ))}
@@ -131,7 +131,7 @@ function ProContent() {
 
         {/* 执行说明 */}
         <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-4">执行说明</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-4">服务说明</h2>
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
             <ul className="space-y-2">
               {pro.executionNotes.map((note, i) => (
@@ -148,7 +148,7 @@ function ProContent() {
         <section className="space-y-3 pt-2">
           <button
             onClick={() => setShowPayment(true)}
-            className="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold text-lg hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200"
+            className="w-full py-4 bg-gray-900 text-white rounded-2xl font-bold text-lg hover:bg-gray-800 transition-colors shadow-lg shadow-gray-900/10"
           >
             立即获取完整版 · ¥299
           </button>

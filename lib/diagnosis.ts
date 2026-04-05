@@ -83,10 +83,11 @@ export const DIAGNOSIS_QUESTIONS: Question[] = [
 export type ResultType = "traffic" | "customer" | "efficiency" | "unclear";
 
 export interface ExecutionAction {
-  id: string;       // 唯一标识
-  label: string;     // 按钮文字
-  desc: string;     // 简短描述
-  icon: string;      // emoji图标
+  id: string;
+  label: string;
+  desc: string;
+  icon: string;
+  category: "text" | "image";
 }
 
 export interface DiagnosisResult {
@@ -275,22 +276,26 @@ const IMMEDIATE_VALUES: Record<ResultType, ImmediateValue> = {
 
 const EXECUTION_ACTIONS: Record<ResultType, ExecutionAction[]> = {
   traffic: [
-    { id: "copywriting", label: "生成引流文案", desc: "生成3条适配小红书/朋友圈的引流内容", icon: "✍️" },
-    { id: "headline", label: "生成爆款标题", desc: "生成10个高点击率的标题方案", icon: "🔥" },
-    { id: "product_desc", label: "生成商品描述", desc: "生成适合电商平台的商品详情文字", icon: "📦" },
+    { id: "copywriting", label: "写引流内容", desc: "3条适配小红书/朋友圈的完整内容", icon: "✍️", category: "text" },
+    { id: "headline", label: "出10个标题", desc: "高点击率的爆款标题方案", icon: "🔥", category: "text" },
+    { id: "product_desc", label: "写商品描述", desc: "适合电商平台的完整商品详情文字", icon: "📦", category: "text" },
+    { id: "product_photo", label: "出商品图", desc: "上传产品照，我们帮你修好", icon: "📸", category: "image" },
+    { id: "background_swap", label: "换背景", desc: "上传图片，帮你换成专业场景", icon: "🖼️", category: "image" },
   ],
   customer: [
-    { id: "reply_script", label: "生成回复话术", desc: "生成10套常见问题的标准回复", icon: "💬" },
-    { id: "welcome_msg", label: "生成欢迎语", desc: "生成新客户欢迎语+引导下单模板", icon: "👋" },
-    { id: "follow_up", label: "生成跟进话术", desc: "生成沉默客户唤醒文案", icon: "🔔" },
+    { id: "reply_script", label: "出回复话术", desc: "10套常见问题的标准回复", icon: "💬", category: "text" },
+    { id: "welcome_msg", label: "出欢迎语", desc: "新客户欢迎语+引导下单模板", icon: "👋", category: "text" },
+    { id: "follow_up", label: "出跟进文案", desc: "沉默客户唤醒的完整文案", icon: "🔔", category: "text" },
   ],
   efficiency: [
-    { id: "report", label: "自动生成报表", desc: "输入数据，自动生成月度汇总报表", icon: "📊" },
-    { id: "data_clean", label: "自动清洗数据", desc: "上传原始数据，输出整理好的Excel", icon: "🧹" },
-    { id: "schedule", label: "自动排期表", desc: "输入任务，自动生成每日工作排期", icon: "📅" },
+    { id: "report", label: "出月度报表", desc: "上传数据，自动生成完整月度汇总", icon: "📊", category: "text" },
+    { id: "data_clean", label: "清洗数据", desc: "上传原始数据，输出整理好的Excel", icon: "🧹", category: "text" },
+    { id: "schedule", label: "出排期表", desc: "输入任务，生成每日工作排期", icon: "📅", category: "text" },
+    { id: "product_photo", label: "出商品图", desc: "上传产品照，我们帮你修好", icon: "📸", category: "image" },
   ],
   unclear: [
-    { id: "consult", label: "预约顾问咨询", desc: "填写信息，顾问24小时内联系你", icon: "📞" },
-    { id: "plan", label: "生成分步计划", desc: "根据你的情况，生成30天行动计划", icon: "📋" },
+    { id: "consult", label: "预约顾问", desc: "填写信息，顾问24小时内联系你", icon: "📞", category: "text" },
+    { id: "plan", label: "出行动计划", desc: "根据你的情况，生成30天可执行计划", icon: "📋", category: "text" },
+    { id: "background_swap", label: "换背景", desc: "上传图片，帮你换成专业场景", icon: "🖼️", category: "image" },
   ],
 };

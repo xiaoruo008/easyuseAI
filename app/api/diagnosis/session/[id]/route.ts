@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getSession, updateSession } from "@/lib/db";
 
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const session = await prisma.diagnosisSession.findUnique({ where: { id } });
+  const session = await getSession(id);
   if (!session) return NextResponse.json({ error: "Session 不存在" }, { status: 404 });
   return NextResponse.json(session);
 }
@@ -17,19 +17,8 @@ export async function PATCH(
 ) {
   const { id } = await params;
   const body = await req.json();
-  const { step, answers, completed, resultType, confidence } = body;
-
   try {
-    const session = await prisma.diagnosisSession.update({
-      where: { id },
-      data: {
-        ...(step !== undefined && { step }),
-        ...(answers !== undefined && { answers }),
-        ...(completed !== undefined && { completed }),
-        ...(resultType !== undefined && { resultType }),
-        ...(confidence !== undefined && { confidence }),
-      },
-    });
+    const session = await updateSession(id, body);
     return NextResponse.json(session);
   } catch {
     return NextResponse.json({ error: "更新失败" }, { status: 404 });

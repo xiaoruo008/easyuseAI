@@ -68,22 +68,34 @@ enum LeadStatus {
 
 // ─── 执行任务 ─────────────────────────────────────────────────
 model Task {
-  id        String     @id @default(cuid())
-  leadId    String
-  taskType  String     // 内容生成 | 图片生成 | 视频脚本 | 客服话术 | 数据处理 | 咨询规划
-  status    TaskStatus @default(NEW)
-  inputData Json       @default("{}")
-  outputData Json?     // nullable，等生成完再写入
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id               String     @id @default(cuid())
+  leadId           String
+  taskType         String     // 内容生成 | 图片生成 | 视频脚本 | 客服话术 | 数据处理 | 咨询规划
+  status           TaskStatus @default(NEW)
+  inputData        Json       @default("{}")
+  outputData       Json?      // nullable，等生成完再写入
+  errorMessage     String?    // 生成失败时记录错误信息
+  deliveryStatus   DeliveryStatus @default(GENERATED)
+  customerFeedback String?    // 客户反馈
+  isCaseCandidate  Boolean    @default(false)  // 是否标记为案例候选
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
 
-  lead      Lead       @relation(fields: [leadId], references: [id])
+  lead             Lead       @relation(fields: [leadId], references: [id])
 }
 
 enum TaskStatus {
   NEW
   DOING
   DONE
+  FAILED
+}
+
+enum DeliveryStatus {
+  GENERATED   // 仅生成
+  SENT        // 已发客户
+  CONFIRMED   // 已确认
+  REDO        // 需重做
 }
 
 // ─── 对话存档（预留 AI 客服 / 人工客服）──────────────────────────

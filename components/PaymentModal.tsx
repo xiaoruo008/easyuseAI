@@ -6,8 +6,8 @@ interface PaymentModalProps {
 }
 
 const PRICE_LABELS: Record<string, string> = {
-  paid: "¥29 解锁完整版",
-  pro: "¥299 获取专属定制",
+  paid: "¥99 标准制作",
+  pro: "¥299 完整定制",
 };
 
 const CONTACT_INFO = {
@@ -17,7 +17,7 @@ const CONTACT_INFO = {
 
 const PAYMENT_ACCOUNT = {
   alipay: "easyuse@ai.com",
-  note: "转账时备注「AI方案+手机号」",
+  note: "转账时备注「创意方案+手机号」",
 };
 
 export default function PaymentModal({ type, onClose }: PaymentModalProps) {
@@ -95,7 +95,7 @@ export default function PaymentModal({ type, onClose }: PaymentModalProps) {
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
             <p className="text-sm text-amber-800 leading-relaxed">
               💡 付款后联系顾问，发送付款截图。<br />
-              24小时内获取你的专属执行方案。
+              顾问会在24小时内完成制作并发送成果。
             </p>
           </div>
 

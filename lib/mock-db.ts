@@ -2,7 +2,8 @@
 // 客户数据层：Lead / Diagnosis / Task / Conversation
 // 与 prisma/schema.prisma 保持对齐（未来连数据库时只需改连接字符串）
 
-export type TaskStatus = "new" | "doing" | "done";
+export type TaskStatus = "new" | "doing" | "done" | "failed";
+export type DeliveryStatus = "generated" | "sent" | "confirmed" | "redo";
 export type TaskType = "内容生成" | "图片生成" | "视频脚本" | "客服话术" | "数据处理" | "咨询规划";
 export type ConversationRole = "user" | "ai" | "human";
 
@@ -37,8 +38,12 @@ export interface Task {
   leadId: string;
   taskType: TaskType;
   status: TaskStatus;
+  deliveryStatus: DeliveryStatus;
   inputData: Record<string, unknown>;
   outputData: Record<string, unknown> | null;
+  errorMessage: string | null;
+  customerFeedback: string | null;
+  isCaseCandidate: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -178,7 +183,16 @@ export function getDiagnosisByLead(leadId: string): Diagnosis | null {
 
 export function createTask(data: Omit<Task, "id" | "createdAt" | "updatedAt">): Task {
   const now = new Date();
-  const t: Task = { id: cuid(), ...data, createdAt: now, updatedAt: now };
+  const t: Task = {
+    id: cuid(),
+    ...data,
+    deliveryStatus: data.deliveryStatus ?? "generated",
+    errorMessage: data.errorMessage ?? null,
+    customerFeedback: data.customerFeedback ?? null,
+    isCaseCandidate: data.isCaseCandidate ?? false,
+    createdAt: now,
+    updatedAt: now,
+  };
   store().tasks.set(t.id, t);
   return t;
 }
