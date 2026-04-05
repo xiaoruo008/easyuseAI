@@ -2,11 +2,11 @@ import Link from "next/link";
 import Image from "next/image";
 
 // MiniMax 真实案例
-// 原始随手拍图（before）
+// 原始随手拍图（before）：客户提供的保健品实拍图
 const REAL_BEFORE =
   "https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/ccv2%2F2026-04-05%2FMiniMax-M2.7-highspeed%2F2027708094057816140%2F32a4d7fcfd86701f9da3ddc2b7922058a2761f92ccaf5bf8d20399e986802d1d..png?Expires=1775487954&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=WmDLHsXcYjIfxsehK6Z240VtE1Y%3D";
 
-// 4张不同风格的 after 图（同一产品，4种处理结果）
+// 4张差异化 after 图（MiniMax image-01 独立生成，视觉风格完全不同）
 const AFTER_BG_SWAP =
   "https://hailuo-image-algeng-data.oss-cn-wulanchabu.aliyuncs.com/image_inference_output%2Ftalkie%2Fprod%2Fimg%2F2026-04-06%2F4cea954c-e56a-42ad-ba9e-c36506f4d5c8_aigc.jpeg?Expires=1775493342&OSSAccessKeyId=LTAI5tB2SwrRwAtD23etQUbC&Signature=pZmkYzDwHW0BuLH7HxmUp%2BC51h4%3D";
 
