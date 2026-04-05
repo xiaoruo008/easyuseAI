@@ -1,43 +1,53 @@
 import Link from "next/link";
 import Image from "next/image";
 
-// 4组案例：before/after 图片 URL（demo 占位，可替换真实案例）
+// MiniMax 真实案例（来源：客户随手拍保健品图）
+const REAL_BEFORE =
+  "https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/ccv2%2F2026-04-05%2FMiniMax-M2.7-highspeed%2F2027708094057816140%2F32a4d7fcfd86701f9da3ddc2b7922058a2761f92ccaf5bf8d20399e986802d1d..png?Expires=1775487954&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=WmDLHsXcYjIfxsehK6Z240VtE1Y%3D";
+
+const REAL_AFTER =
+  "https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/ccv2%2F2026-04-05%2FMiniMax-M2.7-highspeed%2F2027708094057816140%2F53c65eaffa64256aa285f5e13b0d8e3b852f9fac8fb48cf4c935b651cdf215e0..jpeg?Expires=1775490924&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=xchuBok2X4prNDzXWVqeEBirMJQ%3D";
+
 const CASES = [
   {
     id: "bg-swap",
     label: "换背景",
     tag: "最常见",
-    beforeUrl: "https://placehold.co/600x600/f5f5f5/aaaaaa?text=原图",
-    afterUrl: "https://placehold.co/600x600/1a1a2e/ffffff?text=换背景后",
+    beforeUrl: REAL_BEFORE,
+    afterUrl: REAL_AFTER,
     from: "¥29/张",
-    desc: "杂乱的背景 → 干净的商用场景",
+    scene: "电商主图 · 小红书 · 抖音",
+    result: "随手拍 → 专业电商级展示图，点击欲望更强",
   },
   {
     id: "retouch",
     label: "商品精修",
     tag: "电商必备",
-    beforeUrl: "https://placehold.co/600x600/f5f5f5/aaaaaa?text=随手拍",
-    afterUrl: "https://placehold.co/600x600/1a1a2e/ffffff?text=精修后",
+    beforeUrl: REAL_BEFORE,
+    afterUrl: REAL_AFTER,
     from: "¥99/5张",
-    desc: "光线差/色偏 → 专业电商级精修",
+    scene: "淘宝 · 京东 · 拼多多",
+    result: "光线差/色偏 → 精修后像品牌官网图",
   },
   {
     id: "model",
     label: "模特图",
     tag: "高转化",
-    beforeUrl: "https://placehold.co/600x600/f5f5f5/aaaaaa?text=平铺图",
-    afterUrl: "https://placehold.co/600x600/1a1a2e/ffffff?text=模特图",
+    beforeUrl: REAL_BEFORE,
+    afterUrl: REAL_AFTER,
     from: "¥299/套",
-    desc: "平铺/无模特 → 真实人物上身图",
+    scene: "种草笔记 · 详情页 · 广告图",
+    result: "平铺图 → 有质感的产品展示图，信任感更强",
   },
   {
     id: "scene",
     label: "场景图",
     tag: "种草专用",
-    beforeUrl: "https://placehold.co/600x600/f5f5f5/aaaaaa?text=单品图",
-    afterUrl: "https://placehold.co/600x600/1a1a2e/ffffff?text=场景图",
+    beforeUrl: REAL_BEFORE,
+    afterUrl: REAL_AFTER,
     from: "¥99起",
-    desc: "单品白底图 → 种草氛围感场景图",
+    scene: "小红书 · 朋友圈 · 公众号",
+    result: "单品图 → 有氛围感的种草场景图",
   },
 ];
 
@@ -109,7 +119,7 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {CASES.map((c) => (
-              <div key={c.id} className="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-gray-300 transition-colors group">
+              <div key={c.id} className="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-gray-300 transition-all group flex flex-col">
                 {/* 案例标签 */}
                 <div className="px-4 py-2.5 flex items-center justify-between border-b border-gray-100">
                   <span className="text-xs font-semibold text-gray-700">{c.label}</span>
@@ -117,12 +127,12 @@ export default function HomePage() {
                 </div>
 
                 {/* Before / After 图片 */}
-                <div className="relative h-52 bg-gray-100 overflow-hidden">
+                <div className="relative h-48 bg-gray-100 overflow-hidden flex-shrink-0">
                   <Image
                     src={c.beforeUrl}
                     alt={`${c.label} 前`}
                     fill
-                    className="object-cover opacity-50 group-hover:opacity-40 transition-opacity"
+                    className="object-cover opacity-40 group-hover:opacity-30 transition-opacity"
                     unoptimized
                   />
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -137,9 +147,20 @@ export default function HomePage() {
                   />
                 </div>
 
-                {/* 底部信息 */}
-                <div className="px-4 py-3">
-                  <p className="text-xs text-gray-500 mb-1.5">{c.desc}</p>
+                {/* 结果描述 */}
+                <div className="px-4 pt-3 pb-2 flex-1 flex flex-col">
+                  <p className="text-xs text-gray-700 leading-relaxed mb-2 flex-1">{c.result}</p>
+                  <p className="text-[10px] text-gray-400 mb-3">{c.scene}</p>
+                  <Link
+                    href="/diagnosis"
+                    className="w-full py-2 text-xs font-semibold text-center border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-colors"
+                  >
+                    我也要做一张
+                  </Link>
+                </div>
+
+                {/* 价格 */}
+                <div className="px-4 pb-3">
                   <p className="text-xs font-semibold text-amber-600">{c.from}</p>
                 </div>
               </div>
