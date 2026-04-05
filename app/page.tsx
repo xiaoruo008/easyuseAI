@@ -1,12 +1,23 @@
 import Link from "next/link";
 import Image from "next/image";
 
-// MiniMax 真实案例（来源：客户随手拍保健品图）
+// MiniMax 真实案例
+// 原始随手拍图（before）
 const REAL_BEFORE =
   "https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/ccv2%2F2026-04-05%2FMiniMax-M2.7-highspeed%2F2027708094057816140%2F32a4d7fcfd86701f9da3ddc2b7922058a2761f92ccaf5bf8d20399e986802d1d..png?Expires=1775487954&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=WmDLHsXcYjIfxsehK6Z240VtE1Y%3D";
 
-const REAL_AFTER =
-  "https://minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com/ccv2%2F2026-04-05%2FMiniMax-M2.7-highspeed%2F2027708094057816140%2F53c65eaffa64256aa285f5e13b0d8e3b852f9fac8fb48cf4c935b651cdf215e0..jpeg?Expires=1775490924&OSSAccessKeyId=LTAI5tGLnRTkBjLuYPjNcKQ8&Signature=xchuBok2X4prNDzXWVqeEBirMJQ%3D";
+// 4张不同风格的 after 图（同一产品，4种处理结果）
+const AFTER_BG_SWAP =
+  "https://hailuo-image-algeng-data.oss-cn-wulanchabu.aliyuncs.com/image_inference_output%2Ftalkie%2Fprod%2Fimg%2F2026-04-06%2F4cea954c-e56a-42ad-ba9e-c36506f4d5c8_aigc.jpeg?Expires=1775493342&OSSAccessKeyId=LTAI5tB2SwrRwAtD23etQUbC&Signature=pZmkYzDwHW0BuLH7HxmUp%2BC51h4%3D";
+
+const AFTER_RETOUCH =
+  "https://hailuo-image-algeng-data.oss-cn-wulanchabu.aliyuncs.com/image_inference_output%2Ftalkie%2Fprod%2Fimg%2F2026-04-06%2F634605ac-9af2-4262-90e9-abcd2e3f25c6_aigc.jpeg?Expires=1775493361&OSSAccessKeyId=LTAI5tB2SwrRwAtD23etQUbC&Signature=Sv9syDvvOCot25yx1Bs5bapxG9o%3D";
+
+const AFTER_MODEL =
+  "https://hailuo-image-algeng-data.oss-cn-wulanchabu.aliyuncs.com/image_inference_output%2Ftalkie%2Fprod%2Fimg%2F2026-04-06%2F27b63721-e9d2-45ab-9e83-3fadfe7b76e8_aigc.jpeg?Expires=1775493377&OSSAccessKeyId=LTAI5tB2SwrRwAtD23etQUbC&Signature=fUGcxkarLHdwidA676CcGFU2UEM%3D";
+
+const AFTER_SCENE =
+  "https://hailuo-image-algeng-data.oss-cn-wulanchabu.aliyuncs.com/image_inference_output%2Ftalkie%2Fprod%2Fimg%2F2026-04-06%2F7c6771f0-16e3-407d-9f69-3314b266c26c_aigc.jpeg?Expires=1775493399&OSSAccessKeyId=LTAI5tB2SwrRwAtD23etQUbC&Signature=3Oq4Pvtr6lT7NdD97IGiROPmc%2BY%3D";
 
 const CASES = [
   {
@@ -14,40 +25,40 @@ const CASES = [
     label: "换背景",
     tag: "最常见",
     beforeUrl: REAL_BEFORE,
-    afterUrl: REAL_AFTER,
+    afterUrl: AFTER_BG_SWAP,
     from: "¥29/张",
     scene: "电商主图 · 小红书 · 抖音",
-    result: "随手拍 → 专业电商级展示图，点击欲望更强",
+    result: "背景乱 → 干净专业，点击欲望更强",
   },
   {
     id: "retouch",
     label: "商品精修",
     tag: "电商必备",
     beforeUrl: REAL_BEFORE,
-    afterUrl: REAL_AFTER,
+    afterUrl: AFTER_RETOUCH,
     from: "¥99/5张",
     scene: "淘宝 · 京东 · 拼多多",
-    result: "光线差/色偏 → 精修后像品牌官网图",
+    result: "光线差/色偏 → 像品牌官网图",
   },
   {
     id: "model",
     label: "模特图",
     tag: "高转化",
     beforeUrl: REAL_BEFORE,
-    afterUrl: REAL_AFTER,
+    afterUrl: AFTER_MODEL,
     from: "¥299/套",
     scene: "种草笔记 · 详情页 · 广告图",
-    result: "平铺图 → 有质感的产品展示图，信任感更强",
+    result: "没质感 → 有信任感，客户更愿意买",
   },
   {
     id: "scene",
     label: "场景图",
     tag: "种草专用",
     beforeUrl: REAL_BEFORE,
-    afterUrl: REAL_AFTER,
+    afterUrl: AFTER_SCENE,
     from: "¥99起",
     scene: "小红书 · 朋友圈 · 公众号",
-    result: "单品图 → 有氛围感的种草场景图",
+    result: "单品平铺 → 有氛围感，种草更有说服力",
   },
 ];
 
@@ -119,32 +130,43 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {CASES.map((c) => (
-              <div key={c.id} className="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-gray-300 transition-all group flex flex-col">
-                {/* 案例标签 */}
+              <div key={c.id} className="bg-white rounded-2xl overflow-hidden border border-gray-200 hover:border-gray-300 transition-all flex flex-col">
+                {/* 案例标签行 */}
                 <div className="px-4 py-2.5 flex items-center justify-between border-b border-gray-100">
                   <span className="text-xs font-semibold text-gray-700">{c.label}</span>
                   <span className="text-[10px] font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">{c.tag}</span>
                 </div>
 
-                {/* Before / After 图片 */}
-                <div className="relative h-48 bg-gray-100 overflow-hidden flex-shrink-0">
-                  <Image
-                    src={c.beforeUrl}
-                    alt={`${c.label} 前`}
-                    fill
-                    className="object-cover opacity-40 group-hover:opacity-30 transition-opacity"
-                    unoptimized
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-white text-3xl font-bold opacity-60 drop-shadow-sm">→</span>
+                {/* 横向 Before / After 对比图 */}
+                <div className="flex h-44 flex-shrink-0">
+                  {/* Before */}
+                  <div className="relative flex-1 bg-gray-100">
+                    <Image
+                      src={c.beforeUrl}
+                      alt={`${c.label} 原图`}
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-[9px] text-center py-0.5 tracking-wider">
+                      原图
+                    </div>
                   </div>
-                  <Image
-                    src={c.afterUrl}
-                    alt={`${c.label} 后`}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
+                  {/* 分隔线 */}
+                  <div className="w-px bg-gray-200 flex-shrink-0" />
+                  {/* After */}
+                  <div className="relative flex-1">
+                    <Image
+                      src={c.afterUrl}
+                      alt={`${c.label} 效果`}
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                    <div className="absolute bottom-0 left-0 right-0 bg-amber-500/80 text-white text-[9px] text-center py-0.5 tracking-wider">
+                      效果
+                    </div>
+                  </div>
                 </div>
 
                 {/* 结果描述 */}
