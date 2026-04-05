@@ -355,7 +355,7 @@ function ExecuteContent() {
               {working ? (
                 <>
                   <div className="w-5 h-5 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                  制作中，请稍候...
+                  制作中，预计1-2分钟...
                 </>
               ) : (
                 <>
@@ -373,7 +373,7 @@ function ExecuteContent() {
                 disabled={working}
                 className="w-full py-4 bg-gray-900 text-white rounded-xl font-bold text-lg hover:bg-gray-800 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
               >
-                {working ? "制作中..." : "再做一版"}
+                {working ? "制作中，预计1-2分钟" : "再做一版"}
               </button>
               <div className="flex gap-3">
                 <Link
