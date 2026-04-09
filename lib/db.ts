@@ -50,7 +50,9 @@ export async function updateSession(
 export async function createLead(data: {
   name: string;
   contact: string;
+  company?: string | null;
   businessType?: string | null;
+  serviceType?: string | null;
   note?: string | null;
   diagnosisSessionId?: string | null;
 }) {
@@ -58,6 +60,8 @@ export async function createLead(data: {
     return mock.createLead({
       name: data.name,
       contact: data.contact,
+      company: data.company ?? null,
+      serviceType: data.serviceType ?? null,
       businessType: data.businessType ?? null,
       note: data.note ?? null,
       status: "new",
@@ -68,7 +72,9 @@ export async function createLead(data: {
     data: {
       name: data.name,
       contact: data.contact,
+      company: data.company ?? null,
       businessType: data.businessType ?? null,
+      serviceType: data.serviceType ?? null,
       note: data.note ?? null,
       status: "NEW",
       diagnosisSessionId: data.diagnosisSessionId ?? null,
@@ -108,6 +114,7 @@ export async function getAllLeads(filter?: { status?: string; q?: string }) {
     where.OR = [
       { name: { contains: filter.q, mode: "insensitive" } },
       { contact: { contains: filter.q } },
+      { company: { contains: filter.q, mode: "insensitive" } },
       { businessType: { contains: filter.q, mode: "insensitive" } },
     ];
   }
@@ -121,7 +128,7 @@ export async function getAllLeads(filter?: { status?: string; q?: string }) {
 export async function updateLead(id: string, data: Record<string, unknown>) {
   if (USE_MOCK) return mock.updateLead(id, data as Partial<mock.Lead>);
   const patch: Record<string, unknown> = {};
-  for (const key of ["name", "contact", "businessType", "note", "status"]) {
+  for (const key of ["name", "contact", "company", "businessType", "serviceType", "note", "status"]) {
     if (data[key] !== undefined) patch[key] = data[key];
   }
   return prisma.lead.update({ where: { id }, data: patch });
@@ -136,6 +143,16 @@ export async function createTask(data: {
   deliveryStatus?: string;
   inputData: Record<string, unknown>;
   outputData: Record<string, unknown> | null;
+  // 服装视觉扩展字段（可选）
+  market?: string;
+  gender?: string;
+  category?: string;
+  targetImage?: string;
+  referenceQuality?: string;
+  templateKey?: string;
+  promptVersion?: number;
+  moderationRiskLevel?: string;
+  retryStrategy?: string;
 }) {
   if (USE_MOCK) {
     return mock.createTask({
@@ -158,6 +175,16 @@ export async function createTask(data: {
       deliveryStatus: (data.deliveryStatus?.toUpperCase().replace(" ", "_") as "GENERATED" | "SENT" | "CONFIRMED" | "REDO") ?? "GENERATED",
       inputData: data.inputData as unknown as undefined,
       outputData: data.outputData as unknown as undefined,
+      // 新增字段
+      market: data.market,
+      gender: data.gender,
+      category: data.category,
+      targetImage: data.targetImage,
+      referenceQuality: data.referenceQuality,
+      templateKey: data.templateKey,
+      promptVersion: data.promptVersion ?? 1,
+      moderationRiskLevel: data.moderationRiskLevel,
+      retryStrategy: data.retryStrategy,
     },
   });
 }
@@ -187,6 +214,11 @@ export async function updateTask(
     errorMessage?: string | null;
     customerFeedback?: string | null;
     isCaseCandidate?: boolean;
+    // 服装视觉扩展字段
+    templateKey?: string;
+    promptVersion?: number;
+    moderationRiskLevel?: string;
+    retryStrategy?: string;
   }
 ) {
   if (USE_MOCK) {
@@ -212,6 +244,10 @@ export async function updateTask(
   if (data.errorMessage !== undefined) patch.errorMessage = data.errorMessage;
   if (data.customerFeedback !== undefined) patch.customerFeedback = data.customerFeedback;
   if (data.isCaseCandidate !== undefined) patch.isCaseCandidate = data.isCaseCandidate;
+  if (data.templateKey !== undefined) patch.templateKey = data.templateKey;
+  if (data.promptVersion !== undefined) patch.promptVersion = data.promptVersion;
+  if (data.moderationRiskLevel !== undefined) patch.moderationRiskLevel = data.moderationRiskLevel;
+  if (data.retryStrategy !== undefined) patch.retryStrategy = data.retryStrategy;
   return prisma.task.update({ where: { id }, data: patch });
 }
 
