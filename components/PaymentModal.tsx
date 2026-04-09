@@ -11,8 +11,7 @@ const PRICE_LABELS: Record<string, string> = {
 };
 
 const CONTACT_INFO = {
-  wechat: "easyuse_ai",
-  whatsapp: "+86 138-0000-0000",
+  wechat: "easyuseai",
 };
 
 const PAYMENT_ACCOUNT = {
@@ -23,21 +22,21 @@ const PAYMENT_ACCOUNT = {
 export default function PaymentModal({ type, onClose }: PaymentModalProps) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-end pr-4"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-y-auto"
+        className="relative w-full sm:max-w-sm bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-y-auto max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b">
-          <h2 className="font-bold text-gray-900">
+        <div className="sticky top-0 bg-white flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-100 z-10">
+          <h2 className="font-bold text-gray-900 text-sm sm:text-base">
             {PRICE_LABELS[type] ?? "立即获取"}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-gray-400 hover:text-gray-600 transition-colors p-1"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -45,22 +44,22 @@ export default function PaymentModal({ type, onClose }: PaymentModalProps) {
           </button>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-4 sm:p-6 space-y-5">
           {/* Step 1 */}
           <div>
             <div className="flex items-center gap-2 mb-3">
               <span className="w-6 h-6 rounded-full bg-indigo-600 text-white text-xs flex items-center justify-center font-bold">1</span>
               <h3 className="font-semibold text-gray-900">完成付款</h3>
             </div>
-            <div className="bg-gray-50 rounded-xl p-4 space-y-3">
-              <div className="flex justify-between text-sm">
+            <div className="bg-gray-50 rounded-xl p-3 sm:p-4 space-y-3">
+              <div className="flex justify-between text-xs sm:text-sm">
                 <span className="text-gray-600">支付宝</span>
-                <span className="font-semibold text-gray-900">{PAYMENT_ACCOUNT.alipay}</span>
+                <span className="font-semibold text-gray-900 break-all">{PAYMENT_ACCOUNT.alipay}</span>
               </div>
               <div className="border-t border-gray-200 pt-3">
                 <p className="text-xs text-gray-400 mb-2">微信/支付宝 付款码</p>
-                <div className="w-32 h-32 bg-gray-200 border-2 border-dashed rounded-xl mx-auto flex items-center justify-center text-gray-400 text-xs text-center">
-                  二维码占位
+                <div className="w-40 h-40 sm:w-48 sm:h-48 bg-gray-100 border-2 border-dashed rounded-xl mx-auto flex items-center justify-center text-gray-400 text-xs text-center p-2">
+                  <span>二维码待配置<br />请加微信联系</span>
                 </div>
               </div>
               <p className="text-xs text-gray-400 text-center">{PAYMENT_ACCOUNT.note}</p>
@@ -80,13 +79,6 @@ export default function PaymentModal({ type, onClose }: PaymentModalProps) {
                   <span className="text-sm font-medium text-gray-800">微信</span>
                 </div>
                 <span className="text-sm font-semibold text-blue-700">{CONTACT_INFO.wechat}</span>
-              </div>
-              <div className="flex items-center justify-between p-3 bg-green-50 rounded-xl">
-                <div className="flex items-center gap-2">
-                  <span className="text-base">📱</span>
-                  <span className="text-sm font-medium text-gray-800">WhatsApp</span>
-                </div>
-                <span className="text-sm font-semibold text-green-700">{CONTACT_INFO.whatsapp}</span>
               </div>
             </div>
           </div>

@@ -132,42 +132,42 @@ function ExecuteContent() {
     <div className="min-h-screen bg-white">
       {/* Header */}
       <header className="border-b border-gray-100">
-        <div className="max-w-xl mx-auto px-6 py-4 flex items-center gap-3">
-          <Link href={`/result?session=${sessionId}`} className="text-gray-300 hover:text-gray-600 transition-colors">
+        <div className="max-w-xl mx-auto px-4 md:px-6 py-3 md:py-4 flex items-center gap-3">
+          <Link href={`/result?session=${sessionId}`} className="text-gray-300 hover:text-gray-600 transition-colors shrink-0">
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </Link>
-          <div>
-            <p className="text-xs text-gray-400">正在为你制作</p>
-            <p className="font-semibold text-gray-900">{action?.label ?? "图片制作"}</p>
+          <div className="min-w-0">
+            <p className="text-[10px] md:text-xs text-gray-400 leading-none">正在为你制作</p>
+            <p className="font-semibold text-gray-900 text-sm md:text-base truncate">{action?.label ?? "图片制作"}</p>
           </div>
         </div>
       </header>
 
-      <main className="max-w-xl mx-auto px-6 py-8 space-y-6">
+      <main className="max-w-xl mx-auto px-4 md:px-6 py-6 md:py-8 space-y-5 md:space-y-6">
 
         {/* 你的情况 */}
-        <div className="bg-gray-900 rounded-xl p-5 text-white">
+        <div className="bg-gray-900 rounded-xl p-4 md:p-5 text-white">
           <p className="text-xs text-gray-400 mb-1">你的情况</p>
-          <p className="font-medium leading-relaxed">{diagnosisResult.painPoint}</p>
+          <p className="text-sm md:font-medium leading-relaxed">{diagnosisResult.painPoint}</p>
         </div>
 
         {/* 本次任务 */}
-        <div className="rounded-xl border border-gray-200 p-5">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="text-2xl">{action?.icon}</span>
+        <div className="rounded-xl border border-gray-200 p-4 md:p-5">
+          <div className="flex items-center gap-3 mb-1.5 md:mb-2">
+            <span className="text-xl md:text-2xl">{action?.icon}</span>
             <div>
-              <p className="font-semibold text-gray-900">{action?.label}</p>
+              <p className="font-semibold text-gray-900 text-sm md:text-base">{action?.label}</p>
             </div>
           </div>
-          <p className="text-sm text-gray-500 leading-relaxed">{action?.desc}</p>
+          <p className="text-xs md:text-sm text-gray-500 leading-relaxed">{action?.desc}</p>
         </div>
 
         {/* 图片任务：输入 */}
         {isImageTask && !hasResult && (
           <>
-            <div className="rounded-xl border border-gray-200 p-5 space-y-3">
+            <div className="rounded-xl border border-gray-200 p-4 md:p-5 space-y-3">
               <h3 className="text-sm font-semibold text-gray-700">你想要什么样的图？</h3>
               <textarea
                 value={prompt}
@@ -181,15 +181,16 @@ function ExecuteContent() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-xl border border-gray-200 p-5 space-y-3">
+            {/* 风格 + 比例 — 移动端改为纵向堆叠 */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="rounded-xl border border-gray-200 p-4 md:p-5 space-y-2.5">
                 <h3 className="text-sm font-semibold text-gray-700">风格</h3>
-                <div className="flex gap-2">
+                <div className="flex gap-1.5 md:gap-2">
                   {STYLE_OPTIONS.map((opt) => (
                     <button
                       key={opt.value}
                       onClick={() => setStyle(opt.value)}
-                      className={`flex-1 py-2 text-xs font-medium rounded-lg border transition-colors ${
+                      className={`flex-1 py-2.5 text-xs md:text-sm font-medium rounded-lg border transition-colors whitespace-nowrap ${
                         style === opt.value
                           ? "bg-gray-900 text-white border-gray-900"
                           : "bg-white text-gray-500 border-gray-200 hover:border-gray-400"
@@ -200,14 +201,14 @@ function ExecuteContent() {
                   ))}
                 </div>
               </div>
-              <div className="rounded-xl border border-gray-200 p-5 space-y-3">
+              <div className="rounded-xl border border-gray-200 p-4 md:p-5 space-y-2.5">
                 <h3 className="text-sm font-semibold text-gray-700">比例</h3>
-                <div className="flex gap-2">
+                <div className="flex gap-1.5 md:gap-2">
                   {RATIO_OPTIONS.map((opt) => (
                     <button
                       key={opt.value}
                       onClick={() => setAspectRatio(opt.value)}
-                      className={`flex-1 py-2 text-xs font-medium rounded-lg border transition-colors ${
+                      className={`flex-1 py-2.5 text-xs md:text-sm font-medium rounded-lg border transition-colors ${
                         aspectRatio === opt.value
                           ? "bg-gray-900 text-white border-gray-900"
                           : "bg-white text-gray-500 border-gray-200 hover:border-gray-400"
@@ -220,25 +221,12 @@ function ExecuteContent() {
               </div>
             </div>
 
-            <div className="rounded-xl border border-gray-200 p-5">
-              <h3 className="text-sm font-semibold text-gray-700 mb-3">有参考图吗？（可选）</h3>
-              <p className="text-xs text-gray-400 mb-3">上传产品照片，我们会参考风格制作</p>
-              <input
-                ref={fileRef}
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) setUploadedFile(file.name);
-                }}
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:bg-gray-100 file:text-gray-700 file:font-medium hover:file:bg-gray-200 cursor-pointer"
-              />
-              {uploadedFile && (
-                <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
-                  <svg className="w-3 h-3 text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                  已选择：{uploadedFile}
-                </p>
-              )}
+            <div className="rounded-xl border border-gray-200 p-4 md:p-5">
+              <h3 className="text-sm font-semibold text-gray-700 mb-2 md:mb-3">有产品原图吗？（可选）</h3>
+              <p className="text-xs text-gray-400 mb-3 hidden md:block">上传原图可以让效果更接近真实产品（目前 v1 暂不支持上传，AI 将根据你的描述生成）</p>
+              <div className="bg-gray-50 rounded-lg px-4 py-3 text-xs text-gray-400">
+                v1 · 图片上传功能即将上线，目前请详细描述你想要的效果
+              </div>
             </div>
           </>
         )}
@@ -277,7 +265,7 @@ function ExecuteContent() {
               <h3 className="font-semibold text-sm">你的图做好了</h3>
             </div>
             <div className="rounded-xl border border-gray-200 overflow-hidden">
-              <div className="relative aspect-square bg-gray-50">
+              <div className="relative bg-gray-50 max-h-80 md:max-h-96" style={{ aspectRatio: "1/1" }}>
                 <Image
                   src={imageResult.imageUrl}
                   alt="制作结果"
@@ -286,16 +274,16 @@ function ExecuteContent() {
                   unoptimized
                 />
               </div>
-              <div className="p-4 border-t border-gray-100 flex items-center justify-between gap-3">
+              <div className="p-3 md:p-4 border-t border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                 <p className="text-xs text-gray-400">
                   {imageResult.source === "mock"
-                    ? "预览效果 · 实际制作更精细"
-                    : "专业团队制作 · 可直接使用"}
+                    ? "当前为示例效果 · 付费后生成实际产品图"
+                    : "AI生成效果 · 可直接使用"}
                 </p>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
                   <button
                     onClick={copyLink}
-                    className="text-xs px-3 py-1.5 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors flex items-center gap-1"
+                    className="flex-1 sm:flex-none text-xs px-3 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors flex items-center justify-center gap-1"
                   >
                     {copied ? (
                       <>
@@ -313,7 +301,7 @@ function ExecuteContent() {
                     href={imageResult.imageUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs px-3 py-1.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors flex items-center gap-1"
+                    className="flex-1 sm:flex-none text-xs px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center gap-1"
                   >
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                     下载
@@ -371,11 +359,12 @@ function ExecuteContent() {
               <button
                 onClick={handleCreate}
                 disabled={working}
-                className="w-full py-4 bg-gray-900 text-white rounded-xl font-bold text-lg hover:bg-gray-800 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+                className="w-full py-4 bg-gray-900 text-white rounded-xl font-bold text-base md:text-lg hover:bg-gray-800 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
               >
                 {working ? "制作中，预计1-2分钟" : "再做一版"}
               </button>
-              <div className="flex gap-3">
+              {/* 移动端改为纵向堆叠 */}
+              <div className="flex flex-col sm:flex-row gap-2.5">
                 <Link
                   href={`/result?session=${sessionId}`}
                   className="flex-1 py-3 text-center border border-gray-200 text-gray-600 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"

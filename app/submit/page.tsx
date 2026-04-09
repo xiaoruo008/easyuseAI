@@ -76,7 +76,7 @@ function SubmitContent() {
   if (submitted) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-sm border p-8 text-center space-y-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-sm border p-6 md:p-8 text-center space-y-4">
           <div className="text-5xl">✅</div>
           <h1 className="text-2xl font-bold text-gray-900">提交成功！</h1>
           <p className="text-gray-500 leading-relaxed">
@@ -106,11 +106,11 @@ function SubmitContent() {
         </div>
       </header>
 
-      <main className="max-w-xl mx-auto px-6 py-10">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">留下联系方式</h1>
-        <p className="text-gray-500 mb-8">顾问会在24小时内联系你，帮你把事情落地</p>
+      <main className="max-w-xl mx-auto px-4 md:px-6 py-8 md:py-10">
+        <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-1.5 md:mb-2">留下联系方式</h1>
+        <p className="text-gray-500 text-sm mb-6 md:mb-8">顾问会在24小时内联系你，帮你把事情落地</p>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border p-6 space-y-5">
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border p-5 md:p-6 space-y-4 md:space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
               姓名 <span className="text-red-500">*</span>
@@ -179,17 +179,17 @@ function SubmitContent() {
             <p className="text-red-600 text-sm bg-red-50 rounded-lg px-4 py-3">{error}</p>
           )}
 
-          <div className="flex gap-3 pt-2">
+          <div className="flex flex-col sm:flex-row gap-2.5 pt-1 md:pt-2">
             <Link
               href={`/result?session=${sessionId}`}
-              className="flex-1 py-3 text-center border border-gray-200 text-gray-600 rounded-xl font-medium hover:bg-gray-50 transition-colors"
+              className="flex-1 py-3 text-center border border-gray-200 text-gray-600 rounded-xl font-medium hover:bg-gray-50 transition-colors text-sm"
             >
               上一步
             </Link>
             <button
               type="submit"
               disabled={submitting || uploading}
-              className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
               {submitting ? (uploading ? "上传中..." : "提交中...") : "提交资料"}
             </button>
