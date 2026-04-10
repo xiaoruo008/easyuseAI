@@ -152,12 +152,13 @@ function ProContent() {
           >
             立即获取完整版 · ¥299
           </button>
+          <p className="text-center text-xs text-gray-400">满意后再付款 · 24小时内交付 · 永久授权</p>
           <div className="flex gap-3">
             <Link
               href={`/result?session=${sessionId}`}
               className="flex-1 py-3 text-center border border-gray-200 text-gray-600 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
             >
-              返回
+              返回免费版
             </Link>
             <Link
               href="/diagnosis"
