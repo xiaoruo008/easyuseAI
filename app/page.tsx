@@ -150,7 +150,7 @@ export default function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </Link>
-              <p className="text-center text-white/30 text-xs">免费测验！答题后解锁！</p>
+              <p className="text-center text-white/30 text-xs">免费生成一张效果图，不满意不收费</p>
             </div>
           </div>
         </div>
