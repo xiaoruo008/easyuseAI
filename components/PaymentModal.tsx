@@ -45,24 +45,44 @@ export default function PaymentModal({ type, onClose }: PaymentModalProps) {
         </div>
 
         <div className="p-4 sm:p-6 space-y-5">
-          {/* Step 1 */}
+          {/* Step 1 - Pay after consultation */}
           <div>
             <div className="flex items-center gap-2 mb-3">
               <span className="w-6 h-6 rounded-full bg-indigo-600 text-white text-xs flex items-center justify-center font-bold">1</span>
-              <h3 className="font-semibold text-gray-900">完成付款</h3>
+              <h3 className="font-semibold text-gray-900">联系顾问报价</h3>
             </div>
             <div className="bg-gray-50 rounded-xl p-3 sm:p-4 space-y-3">
-              <div className="flex justify-between text-xs sm:text-sm">
-                <span className="text-gray-600">支付宝</span>
-                <span className="font-semibold text-gray-900 break-all">{PAYMENT_ACCOUNT.alipay}</span>
-              </div>
-              <div className="border-t border-gray-200 pt-3">
-                <p className="text-xs text-gray-400 mb-2">微信/支付宝 付款码</p>
-                <div className="w-40 h-40 sm:w-48 sm:h-48 bg-gray-100 border-2 border-dashed rounded-xl mx-auto flex items-center justify-center text-gray-400 text-xs text-center p-2">
-                  <span>二维码待配置<br />请加微信联系</span>
+              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                顾问了解你的需求后，提供具体方案和报价。确认后付款，交付成果。
+              </p>
+              <div className="border-t border-gray-200 pt-3 space-y-2">
+                <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+                  <span className="text-base">💬</span>
+                  <div className="flex-1">
+                    <p className="text-xs text-gray-400">微信（优先）</p>
+                    <p className="text-sm font-semibold text-gray-900">{CONTACT_INFO.wechat}</p>
+                  </div>
+                  <button
+                    onClick={() => navigator.clipboard.writeText(CONTACT_INFO.wechat)}
+                    className="text-xs text-indigo-600 hover:text-indigo-800 font-medium shrink-0"
+                  >
+                    复制
+                  </button>
+                </div>
+                <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+                  <span className="text-base">📧</span>
+                  <div className="flex-1">
+                    <p className="text-xs text-gray-400">邮箱</p>
+                    <p className="text-sm font-semibold text-gray-900 break-all">{PAYMENT_ACCOUNT.alipay}</p>
+                  </div>
+                  <button
+                    onClick={() => navigator.clipboard.writeText(PAYMENT_ACCOUNT.alipay)}
+                    className="text-xs text-indigo-600 hover:text-indigo-800 font-medium shrink-0"
+                  >
+                    复制
+                  </button>
                 </div>
               </div>
-              <p className="text-xs text-gray-400 text-center">{PAYMENT_ACCOUNT.note}</p>
             </div>
           </div>
 
@@ -70,24 +90,19 @@ export default function PaymentModal({ type, onClose }: PaymentModalProps) {
           <div>
             <div className="flex items-center gap-2 mb-3">
               <span className="w-6 h-6 rounded-full bg-indigo-600 text-white text-xs flex items-center justify-center font-bold">2</span>
-              <h3 className="font-semibold text-gray-900">联系顾问</h3>
+              <h3 className="font-semibold text-gray-900">等待顾问联系</h3>
             </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between p-3 bg-blue-50 rounded-xl">
-                <div className="flex items-center gap-2">
-                  <span className="text-base">💬</span>
-                  <span className="text-sm font-medium text-gray-800">微信</span>
-                </div>
-                <span className="text-sm font-semibold text-blue-700">{CONTACT_INFO.wechat}</span>
-              </div>
+            <div className="bg-blue-50 rounded-xl p-3 sm:p-4">
+              <p className="text-xs sm:text-sm text-blue-800 leading-relaxed">
+                通常 2小时内回复，24小时内给出方案。顾问会了解你的具体情况后提供报价。
+              </p>
             </div>
           </div>
 
           {/* Note */}
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
             <p className="text-sm text-amber-800 leading-relaxed">
-              💡 付款后联系顾问，发送付款截图。<br />
-              顾问会在24小时内完成制作并发送成果。
+              💡 先联系不收费。顾问了解需求后给出报价，确认满意再付款。
             </p>
           </div>
 
