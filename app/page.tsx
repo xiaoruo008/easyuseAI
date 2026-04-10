@@ -39,10 +39,13 @@ export default function HomePage() {
       <header className="relative z-20 border-b border-white/10 min-h-[72px]">
         <div className="max-w-6xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between min-h-[72px]">
           <div className="flex items-center shrink-0">
-            <img
+            <Image
               src="/images/home/logo.png"
               alt="easyuse.ai"
+              width={180}
+              height={56}
               className="block h-[48px] md:h-[56px] w-auto max-w-[180px] md:max-w-[220px] object-contain"
+              unoptimized
             />
           </div>
           <nav className="flex gap-6 text-sm">
@@ -110,10 +113,11 @@ export default function HomePage() {
                   }`}
                   style={{ width: "60px", height: "60px", minWidth: "60px" }}
                 >
-                  <img
+                  <Image
                     src={img.src}
                     alt={img.label}
-                    className="absolute inset-0 w-full h-full object-contain pointer-events-none"
+                    fill
+                    className="object-contain pointer-events-none"
                   />
                 </div>
               ))}
