@@ -171,24 +171,6 @@ function ResultContent() {
           </div>
         </section>
 
-        {/* ── 获取高清版本 ────────────────────────── */}
-        <section className="space-y-2.5 md:space-y-3">
-          <div className="rounded-xl bg-gray-900 p-5 md:p-6 text-center space-y-2.5 md:space-y-3">
-            <p className="text-white font-semibold text-base md:text-lg">加微信获取高清版本</p>
-            <p className="text-white/50 text-xs md:text-sm">顾问发你高清图 + 使用建议</p>
-            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-lg px-4 md:px-5 py-2.5 md:py-3 mt-1">
-              <span className="text-white text-sm font-medium">微信：easyuseai</span>
-              <button
-                onClick={() => navigator.clipboard.writeText("easyuseai")}
-                className="text-white/50 hover:text-white text-xs transition-colors"
-              >
-                复制
-              </button>
-            </div>
-            <p className="text-white/30 text-xs">免费，不推销，只发结果</p>
-          </div>
-        </section>
-
         {/* ── 你的情况 ─────────────────────────────── */}
         <section className="space-y-3">
           <p className="text-xs font-medium text-amber-600 tracking-wide">你的情况</p>
@@ -329,6 +311,24 @@ function ResultContent() {
             <Link href="/diagnosis" className="text-xs text-gray-300 hover:text-gray-500 transition-colors">
               重新开始 →
             </Link>
+          </div>
+        </section>
+
+        {/* ── 加微信获取高清版本（CTA之后）───────────── */}
+        <section className="space-y-2.5 md:space-y-3">
+          <div className="rounded-xl bg-gray-900 p-5 md:p-6 text-center space-y-2.5 md:space-y-3">
+            <p className="text-white font-semibold text-base md:text-lg">加微信获取高清版本</p>
+            <p className="text-white/50 text-xs md:text-sm">顾问发你高清图 + 使用建议</p>
+            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-lg px-4 md:px-5 py-2.5 md:py-3 mt-1">
+              <span className="text-white text-sm font-medium">微信：easyuseai</span>
+              <button
+                onClick={() => navigator.clipboard.writeText("easyuseai")}
+                className="text-white/50 hover:text-white text-xs transition-colors"
+              >
+                复制
+              </button>
+            </div>
+            <p className="text-white/30 text-xs">免费，不推销，只发结果</p>
           </div>
         </section>
 
