@@ -1,13 +1,14 @@
 // lib/db.ts — 统一数据访问层
-// USE_MOCK=true → 内存 mock（本地开发无数据库时）
-// USE_MOCK=false/unset → Prisma + PostgreSQL（生产环境）
+// USE_MOCK=true/unset → 内存 mock（默认，兼顾本地和未配置数据库的生产环境）
+// USE_MOCK=false → Prisma + PostgreSQL（需要自行配置数据库连接）
 //
 // 所有 API route 只 import 这个文件，不直接 import prisma 或 mock-db
 
 import { prisma } from "./prisma";
 import * as mock from "./mock-db";
 
-const USE_MOCK = process.env.USE_MOCK === "true";
+// 默认使用 mock，确保生产环境（无数据库配置时）不崩溃
+const USE_MOCK = process.env.USE_MOCK !== "false";
 
 // ─── DiagnosisSession ─────────────────────────────────────────
 
