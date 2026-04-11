@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession, updateSession } from "@/lib/db";
 import { calculateResult } from "@/lib/diagnosis";
 import type { AnswerValue } from "@/lib/diagnosis";
+import { extractFields, resolveWorkflow } from "@/lib/workflow";
 
 export async function GET(
   _req: NextRequest,
@@ -21,5 +22,13 @@ export async function GET(
     confidence: result.confidence,
   });
 
-  return NextResponse.json({ session: updated, result });
+  const fields = extractFields(answers, (session as Record<string, unknown>).contact as string | undefined);
+  const workflow = resolveWorkflow(fields);
+
+  return NextResponse.json({
+    session: updated,
+    result,
+    fields,
+    workflow,
+  });
 }
