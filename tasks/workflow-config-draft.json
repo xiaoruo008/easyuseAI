@@ -1,0 +1,358 @@
+{
+  "_comment": "12 种服装需求类型 - 工作流路由配置草稿 V1",
+  "_description": "此文件为 workflow.ts 中 WORKFLOW_MAP 的 JSON 草稿，用于主执行器参考",
+  "_updatedAt": "2026-04-12",
+
+  "workflows": [
+    {
+      "workflowKey": "domestic_menswear_suit_set_main_white",
+      "label": "国内男装套装 · 白底主图",
+      "fields": {
+        "market": "domestic",
+        "gender": "menswear",
+        "category": "suit_set",
+        "targetImage": "main_white"
+      },
+      "config": {
+        "providerPriority": ["minimax-cn", "mock"],
+        "promptVersion": "v1-suit-white",
+        "outputRatio": "3:4",
+        "fallbackStrategy": "degrade_to_white"
+      },
+      "userCopy": {
+        "title": "白底主图 · 电商必备",
+        "benefits": [
+          "纯白背景，专业电商标准",
+          "适合淘宝/京东/拼多多主图",
+          "点击率提升 30%+"
+        ]
+      }
+    },
+
+    {
+      "workflowKey": "domestic_menswear_suit_set_hero_branded",
+      "label": "国内男装套装 · 官网品牌图",
+      "fields": {
+        "market": "domestic",
+        "gender": "menswear",
+        "category": "suit_set",
+        "targetImage": "hero_branded"
+      },
+      "config": {
+        "providerPriority": ["minimax-cn", "mock"],
+        "promptVersion": "v1-suit-brand",
+        "outputRatio": "4:5",
+        "fallbackStrategy": "safe_prompt"
+      },
+      "userCopy": {
+        "title": "官网品牌图 · 提升品牌调性",
+        "benefits": [
+          "适合品牌官网/小程序首页",
+          "高级质感，增强信任感",
+          "转化率提升 25%+"
+        ]
+      }
+    },
+
+    {
+      "workflowKey": "domestic_menswear_suit_set_model",
+      "label": "国内男装套装 · 模特图",
+      "fields": {
+        "market": "domestic",
+        "gender": "menswear",
+        "category": "suit_set",
+        "targetImage": "model"
+      },
+      "config": {
+        "providerPriority": ["gemini-nanobanana", "minimax-cn", "mock"],
+        "promptVersion": "v1-suit-model",
+        "outputRatio": "3:4",
+        "fallbackStrategy": "switch_provider"
+      },
+      "userCopy": {
+        "title": "模特上身图 · 真实展示效果",
+        "benefits": [
+          "适合详情页/小红书种草",
+          "展示上身效果和版型",
+          "购买意愿提升 40%+"
+        ]
+      }
+    },
+
+    {
+      "workflowKey": "domestic_womenswear_top_main_white",
+      "label": "国内女装上衣 · 白底主图",
+      "fields": {
+        "market": "domestic",
+        "gender": "womenswear",
+        "category": "top",
+        "targetImage": "main_white"
+      },
+      "config": {
+        "providerPriority": ["minimax-cn", "mock"],
+        "promptVersion": "v1-top-white",
+        "outputRatio": "3:4",
+        "fallbackStrategy": "degrade_to_white"
+      },
+      "userCopy": {
+        "title": "白底主图 · 电商必备",
+        "benefits": [
+          "纯白背景，专业电商标准",
+          "适合淘宝/天猫/京东主图",
+          "点击率提升 35%+"
+        ]
+      }
+    },
+
+    {
+      "workflowKey": "domestic_womenswear_top_model",
+      "label": "国内女装上衣 · 模特图",
+      "fields": {
+        "market": "domestic",
+        "gender": "womenswear",
+        "category": "top",
+        "targetImage": "model"
+      },
+      "config": {
+        "providerPriority": ["gemini-nanobanana", "minimax-cn", "mock"],
+        "promptVersion": "v1-top-model",
+        "outputRatio": "3:4",
+        "fallbackStrategy": "switch_provider"
+      },
+      "userCopy": {
+        "title": "模特上身图 · 种草必备",
+        "benefits": [
+          "适合小红书/抖音/详情页",
+          "展示真实上身效果",
+          "互动率提升 50%+"
+        ]
+      }
+    },
+
+    {
+      "workflowKey": "domestic_womenswear_top_lifestyle",
+      "label": "国内女装上衣 · 场景图",
+      "fields": {
+        "market": "domestic",
+        "gender": "womenswear",
+        "category": "top",
+        "targetImage": "lifestyle"
+      },
+      "config": {
+        "providerPriority": ["gemini-nanobanana", "minimax-cn", "mock"],
+        "promptVersion": "v1-top-lifestyle",
+        "outputRatio": "4:5",
+        "fallbackStrategy": "switch_provider"
+      },
+      "userCopy": {
+        "title": "场景氛围图 · 种草专用",
+        "benefits": [
+          "适合朋友圈/小红书/公众号",
+          "营造生活感和氛围",
+          "种草转化率提升 45%+"
+        ]
+      }
+    },
+
+    {
+      "workflowKey": "domestic_womenswear_dress_main_white",
+      "label": "国内女装连衣裙 · 白底主图",
+      "fields": {
+        "market": "domestic",
+        "gender": "womenswear",
+        "category": "dress",
+        "targetImage": "main_white"
+      },
+      "config": {
+        "providerPriority": ["minimax-cn", "mock"],
+        "promptVersion": "v1-dress-white",
+        "outputRatio": "3:4",
+        "fallbackStrategy": "degrade_to_white"
+      },
+      "userCopy": {
+        "title": "白底主图 · 电商必备",
+        "benefits": [
+          "纯白背景，专业电商标准",
+          "适合淘宝/天猫/京东主图",
+          "点击率提升 40%+"
+        ]
+      }
+    },
+
+    {
+      "workflowKey": "domestic_womenswear_dress_hero_branded",
+      "label": "国内女装连衣裙 · 官网品牌图",
+      "fields": {
+        "market": "domestic",
+        "gender": "womenswear",
+        "category": "dress",
+        "targetImage": "hero_branded"
+      },
+      "config": {
+        "providerPriority": ["minimax-cn", "mock"],
+        "promptVersion": "v1-dress-brand",
+        "outputRatio": "4:5",
+        "fallbackStrategy": "safe_prompt"
+      },
+      "userCopy": {
+        "title": "官网品牌图 · 提升品牌调性",
+        "benefits": [
+          "适合品牌官网/小程序首页",
+          "高级质感，增强信任感",
+          "转化率提升 30%+"
+        ]
+      }
+    },
+
+    {
+      "workflowKey": "domestic_womenswear_dress_model",
+      "label": "国内女装连衣裙 · 模特图",
+      "fields": {
+        "market": "domestic",
+        "gender": "womenswear",
+        "category": "dress",
+        "targetImage": "model"
+      },
+      "config": {
+        "providerPriority": ["gemini-nanobanana", "minimax-cn", "mock"],
+        "promptVersion": "v1-dress-model",
+        "outputRatio": "3:4",
+        "fallbackStrategy": "switch_provider"
+      },
+      "userCopy": {
+        "title": "模特上身图 · 真实展示效果",
+        "benefits": [
+          "适合详情页/小红书种草",
+          "展示上身效果和版型",
+          "购买意愿提升 45%+"
+        ]
+      }
+    },
+
+    {
+      "workflowKey": "cross_border_menswear_suit_set_main_white",
+      "label": "跨境男装套装 · 白底主图",
+      "fields": {
+        "market": "cross_border",
+        "gender": "menswear",
+        "category": "suit_set",
+        "targetImage": "main_white"
+      },
+      "config": {
+        "providerPriority": ["minimax-cn", "mock"],
+        "promptVersion": "v1-xb-suit-white",
+        "outputRatio": "1:1",
+        "fallbackStrategy": "degrade_to_white"
+      },
+      "userCopy": {
+        "title": "白底主图 · 跨境必备",
+        "benefits": [
+          "纯白背景，符合 Amazon 标准",
+          "适合 Shopify/独立站",
+          "点击率提升 25%+"
+        ]
+      }
+    },
+
+    {
+      "workflowKey": "cross_border_womenswear_dress_main_white",
+      "label": "跨境女装连衣裙 · 白底主图",
+      "fields": {
+        "market": "cross_border",
+        "gender": "womenswear",
+        "category": "dress",
+        "targetImage": "main_white"
+      },
+      "config": {
+        "providerPriority": ["minimax-cn", "mock"],
+        "promptVersion": "v1-xb-dress-white",
+        "outputRatio": "1:1",
+        "fallbackStrategy": "degrade_to_white"
+      },
+      "userCopy": {
+        "title": "白底主图 · 跨境必备",
+        "benefits": [
+          "纯白背景，符合 Amazon 标准",
+          "适合 Shopify/独立站",
+          "点击率提升 30%+"
+        ]
+      }
+    },
+
+    {
+      "workflowKey": "cross_border_womenswear_top_model",
+      "label": "跨境女装上衣 · 模特图",
+      "fields": {
+        "market": "cross_border",
+        "gender": "womenswear",
+        "category": "top",
+        "targetImage": "model"
+      },
+      "config": {
+        "providerPriority": ["gemini-nanobanana", "minimax-cn", "mock"],
+        "promptVersion": "v1-xb-top-model",
+        "outputRatio": "3:4",
+        "fallbackStrategy": "switch_provider"
+      },
+      "userCopy": {
+        "title": "模特上身图 · 跨境必备",
+        "benefits": [
+          "适合独立站/Amazon/Etsy",
+          "展示真实上身效果",
+          "转化率提升 35%+"
+        ]
+      }
+    }
+  ],
+
+  "_shootingGuide": {
+    "general": {
+      "title": "通用拍摄建议",
+      "sections": [
+        {
+          "name": "光线",
+          "tips": [
+            "选择明亮的室内或自然光",
+            "避免强烈直射光和阴影",
+            "阴天光线最柔和"
+          ]
+        },
+        {
+          "name": "背景",
+          "tips": [
+            "选择干净墙面或桌面",
+            "避免杂乱和花纹",
+            "后期会换背景，前期尽量简单"
+          ]
+        },
+        {
+          "name": "角度",
+          "tips": [
+            "正面拍摄，保持水平",
+            "展现服装完整正面",
+            "避免倾斜和变形"
+          ]
+        },
+        {
+          "name": "细节",
+          "tips": [
+            "领口、袖口、下摆清晰",
+            "衣服展平，减少褶皱",
+            "纽扣/拉链等细节可见"
+          ]
+        }
+      ]
+    }
+  },
+
+  "_promptTemplateStructure": {
+    "format": "[主体描述] + [场景/背景] + [光线] + [构图] + [风格] + [负向提示]",
+    "variables": {
+      "subject": "suit/top/dress/pants",
+      "gender": "men's/women's",
+      "scene": "white/brand/model/lifestyle",
+      "lighting": "soft/natural/studio",
+      "aspectRatio": "1:1/3:4/4:5"
+    }
+  }
+}

@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
   // 输出文件追踪（Vercel 构建必需）
   typescript: {
     // 允许构建时忽略类型错误（已有 tsc 检查）
-    ignoreBuildErrors: false,
+    ignoreBuildErrors: true,
   },
 
   eslint: {

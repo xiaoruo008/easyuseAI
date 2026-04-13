@@ -1,5 +1,5 @@
 import type { ImageProvider } from "./provider";
-import type { ImageTaskInput, ImageTaskOutput } from "./types";
+import type { ImageTaskInput, ImageTaskOutput, ImageTaskType } from "./types";
 import { MockImageProvider } from "./mock-provider";
 import { FalImageProvider } from "./fal-provider";
 import { MiniMaxImageProvider } from "../providers/minimax-image";
@@ -22,4 +22,32 @@ export function getImageProvider(): ImageProvider {
 export async function generateImage(input: ImageTaskInput): Promise<ImageTaskOutput> {
   const provider = getImageProvider();
   return provider.generate(input);
+}
+
+// 兼容 generate/route.ts 的调用方式
+export interface GenerateImageOptions {
+  templateId: string;
+  variables?: Record<string, unknown>;
+  originalImageUrl?: string;
+  userRefinement?: string;
+  aspectRatio?: "1:1" | "3:4" | "16:9";
+}
+
+// templateId → ImageTaskType 映射
+const TEMPLATE_TYPE_MAP: Record<string, ImageTaskType> = {
+  product_photo: "product_photo",
+  model_photo: "model_photo",
+  background_swap: "background_swap",
+  bg_white: "product_photo",
+};
+
+export async function generateImageFromOptions(opts: GenerateImageOptions): Promise<ImageTaskOutput> {
+  const type = TEMPLATE_TYPE_MAP[opts.templateId] ?? "product_photo";
+  const provider = getImageProvider();
+  return provider.generate({
+    type,
+    prompt: opts.userRefinement ?? "",
+    referenceImageUrl: opts.originalImageUrl,
+    aspectRatio: opts.aspectRatio,
+  });
 }

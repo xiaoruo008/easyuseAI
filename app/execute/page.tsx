@@ -46,6 +46,13 @@ function ExecuteContent() {
   const [copied, setCopied] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
+  const FREE_MAX = 2;
+  const [freeLimitReached, setFreeLimitReached] = useState(() => {
+    if (typeof window === "undefined") return false;
+    const count = parseInt(localStorage.getItem("trial_count") ?? "0", 10);
+    return count >= FREE_MAX;
+  });
+
   const isImageTask = IMAGE_ACTIONS.has(actionId);
 
   useEffect(() => {
@@ -87,6 +94,11 @@ function ExecuteContent() {
   const hasResult = isImageTask ? !!imageResult : !!textResult;
 
   const handleCreate = async () => {
+    // 免费试用次数用完，拦截
+    if (freeLimitReached || hasResult) {
+      return;
+    }
+
     setWorking(true);
     try {
       const body: Record<string, string | undefined> = {
@@ -113,6 +125,11 @@ function ExecuteContent() {
       } else {
         setTextResult(d.result);
       }
+      // 标记免费试用已使用（累加计数）
+      const prev = parseInt(localStorage.getItem("trial_count") ?? "0", 10);
+      const next = prev + 1;
+      localStorage.setItem("trial_count", String(next));
+      if (next >= FREE_MAX) setFreeLimitReached(true);
     } catch {
       alert("制作失败，请重试");
     } finally {
@@ -163,6 +180,59 @@ function ExecuteContent() {
           </div>
           <p className="text-xs md:text-sm text-gray-500 leading-relaxed">{action?.desc}</p>
         </div>
+
+        {/* 免费次数用完提示 */}
+        {freeLimitReached && (
+          <div className="rounded-xl border border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 p-5 md:p-6">
+            <div className="flex items-start gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+                <span className="text-xl">🎁</span>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-base font-bold text-amber-900 mb-1">免费次数已用完</h3>
+                <p className="text-sm text-amber-700 leading-relaxed">
+                  感谢你体验我们的服务！免费次数已用完，但你还有 2 种方式继续：
+                </p>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <Link
+                href={`/submit?session=${sessionId}`}
+                className="block rounded-xl border border-amber-200 bg-white p-4 hover:border-amber-300 hover:bg-amber-50 transition-all"
+              >
+                <div className="flex items-start gap-3">
+                  <span className="text-lg">📝</span>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-gray-900">方式 1：留下联系方式（推荐）</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      顾问 24 小时内联系你，帮你规划完整方案。现在填写，额外赠送 3 张免费制作券。
+                    </p>
+                    <p className="text-xs text-indigo-600 font-medium mt-2">
+                      免费填写 →
+                    </p>
+                  </div>
+                </div>
+              </Link>
+              <button
+                onClick={() => router.push(`/result?session=${sessionId}`)}
+                className="block w-full rounded-xl border border-amber-200 bg-white p-4 hover:border-amber-300 hover:bg-amber-50 transition-all text-left"
+              >
+                <div className="flex items-start gap-3">
+                  <span className="text-lg">💳</span>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-gray-900">方式 2：立即付费解锁</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      ¥99 制作 5 张同规格图片，批量制作更优惠。
+                    </p>
+                    <p className="text-xs text-indigo-600 font-medium mt-2">
+                      立即解锁 →
+                    </p>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* 图片任务：输入 */}
         {isImageTask && !hasResult && (
@@ -332,8 +402,23 @@ function ExecuteContent() {
           </div>
         )}
 
+        {/* 免费次数用完提示 */}
+        {freeLimitReached && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 space-y-2">
+            <p className="text-sm font-medium text-amber-800">免费体验次数已用完</p>
+            <p className="text-xs text-amber-600">留下联系方式，顾问24小时内联系你获取更多体验次数</p>
+            <Link
+              href={`/submit?session=${sessionId}`}
+              className="block w-full py-3 bg-amber-600 text-white rounded-xl font-medium text-sm hover:bg-amber-700 transition-colors text-center"
+            >
+              留下联系方式
+            </Link>
+          </div>
+        )}
+
         {/* 按钮 */}
-        <div className="space-y-3 pb-8">
+        {!freeLimitReached && (
+          <div className="space-y-3 pb-8">
           {!hasResult ? (
             <button
               onClick={handleCreate}
@@ -380,7 +465,8 @@ function ExecuteContent() {
               </div>
             </>
           )}
-        </div>
+          </div>
+        )}
 
       </main>
     </div>

@@ -143,3 +143,36 @@ export async function generateContent(
     model: response.model,
   };
 }
+
+// ─── 健康检查 ────────────────────────────────────────────────
+
+export interface HealthCheckResult {
+  ok: boolean;
+  model?: string;
+  status: number;
+  content?: string;
+  error?: string;
+}
+
+export async function healthCheckAI(): Promise<HealthCheckResult> {
+  if (!API_KEY) {
+    return { ok: false, status: 0, error: "No API key configured" };
+  }
+  try {
+    const res = await fetch(`${BASE_URL}/models`, {
+      headers: { Authorization: `Bearer ${API_KEY}` },
+    });
+    if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+      return {
+        ok: true,
+        status: res.status,
+        model: data.model ?? MODEL,
+        content: JSON.stringify(data).slice(0, 100),
+      };
+    }
+    return { ok: false, status: res.status, error: `HTTP ${res.status}` };
+  } catch (err) {
+    return { ok: false, status: 0, error: String(err) };
+  }
+}
