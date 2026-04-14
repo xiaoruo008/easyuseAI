@@ -4,7 +4,9 @@ import { generateContent, isAIEnabled, healthCheckAI } from "@/lib/ai";
 import { generateImageFromOptions } from "@/lib/image";
 import type { GenerateResult } from "@/lib/ai";
 import type { ImageTaskOutput } from "@/lib/image";
-import { routeFromAction, getRetryPrompt } from "@/lib/types/fashion";
+import { routeFromAction, getRetryPrompt, WORKFLOW_TO_TEMPLATE_KEY_MAP, findRoute, PATTERN_PROMPTS } from "@/lib/types/fashion";
+import { deriveFashionFieldsFromDiagnosis } from "@/lib/diagnosis-workflow-map";
+import type { ResultType } from "@/lib/diagnosis";
 
 // ── 静态文案结果 ─────────────────────────────────
 const MOCK_TEXT_RESULTS: Record<string, { title: string; items: string[] }> = {
@@ -201,6 +203,7 @@ export async function POST(req: NextRequest) {
     businessType,
     painPoint,
     prompt,
+    style,
     aspectRatio,
     referenceImageUrl,
     // 结构化字段（可选）
@@ -209,6 +212,11 @@ export async function POST(req: NextRequest) {
     category,
     targetImage,
     referenceQuality,
+    workflowKey,
+    // 诊断上下文（用于 prompt 增强）
+    userBusinessType,
+    userPainPoint,
+    userPersona,
   } = body as {
     sessionId?: string;
     action: string;
@@ -225,6 +233,10 @@ export async function POST(req: NextRequest) {
     category?: string;
     targetImage?: string;
     referenceQuality?: string;
+    workflowKey?: string;
+    userBusinessType?: string;
+    userPainPoint?: string;
+    userPersona?: string;
   };
 
   const isImageAction = IMAGE_ACTIONS.has(action);
@@ -243,9 +255,29 @@ export async function POST(req: NextRequest) {
 
   // ── 图片生成 ─────────────────────────────────────
   if (isImageAction) {
-    // 解析模板路由
-    const cat = (category ?? "top") as string;
-    const route = routeFromAction(action, cat as Parameters<typeof routeFromAction>[1]);
+    // 推导时尚字段：当未明确提供时，从诊断结果类型推导
+    const derivedFields = deriveFashionFieldsFromDiagnosis(
+      (type ?? "unclear") as ResultType,
+      action
+    );
+    
+    // 解析模板路由（使用推导的或明确提供的字段）
+    const cat = (category ?? derivedFields.category) as string;
+    const resolvedMarket = market ?? derivedFields.market;
+    const resolvedGender = gender ?? derivedFields.gender;
+    const resolvedTargetImage = targetImage ?? derivedFields.targetImage;
+    
+    // 优先使用 workflowKey 翻译（Result API → Execute API）
+    let route = null;
+    if (workflowKey && WORKFLOW_TO_TEMPLATE_KEY_MAP[workflowKey]) {
+      const templateKey = WORKFLOW_TO_TEMPLATE_KEY_MAP[workflowKey];
+      route = findRoute(templateKey) ?? null;
+    }
+    
+    // 回退到 routeFromAction 逻辑
+    if (!route) {
+      route = routeFromAction(action, cat as Parameters<typeof routeFromAction>[1]);
+    }
 
     if (!route) {
       return NextResponse.json({ error: `未知 action: ${action}` }, { status: 400 });
@@ -253,6 +285,9 @@ export async function POST(req: NextRequest) {
 
     const templateId = route.templateId;
     const templateKey = route.key;
+
+    // 从 PATTERN_PROMPTS 获取图案指导（作为生成基础 prompt）
+    const basePatternPrompt = PATTERN_PROMPTS[templateKey] ?? null;
 
     // ① 建 Task
     const taskId = resolvedLeadId
@@ -262,10 +297,10 @@ export async function POST(req: NextRequest) {
           status: "doing",
           inputData: { action, templateId, userPrompt: prompt, referenceImageUrl, aspectRatio },
           outputData: null,
-          market: market ?? "domestic",
-          gender: gender ?? "unisex",
+          market: resolvedMarket,
+          gender: resolvedGender,
           category: cat,
-          targetImage: targetImage ?? "hero_branded",
+          targetImage: resolvedTargetImage,
           referenceQuality: referenceQuality ?? "medium",
           templateKey,
           promptVersion: 1,
@@ -274,11 +309,25 @@ export async function POST(req: NextRequest) {
         }).then((t) => (t as { id: string }).id)
       : null;
 
+    // 构建诊断上下文注入 prompt（增强 MiniMax 生成效果）
+    const ctxParts: string[] = [];
+    if (userPersona) ctxParts.push(`目标用户：${userPersona}`);
+    if (userPainPoint) ctxParts.push(`核心需求：${userPainPoint}`);
+    if (userBusinessType) ctxParts.push(`业务类型：${userBusinessType}`);
+    if (style) ctxParts.push(`风格：${style}`);
+    const diagnosisContext = ctxParts.length > 0 ? `${ctxParts.join("，")}。` : "";
+    const enrichedPrompt = `${diagnosisContext}${prompt ?? ""}`.trim();
+
+    // 构建最终 prompt：图案指导 + 诊断上下文 + 用户输入
+    const finalPrompt = basePatternPrompt
+      ? `${basePatternPrompt} ${enrichedPrompt}`.trim()
+      : enrichedPrompt;
+
     // ② 执行生成（带重试降级）
     const { output, errorMessage } = await generateImageWithRetry({
       templateId,
       originalImageUrl: referenceImageUrl,
-      userRefinement: prompt,
+      userRefinement: finalPrompt,
       aspectRatio,
       category: cat,
     });
