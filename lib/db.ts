@@ -83,9 +83,7 @@ export async function createLead(data: {
     data: {
       name: data.name,
       contact: data.contact,
-      company: data.company ?? null,
       businessType: data.businessType ?? null,
-      serviceType: data.serviceType ?? null,
       note: data.note ?? null,
       status: "NEW",
       diagnosisSessionId: data.diagnosisSessionId ?? null,
@@ -184,18 +182,20 @@ export async function createTask(data: {
       taskType: data.taskType,
       status: data.status === "done" ? "DONE" : data.status === "doing" ? "DOING" : data.status === "failed" ? "FAILED" : "NEW",
       deliveryStatus: (data.deliveryStatus?.toUpperCase().replace(" ", "_") as "GENERATED" | "SENT" | "CONFIRMED" | "REDO") ?? "GENERATED",
-      inputData: data.inputData as unknown as undefined,
+      inputData: {
+        ...data.inputData,
+        // 服装视觉扩展字段存入 inputData（Prisma Task schema 只有这些核心字段）
+        market: data.market,
+        gender: data.gender,
+        category: data.category,
+        targetImage: data.targetImage,
+        referenceQuality: data.referenceQuality,
+        templateKey: data.templateKey,
+        promptVersion: data.promptVersion ?? 1,
+        moderationRiskLevel: data.moderationRiskLevel,
+        retryStrategy: data.retryStrategy,
+      } as unknown as undefined,
       outputData: data.outputData as unknown as undefined,
-      // 新增字段
-      market: data.market,
-      gender: data.gender,
-      category: data.category,
-      targetImage: data.targetImage,
-      referenceQuality: data.referenceQuality,
-      templateKey: data.templateKey,
-      promptVersion: data.promptVersion ?? 1,
-      moderationRiskLevel: data.moderationRiskLevel,
-      retryStrategy: data.retryStrategy,
     },
   });
 }
