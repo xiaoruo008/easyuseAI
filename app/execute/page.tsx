@@ -14,7 +14,7 @@ interface ResultData {
 type TextResult = { title: string; items: string[] };
 type ImageResult = { imageUrl: string; thumbnailUrl?: string; provider: string; model: string; source: string };
 
-const IMAGE_ACTIONS = new Set(["product_photo", "model_photo", "background_swap"]);
+const IMAGE_ACTIONS = new Set(["product_photo", "model_photo", "background_swap", "lifestyle", "fashion_model", "fashion_lifestyle"]);
 
 const STYLE_OPTIONS = [
   { value: "commercial", label: "商业" },
@@ -33,6 +33,7 @@ function ExecuteContent() {
   const router = useRouter();
   const sessionId = params.get("session") ?? "";
   const actionId = params.get("action") ?? "";
+  const workflowKey = params.get("workflowKey") ?? "";
   const [data, setData] = useState<ResultData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -61,11 +62,14 @@ function ExecuteContent() {
       setLoading(false);
       return;
     }
-    fetch(`/api/diagnosis/session/${sessionId}/result`)
+    const resultUrl = actionId
+      ? `/api/diagnosis/session/${sessionId}/result?action=${encodeURIComponent(actionId)}`
+      : `/api/diagnosis/session/${sessionId}/result`;
+    fetch(resultUrl)
       .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
       .then((d) => { setData(d); setLoading(false); })
       .catch(() => { setError("加载失败"); setLoading(false); });
-  }, [sessionId]);
+  }, [sessionId, actionId]);
 
   if (loading) {
     return (
@@ -105,6 +109,9 @@ function ExecuteContent() {
         action: actionId,
         type: diagnosisResult.type,
         sessionId,
+        userPainPoint: diagnosisResult.painPoint,
+        userPersona: diagnosisResult.persona,
+        workflowKey,
       };
       if (isImageTask) {
         body.prompt = prompt || undefined;

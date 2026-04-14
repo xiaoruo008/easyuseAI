@@ -21,6 +21,12 @@ const TYPE_PROMPT_PREFIX: Record<string, string> = {
     "Professional product placement in an elegant scene, photorealistic rendering, seamless integration,",
 };
 
+const STYLE_GUIDANCE: Record<string, string> = {
+  luxury: "Luxury boutique aesthetic, editorial high-fashion quality, sophisticated refined mood, premium color grading, polished presentation.",
+  minimal: "Minimalist clean aesthetic, simple and elegant composition, generous white space, understated sophistication.",
+  commercial: "Commercial e-commerce standard, retail-ready quality, clean professional presentation, high conversion aesthetic.",
+};
+
 interface MiniMaxResponse {
   id: string;
   data: {
@@ -47,7 +53,9 @@ export class MiniMaxImageProvider implements ImageProvider {
 
     const aspectRatio = ASPECT_MAP[input.aspectRatio ?? "1:1"] ?? "1:1";
     const prefix = TYPE_PROMPT_PREFIX[input.type] ?? TYPE_PROMPT_PREFIX.product_photo;
-    const fullPrompt = `${prefix} ${input.prompt}`.slice(0, 1500);
+    const styleGuidance = input.style ? (STYLE_GUIDANCE[input.style] ?? "") : "";
+    const stylePrefix = styleGuidance ? `${styleGuidance} ` : "";
+    const fullPrompt = `${stylePrefix}${prefix} ${input.prompt}`.slice(0, 1500);
 
     const body: Record<string, unknown> = {
       model: MODEL,

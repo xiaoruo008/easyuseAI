@@ -1,5 +1,5 @@
 # METRICS
-
+[DEPRECATED - 已整合到 docs/SYSTEM_PROGRESS.md]
 更新时间：2026-04-13 19:42 UTC+8
 
 | 指标 | 当前值 | 备注 |

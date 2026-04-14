@@ -4246,3 +4246,593 @@ EasyUseAI 组合拳：
 *新增内容：季节性营销文案、垂直品类专项（汉服/旗袍/新中式）、场景化运营内容、私域运营文案、差异化卖点深度解析、组合营销策略、信任背书内容*
 *生成状态：已完成*
 
+
+---
+
+# QWEN LOG
+
+更新时间：2026-04-14 13:48 UTC+8
+
+---
+
+## 任务4：图案生成 Prompt 模板（覆盖全部18种有效工作流）
+
+> 来源：lib/types/fashion.ts → FASHION_TEMPLATE_ROUTES
+> 说明：任务描述12种工作流，实际有效路由共18条（5品类 × 各品类支持图片类型），本输出覆盖全部18条。
+
+---
+
+### 图案生成 Prompt 模板总览
+
+| workflowKey | market | gender | category | targetImage | 路由说明 |
+|------------|--------|--------|----------|-------------|---------|
+| suit_set_main_white | domestic | menswear | suit_set | main_white | 套装白底主图 |
+| suit_set_hero_branded | domestic | menswear | suit_set | hero_branded | 套装品牌图 |
+| suit_set_model | domestic | menswear | suit_set | model | 套装模特图 |
+| suit_set_lifestyle | domestic | menswear | suit_set | lifestyle | 套装场景图 |
+| top_main_white | domestic | unisex | top | main_white | 上装白底主图 |
+| top_hero_branded | domestic | unisex | top | hero_branded | 上装品牌图 |
+| top_model | domestic | unisex | top | model | 上装模特图 |
+| top_lifestyle | domestic | unisex | top | lifestyle | 上装场景图 |
+| dress_main_white | domestic | womenswear | dress | main_white | 连衣裙白底主图 |
+| dress_hero_branded | domestic | womenswear | dress | hero_branded | 连衣裙品牌图 |
+| dress_model | domestic | womenswear | dress | model | 连衣裙模特图 |
+| dress_lifestyle | domestic | womenswear | dress | lifestyle | 连衣裙场景图 |
+| pants_main_white | domestic | unisex | pants | main_white | 裤装白底主图 |
+| pants_hero_branded | domestic | unisex | pants | hero_branded | 裤装品牌图 |
+| pants_model | domestic | unisex | pants | model | 裤装模特图 |
+| pants_lifestyle | domestic | unisex | pants | lifestyle | 裤装场景图 |
+| lingerie_main_white | domestic | womenswear | lingerie | main_white | 内衣白底主图 |
+| lingerie_hero_branded | domestic | womenswear | lingerie | hero_branded | 内衣品牌图 |
+
+> cross_border 市场模板与 domestic 结构相同，只需将 market 字段改为 cross_border，视觉风格向国际化倾斜（见各模板说明）。
+
+
+### 图案生成 Prompt 模板详情
+
+---
+
+#### 1. suit_set_main_white（套装·白底主图）
+
+```json
+{
+  "workflowKey": "suit_set_main_white",
+  "market": "domestic",
+  "gender": "menswear",
+  "category": "suit_set",
+  "targetImage": "main_white",
+  "patternPrompt": {
+    "visualStyle": "高端简约 · 专业干净",
+    "composition": "全身正白底主图，套装平铺或挂拍，主体居中，背景纯白",
+    "mood": "自信 · 干练 · 正式",
+    "keywords": [
+      "白底主图", "纯白背景", "专业干净", "西装套装", "正装",
+      "平面拍摄", "高质感商品图", "均匀光线", "细节清晰"
+    ],
+    "negativeKeywords": [
+      "杂乱背景", "褶皱", "色差", "模糊", "阴影不均", "logo过多"
+    ]
+  },
+  "examplePrompt": "Full-body flat lay of a tailored 2-piece business suit set on a pure white background, pristine white studio backdrop, professional and clean product photography, sharp tailoring details visible, natural fabric drape, high-end commercial quality, minimal shadows, even diffused lighting, front-facing centered composition, e-commerce standard."
+}
+```
+
+**cross_border 变体**：prompt 中增加 "international fashion standard", "modern refined tailoring", "global brand aesthetic"。
+
+---
+
+#### 2. suit_set_hero_branded（套装·品牌图）
+
+```json
+{
+  "workflowKey": "suit_set_hero_branded",
+  "market": "domestic",
+  "gender": "menswear",
+  "category": "suit_set",
+  "targetImage": "hero_branded",
+  "patternPrompt": {
+    "visualStyle": "品牌感精修 · 光影质感",
+    "composition": "全身或半身精修品牌展示，专业棚拍，模特姿态自信",
+    "mood": "高端 · 精致 · 商务精英",
+    "keywords": [
+      "精修品牌图", "光影质感", "西装套装", "高级感", "棚拍",
+      "专业模特", "商务精英", "品牌调性", "高光与阴影"
+    ],
+    "negativeKeywords": [
+      "杂乱背景", "褶皱", "色差", "模糊", "低质量", "业余感"
+    ]
+  },
+  "examplePrompt": "Professional brand photograph of a premium business suit set featuring a well-groomed male model in an elegant standing pose, soft studio lighting with subtle rim light and defined shadows, high-end fashion aesthetic, tailored fit showcasing construction details, luxury brand quality, polished and refined presentation, confident executive energy, warm sophisticated color grading."
+}
+```
+
+**cross_border 变体**：增加 "GQ editorial style", "international elite aesthetic", "premium global brand".
+
+---
+
+#### 3. suit_set_model（套装·模特图）
+
+```json
+{
+  "workflowKey": "suit_set_model",
+  "market": "domestic",
+  "gender": "menswear",
+  "category": "suit_set",
+  "targetImage": "model",
+  "patternPrompt": {
+    "visualStyle": "时尚高级感 · 都市精英",
+    "composition": "全身模特图，自然背景或简洁棚拍，模特自信站姿",
+    "mood": "自信 · 都市感 · 现代",
+    "keywords": [
+      "模特图", "都市感", "高级时尚", "西装套装", "商业摄影",
+      "自信姿态", "现代感", "高质量"
+    ],
+    "negativeKeywords": [
+      "杂乱背景", "褶皱", "色差", "模糊", "业余拍摄"
+    ]
+  },
+  "examplePrompt": "Professional full-body fashion photograph of a male model wearing a tailored suit in an urban setting, modern city backdrop or clean studio background, confident sophisticated energy, natural relaxed posture with slight stance, high-end fashion editorial quality, sharp polished aesthetic, bright natural lighting, commercial fashion standard, authentic executive presence."
+}
+```
+
+**cross_border 变体**：增加 "fashion editorial", "international lookbook", "global menswear trend".
+
+---
+
+#### 4. suit_set_lifestyle（套装·场景图）
+
+```json
+{
+  "workflowKey": "suit_set_lifestyle",
+  "market": "domestic",
+  "gender": "menswear",
+  "category": "suit_set",
+  "targetImage": "lifestyle",
+  "patternPrompt": {
+    "visualStyle": "自然场景化 · 都市品质",
+    "composition": "全身场景图，自然都市背景，咖啡馆/写字楼/街头氛围",
+    "mood": "自然 · 品质 · 都市精英",
+    "keywords": [
+      "场景图", "生活方式", "自然光", "都市背景", "品质感",
+      "街头氛围", "休闲商务", "真实感", "氛围感"
+    ],
+    "negativeKeywords": [
+      "杂场景", "构图失衡", "模糊", "色差", "过度合成"
+    ]
+  },
+  "examplePrompt": "Lifestyle photograph of a professional male model wearing a smart casual suit in a natural urban setting like a stylish cafe terrace or city street, soft natural daylight, relaxed yet sophisticated atmosphere, modern cityscape background, authentic aspirational mood, warm inviting color palette, shallow depth of field with pleasing bokeh, high production value, premium lifestyle brand aesthetic."
+}
+```
+
+**cross_border 变体**：增加 "global city vibe", "international business traveler", "premium lifestyle".
+
+---
+
+#### 5. top_main_white（上装·白底主图）
+
+```json
+{
+  "workflowKey": "top_main_white",
+  "market": "domestic",
+  "gender": "unisex",
+  "category": "top",
+  "targetImage": "main_white",
+  "patternPrompt": {
+    "visualStyle": "简洁干净 · 清新百搭",
+    "composition": "白底主图，平铺或挂拍，主体居中，纯白背景",
+    "mood": "清新 · 简约 · 百搭",
+    "keywords": [
+      "白底主图", "纯色背景", "简洁", "清新", "上装",
+      "平铺", "挂拍", "高质感", "均匀光线"
+    ],
+    "negativeKeywords": [
+      "杂乱背景", "褶皱", "色差", "模糊", "阴影不均"
+    ]
+  },
+  "examplePrompt": "Clean white background product photograph of a stylish casual top garment, crisp white studio backdrop, front-facing flat lay or hung shot, even natural lighting, crisp fabric texture, minimal shadows, commercial e-commerce quality, fresh and clean aesthetic, centered composition, detailed neckline and sleeve texture visible."
+}
+```
+
+**cross_border 变体**：增加 "minimalist design", "neutral tones", "global basic aesthetic".
+
+---
+
+#### 6. top_hero_branded（上装·品牌图）
+
+```json
+{
+  "workflowKey": "top_hero_branded",
+  "market": "domestic",
+  "gender": "unisex",
+  "category": "top",
+  "targetImage": "hero_branded",
+  "patternPrompt": {
+    "visualStyle": "品牌质感精修 · 亲和时尚",
+    "composition": "半身或全身精修品牌展示，专业棚拍，模特自然姿态",
+    "mood": "品质 · 亲和 · 时尚",
+    "keywords": [
+      "精修品牌图", "光影质感", "上装", "高级感", "棚拍",
+      "亲和", "时尚", "品牌调性"
+    ],
+    "negativeKeywords": [
+      "杂乱背景", "褶皱", "色差", "模糊", "低质量"
+    ]
+  },
+  "examplePrompt": "Polished brand photograph of a model wearing a stylish casual top, half or full-body composition in soft directional studio lighting with subtle rim light, premium fashion aesthetic, relaxed approachable energy, high-end commercial quality, clean sophisticated composition, warm inviting color grading, natural skin tone lighting, aspirational yet accessible mood."
+}
+```
+
+**cross_border 变体**：增加 "modern streetwear aesthetic", "global fashion brand", "contemporary casual style".
+
+
+#### 7. top_model（上装·模特图）
+
+```json
+{
+  "workflowKey": "top_model",
+  "market": "domestic",
+  "gender": "unisex",
+  "category": "top",
+  "targetImage": "model",
+  "patternPrompt": {
+    "visualStyle": "时尚自然 · 亲和日常",
+    "composition": "半身模特图，自然背景，模特轻松姿态",
+    "mood": "自信 · 亲和 · 日常时尚",
+    "keywords": [
+      "模特图", "自然", "时尚", "上装", "半身照",
+      "商业摄影", "亲和", "日常感"
+    ],
+    "negativeKeywords": [
+      "杂乱背景", "褶皱", "色差", "模糊", "低质量"
+    ]
+  },
+  "examplePrompt": "Natural fashion photograph of a model wearing a casual top, half-body composition with soft natural background, fresh approachable energy, relaxed pose with slight smile, good skin lighting, commercial fashion quality, bright clean color grading, authentic lifestyle feel, natural expression, everyday fashion mood."
+}
+```
+
+**cross_border 变体**：增加 "international lifestyle", "effortless style", "global street fashion".
+
+---
+
+#### 8. top_lifestyle（上装·场景图）
+
+```json
+{
+  "workflowKey": "top_lifestyle",
+  "market": "domestic",
+  "gender": "unisex",
+  "category": "top",
+  "targetImage": "lifestyle",
+  "patternPrompt": {
+    "visualStyle": "自然生活化 · 轻松品质",
+    "composition": "场景生活照，咖啡馆/家居/户外背景，自然光",
+    "mood": "轻松 · 品质 · 自然",
+    "keywords": [
+      "场景图", "生活方式", "自然光", "咖啡馆", "家居",
+      "户外", "上装", "轻松氛围", "真实感"
+    ],
+    "negativeKeywords": [
+      "杂场景", "构图失衡", "模糊", "色差", "过度修图"
+    ]
+  },
+  "examplePrompt": "Lifestyle photograph of a model wearing a stylish top in a natural setting like a cafe terrace or home environment, soft natural daylight, relaxed aspirational atmosphere, authentic everyday moment, warm color palette, shallow depth of field with pleasing bokeh, high production value, casual elegant mood, lifestyle brand aesthetic."
+}
+```
+
+**cross_border 变体**：增加 "global cafe culture", "international lifestyle", "contemporary living space".
+
+---
+
+#### 9. dress_main_white（连衣裙·白底主图）
+
+```json
+{
+  "workflowKey": "dress_main_white",
+  "market": "domestic",
+  "gender": "womenswear",
+  "category": "dress",
+  "targetImage": "main_white",
+  "patternPrompt": {
+    "visualStyle": "优雅极简 · 精致干净",
+    "composition": "白底主图，连衣裙专用平铺或挂拍，主体居中，纯白背景",
+    "mood": "优雅 · 精致 · 柔美",
+    "keywords": [
+      "白底主图", "纯白背景", "优雅", "精致", "连衣裙",
+      "裙装", "平铺", "高质感", "细节清晰"
+    ],
+    "negativeKeywords": [
+      "杂乱背景", "褶皱", "色差", "模糊", "阴影不均"
+    ]
+  },
+  "examplePrompt": "Pristine white background product photograph of an elegant dress, front-facing full-length or three-quarter composition, even diffused studio lighting, smooth fabric drape, refined details and texture visible, commercial e-commerce quality, soft sophisticated aesthetic, centered composition, delicate hemline and neckline details clear."
+}
+```
+
+**cross_border 变体**：增加 "couture quality", "international bridal aesthetic", "luxury evening wear standard".
+
+---
+
+#### 10. dress_hero_branded（连衣裙·品牌图）
+
+```json
+{
+  "workflowKey": "dress_hero_branded",
+  "market": "domestic",
+  "gender": "womenswear",
+  "category": "dress",
+  "targetImage": "hero_branded",
+  "patternPrompt": {
+    "visualStyle": "品牌精致感 · 柔美光影",
+    "composition": "全身精修品牌图，专业棚拍，模特优雅站姿",
+    "mood": "高端 · 女人味 · 精致",
+    "keywords": [
+      "精修品牌图", "光影质感", "连衣裙", "高级感", "棚拍",
+      "优雅", "女人味", "品牌调性"
+    ],
+    "negativeKeywords": [
+      "杂乱背景", "褶皱", "色差", "模糊", "低质量"
+    ]
+  },
+  "examplePrompt": "Elegant brand photograph of a beautiful woman wearing a flowing midi dress, full-body composition in soft studio lighting with subtle shadows, high-end fashion aesthetic, feminine sophisticated energy, luxurious fabric movement visible, polished refined presentation, warm skin-tone lighting, elegant standing pose, premium brand quality."
+}
+```
+
+**cross_border 变体**：增加 "Vogue editorial", "international fashion week", "luxury global brand aesthetic".
+
+---
+
+#### 11. dress_model（连衣裙·模特图）
+
+```json
+{
+  "workflowKey": "dress_model",
+  "market": "domestic",
+  "gender": "womenswear",
+  "category": "dress",
+  "targetImage": "model",
+  "patternPrompt": {
+    "visualStyle": "时尚杂志感 · 柔美自信",
+    "composition": "全身模特图，简洁背景或自然虚化，模特自信姿态",
+    "mood": "自信 · 优雅 · 柔美",
+    "keywords": [
+      "模特图", "时尚", "优雅", "连衣裙", "全身照",
+      "商业摄影", "女人味", "高质量"
+    ],
+    "negativeKeywords": [
+      "杂乱背景", "褶皱", "色差", "模糊", "低质量"
+    ]
+  },
+  "examplePrompt": "Fashion editorial photograph of a female model wearing an elegant dress, full-body natural pose in bright clean setting or soft bokeh background, confident graceful energy, good skin lighting with natural expression, commercial fashion quality, polished refined aesthetic, warm feminine color grading, stylish summer afternoon mood."
+}
+```
+
+**cross_border 变体**：增加 "fashion magazine editorial", "international model aesthetic", "Haute couture feel".
+
+---
+
+#### 12. dress_lifestyle（连衣裙·场景图）
+
+```json
+{
+  "workflowKey": "dress_lifestyle",
+  "market": "domestic",
+  "gender": "womenswear",
+  "category": "dress",
+  "targetImage": "lifestyle",
+  "patternPrompt": {
+    "visualStyle": "浪漫场景化 · 温柔氛围",
+    "composition": "全身场景图，浪漫户外/咖啡馆/花园背景，自然光",
+    "mood": "浪漫 · 温柔 · 美好",
+    "keywords": [
+      "场景图", "生活方式", "自然光", "浪漫", "温柔",
+      "连衣裙", "女性", "咖啡馆", "花园", "氛围感"
+    ],
+    "negativeKeywords": [
+      "杂场景", "构图失衡", "模糊", "色差", "过度修图"
+    ]
+  },
+  "examplePrompt": "Romantic lifestyle photograph of a female model wearing an elegant dress in a beautiful outdoor garden or stylish cafe setting, soft natural daylight with warm tones, dreamy feminine atmosphere, authentic aspirational moment, gentle color palette with soft bokeh, high production value, whimsical romantic mood, feminine summer aesthetic."
+}
+```
+
+**cross_border 变体**：增加 "European romantic getaway", "international travel lifestyle", "luxury resort aesthetic".
+
+
+#### 13. pants_main_white（裤装·白底主图）
+
+```json
+{
+  "workflowKey": "pants_main_white",
+  "market": "domestic",
+  "gender": "unisex",
+  "category": "pants",
+  "targetImage": "main_white",
+  "patternPrompt": {
+    "visualStyle": "简洁专业 · 干练利落",
+    "composition": "白底主图，裤装专用平铺，前视图，主体居中",
+    "mood": "干练 · 品质 · 专业",
+    "keywords": [
+      "白底主图", "纯白背景", "简洁", "干练", "裤装",
+      "平铺", "高质感", "轮廓清晰"
+    ],
+    "negativeKeywords": [
+      "杂乱背景", "褶皱", "色差", "模糊", "阴影不均"
+    ]
+  },
+  "examplePrompt": "Clean white background product photograph of a pair of stylish tailored pants, front-facing flat lay with even lighting, crisp fabric texture, well-defined silhouette and tailoring details visible, commercial e-commerce quality, minimal shadows, professional and clean aesthetic, centered composition, waistband and stitching details clear."
+}
+```
+
+**cross_border 变体**：增加 "designer trouser quality", "minimalist luxury aesthetic", "international denim or tailored brand standard".
+
+---
+
+#### 14. pants_hero_branded（裤装·品牌图）
+
+```json
+{
+  "workflowKey": "pants_hero_branded",
+  "market": "domestic",
+  "gender": "unisex",
+  "category": "pants",
+  "targetImage": "hero_branded",
+  "patternPrompt": {
+    "visualStyle": "品牌精修质感 · 都市干练",
+    "composition": "全身精修品牌展示，专业棚拍，模特自信姿态",
+    "mood": "干练 · 都市感 · 现代",
+    "keywords": [
+      "精修品牌图", "光影质感", "裤装", "高级感", "棚拍",
+      "都市感", "干练", "品牌调性"
+    ],
+    "negativeKeywords": [
+      "杂乱背景", "褶皱", "色差", "模糊", "低质量"
+    ]
+  },
+  "examplePrompt": "Polished brand photograph of a model wearing tailored wide-leg pants, full-body composition in professional studio lighting, sharp sophisticated aesthetic, urban modern energy, high-end commercial quality, clean structured presentation, confident polished look, warm neutral color grading, premium fashion brand mood."
+}
+```
+
+**cross_border 变体**：增加 "global fashion capital", "international designer aesthetic", "fashion week street style".
+
+---
+
+#### 15. pants_model（裤装·模特图）
+
+```json
+{
+  "workflowKey": "pants_model",
+  "market": "domestic",
+  "gender": "unisex",
+  "category": "pants",
+  "targetImage": "model",
+  "patternPrompt": {
+    "visualStyle": "时尚自然 · 都市日常",
+    "composition": "半身或全身模特图，简洁背景，模特自然姿态",
+    "mood": "自信 · 亲和 · 都市感",
+    "keywords": [
+      "模特图", "自然", "时尚", "裤装", "半身照",
+      "商业摄影", "都市感", "日常时尚"
+    ],
+    "negativeKeywords": [
+      "杂乱背景", "褶皱", "色差", "模糊", "低质量"
+    ]
+  },
+  "examplePrompt": "Natural fashion photograph of a model wearing stylish pants, half or full-body composition with clean background, relaxed confident energy, natural pose and expression, good lighting, commercial fashion quality, bright clean color grading, authentic urban style mood, everyday sophistication."
+}
+```
+
+**cross_border 变体**：增加 "global street fashion", "international casual style", "effortless everyday luxury".
+
+---
+
+#### 16. pants_lifestyle（裤装·场景图）
+
+```json
+{
+  "workflowKey": "pants_lifestyle",
+  "market": "domestic",
+  "gender": "unisex",
+  "category": "pants",
+  "targetImage": "lifestyle",
+  "patternPrompt": {
+    "visualStyle": "自然都市生活 · 轻松品质",
+    "composition": "场景生活照，城市街头/咖啡馆/家居背景，自然光",
+    "mood": "轻松 · 都市感 · 品质",
+    "keywords": [
+      "场景图", "生活方式", "自然光", "都市", "轻松",
+      "裤装", "咖啡馆", "街头", "真实感"
+    ],
+    "negativeKeywords": [
+      "杂场景", "构图失衡", "模糊", "色差", "过度修图"
+    ]
+  },
+  "examplePrompt": "Lifestyle photograph of a model wearing casual chic pants in an urban setting like a stylish city street or cozy cafe, soft natural daylight, relaxed aspirational atmosphere, authentic everyday moment, warm color palette, shallow depth of field with pleasing bokeh, high production value, modern urban lifestyle mood, sophisticated casual aesthetic."
+}
+```
+
+**cross_border 变体**：增加 "global city explorer", "international travel lifestyle", "contemporary urbanite".
+
+---
+
+#### 17. lingerie_main_white（内衣·白底主图）
+
+```json
+{
+  "workflowKey": "lingerie_main_white",
+  "market": "domestic",
+  "gender": "womenswear",
+  "category": "lingerie",
+  "targetImage": "main_white",
+  "patternPrompt": {
+    "visualStyle": "精致轻奢 · 优雅克制",
+    "composition": "白底主图，平面展示（平铺/假模/衣架），纯白背景，安全呈现",
+    "mood": "精致 · 优雅 · 安全",
+    "keywords": [
+      "白底主图", "纯白背景", "精致", "优雅", "安全",
+      "内衣", "平面展示", "高质感", "细节清晰"
+    ],
+    "negativeKeywords": [
+      "暴露", "透视", "过于性感", "杂乱背景", "褶皱", "色差", "模糊"
+    ]
+  },
+  "examplePrompt": "Elegant white background product photograph of a delicate lace lingerie set, tasteful flat lay or mannequin form presentation, soft diffused studio lighting, fine fabric texture and delicate details visible, high-end intimate apparel quality, modest sophisticated aesthetic, commercial e-commerce safe presentation, no visible body, clean and refined mood."
+}
+```
+
+**cross_border 变体**：增加 "French intimate apparel", "luxury lingerie'shop aesthetic", "premium global intimates brand standard".
+
+---
+
+#### 18. lingerie_hero_branded（内衣·品牌图）
+
+```json
+{
+  "workflowKey": "lingerie_hero_branded",
+  "market": "domestic",
+  "gender": "womenswear",
+  "category": "lingerie",
+  "targetImage": "hero_branded",
+  "patternPrompt": {
+    "visualStyle": "高端品牌精修 · 精致克制",
+    "composition": "全身产品精修展示（不出模特），精致光影，优雅呈现",
+    "mood": "高端 · 精致 · 克制",
+    "keywords": [
+      "精修品牌图", "光影质感", "内衣", "高级感", "棚拍",
+      "高端", "精致", "品牌调性", "不出模特"
+    ],
+    "negativeKeywords": [
+      "暴露", "透视", "过于性感", "杂乱背景", "褶皱", "色差", "模糊", "低质量"
+    ]
+  },
+  "examplePrompt": "Elegant brand photograph of a luxurious lingerie set, full product shot on a polished form or styled flat lay with exquisite lighting to highlight fabric texture and delicate lace details, high-end intimate apparel aesthetic, sophisticated refined mood, soft shadows and premium color grading, no model in frame, polished tasteful presentation, luxury boutique quality."
+}
+```
+
+**cross_border 变体**：增加 "Victoria's Secret luxury line", "La Perla aesthetic", "international luxury intimates brand".
+
+---
+
+### 总结：图案 Prompt 策略矩阵
+
+| 维度 | main_white | hero_branded | model | lifestyle |
+|------|-----------|-------------|-------|-----------|
+| **suit_set** | 高端简约·专业干净 | 品牌感精修·光影 | 时尚高级·都市精英 | 自然场景·都市品质 |
+| **top** | 简洁干净·清新百搭 | 品牌质感·亲和时尚 | 时尚自然·日常感 | 自然生活·轻松品质 |
+| **dress** | 优雅极简·精致干净 | 品牌精致·柔美光影 | 时尚杂志·柔美自信 | 浪漫场景·温柔氛围 |
+| **pants** | 简洁专业·干练利落 | 品牌精修·都市干练 | 时尚自然·都市感 | 自然都市·轻松品质 |
+| **lingerie** | 精致轻奢·优雅克制 | 高端精修·精致克制 | — | — |
+
+### cross_border 市场适配建议
+
+cross_border 市场模板在 domestic 基础上做以下方向调整：
+
+- **视觉风格**：向国际化审美倾斜，强调 "global brand aesthetic"、"international fashion standard"
+- **构图**：参考国际电商平台（Net-a-Porter、SSENSE、Farfetch）风格
+- **关键词**：增加英文时尚术语（minimalist、luxury、editorial、haute couture）
+- **情绪方向**：更强调 empowerment、confidence、sophistication
+- **Negative Keywords**：可增加 "local Chinese market look"、"domestic aesthetic"
+
+---
+
+**任务4完成** ✅ — 共生成 18 套完整图案生成 Prompt 模板，覆盖 FASHION_TEMPLATE_ROUTES 全部 18 条有效工作流。
+

@@ -1,19 +1,19 @@
 {
-  "round": 285,
-  "stable_count": 44,
-  "last_check": "2026-04-14T12:36:00Z",
+  "round": 307,
+  "stable_count": 5,
+  "last_check": "2026-04-15T03:12:00Z",
   "last_result": "pass",
   "checks": {
-    "http": "200 - localhost:3000",
-    "console": "pass",
-    "flow": "pass (5/5)",
-    "mobile": "pass (3/3)",
-    "errors": "none found"
+    "http": "200 OK (localhost:3005)",
+    "console": "pass — no errors, no failed requests",
+    "flow": "pass — 5/5 steps pass",
+    "mobile": "pass — 3/3 pages load correctly",
+    "errors": null
   },
-  "consecutive_stable": 44,
+  "consecutive_stable": 4,
   "notes": {
-    "tts": "script ready at public/welcome-voice-script.txt, TTS API not integrated",
-    "health": "HTTP 200, no errors, flow 5/5, mobile 3/3",
-    "stability_note": "网站基本稳定 - 连续44次通过"
+    "health": "All checks passed",
+    "failure_stage": null,
+    "dev_server_note": "Server runs on port 3005 (not 3000 as in instructions)"
   }
 }

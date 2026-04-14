@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession, updateSession } from "@/lib/db";
-import { calculateResult } from "@/lib/diagnosis";
+import { calculateResult, DIAGNOSIS_QUESTIONS } from "@/lib/diagnosis";
 import type { AnswerValue } from "@/lib/diagnosis";
-import { extractFields, resolveWorkflow } from "@/lib/workflow";
+import { resolveWorkflow } from "@/lib/workflow";
+import { deriveFashionFieldsFromDiagnosis } from "@/lib/diagnosis-workflow-map";
+import { chat, isAIEnabled } from "@/lib/ai";
 
 export async function GET(
   _req: NextRequest,
@@ -10,6 +12,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
+    const action = new URL(_req.url).searchParams.get("action") ?? "";
 
     const session = await getSession(id);
     if (!session) {
@@ -25,15 +28,67 @@ export async function GET(
       confidence: result.confidence,
     });
 
-    // session.contact 已添加到 MockDiagnosisSession（可能为 null）
-    const fields = extractFields(answers, session.contact ?? undefined);
+    // 从诊断结果类型推导时尚字段（action 由客户端后续步骤提供）
+    const derived = deriveFashionFieldsFromDiagnosis(result.type, action);
+    const fields = { ...derived, contact: "" };
     const workflow = resolveWorkflow(fields);
+
+    // ─── LLM 用户画像生成（Task3）───────────────────────────────
+    let aiPersona: string | null = null;
+    if (isAIEnabled()) {
+      try {
+        // 构建用户画像 Prompt
+        const diagnosisText = DIAGNOSIS_QUESTIONS.map((q) => {
+          const ans = answers[q.id] ?? "未作答";
+          const opt = q.options.find((o) => o.value === ans);
+          return `Q${q.id}: ${q.text}\nA${q.id}: ${opt?.label ?? ans}`;
+        }).join("\n");
+
+        const personaPrompt = [
+          {
+            role: "system" as const,
+            content: `你是一个专业的商业咨询师。根据用户的诊断答案，生成一句精准的用户画像描述。
+
+规则：
+1. 画像必须基于用户的真实回答，不能编造
+2. 一句话说明用户的核心痛点和特征
+3. 格式：「用户类型 + 痛点描述 + 期望」
+4. 语言简洁专业，适合直接展示给用户
+5. 不要解释，直接输出画像句子
+
+示例：
+"内容引流效率低、有产品但缺流量的电商商家，期望找到高效的内容生产方式"
+"客服响应慢、重复问题多的客服瓶颈商家，期望自动化处理提升效率"
+"数据整理繁琐、渴望自动化提效的效率型商家，期望用工具替代重复劳动"`,
+          },
+          {
+            role: "user" as const,
+            content: `用户诊断答案如下：\n${diagnosisText}\n\n请根据以上答案，生成一句精准的用户画像描述。`,
+          },
+        ];
+
+        const personaResponse = await chat(personaPrompt);
+        aiPersona = personaResponse.content.trim();
+      } catch (aiErr) {
+        // AI 生成失败时降级使用规则结果，不阻塞主流程
+        console.warn("[/api/diagnosis/session/[id]/result] AI persona generation failed:", aiErr);
+        aiPersona = null;
+      }
+    }
+
+    // 优先使用 LLM 生成的画像，否则使用规则结果
+    const finalPersona = aiPersona ?? result.persona;
 
     return NextResponse.json({
       session: updated,
-      result,
+      result: {
+        ...result,
+        persona: finalPersona,
+      },
       fields,
       workflow,
+      // 额外返回 AI 生成的用户画像（供前端展示）
+      aiPersona: aiPersona ?? null,
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "未知错误";

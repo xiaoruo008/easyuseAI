@@ -117,8 +117,9 @@ async function generateImageWithRetry(opts: {
   userRefinement?: string;
   aspectRatio?: string;
   category?: string;
+  style?: "minimal" | "luxury" | "commercial";
 }): Promise<{ output: ImageTaskOutput; errorMessage: string | null }> {
-  const { templateId, originalImageUrl, userRefinement, aspectRatio } = opts;
+  const { templateId, originalImageUrl, userRefinement, aspectRatio, style } = opts;
 
   // 第1次：正常生成
   try {
@@ -128,6 +129,7 @@ async function generateImageWithRetry(opts: {
       originalImageUrl,
       userRefinement,
       aspectRatio: (aspectRatio as "1:1" | "3:4" | "16:9") ?? "1:1",
+      style,
     });
     return { output, errorMessage: null };
   } catch (err) {
@@ -143,6 +145,7 @@ async function generateImageWithRetry(opts: {
       originalImageUrl,
       userRefinement: safeRefinement + (userRefinement ? ` ${userRefinement}` : ""),
       aspectRatio: (aspectRatio as "1:1" | "3:4" | "16:9") ?? "1:1",
+      style,
     });
     return { output, errorMessage: "prompt_v2" };
   } catch (err) {
@@ -295,7 +298,7 @@ export async function POST(req: NextRequest) {
           leadId: resolvedLeadId,
           taskType,
           status: "doing",
-          inputData: { action, templateId, userPrompt: prompt, referenceImageUrl, aspectRatio },
+          inputData: { action, templateId, userPrompt: prompt, referenceImageUrl, aspectRatio, style },
           outputData: null,
           market: resolvedMarket,
           gender: resolvedGender,
@@ -330,6 +333,7 @@ export async function POST(req: NextRequest) {
       userRefinement: finalPrompt,
       aspectRatio,
       category: cat,
+      style: (style as "minimal" | "luxury" | "commercial") ?? undefined,
     });
 
     // ③ 写回 Task

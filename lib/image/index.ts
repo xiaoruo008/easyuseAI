@@ -31,6 +31,7 @@ export interface GenerateImageOptions {
   originalImageUrl?: string;
   userRefinement?: string;
   aspectRatio?: "1:1" | "3:4" | "16:9";
+  style?: "minimal" | "luxury" | "commercial";
 }
 
 // templateId → ImageTaskType 映射
@@ -39,6 +40,9 @@ const TEMPLATE_TYPE_MAP: Record<string, ImageTaskType> = {
   model_photo: "model_photo",
   background_swap: "background_swap",
   bg_white: "product_photo",
+  fashion_model: "model_photo",
+  lifestyle: "product_photo",
+  fashion_lifestyle: "product_photo",
 };
 
 export async function generateImageFromOptions(opts: GenerateImageOptions): Promise<ImageTaskOutput> {
@@ -49,5 +53,6 @@ export async function generateImageFromOptions(opts: GenerateImageOptions): Prom
     prompt: opts.userRefinement ?? "",
     referenceImageUrl: opts.originalImageUrl,
     aspectRatio: opts.aspectRatio,
+    style: opts.style,
   });
 }

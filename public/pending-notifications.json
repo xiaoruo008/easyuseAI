@@ -15,3 +15,15 @@
 2026-04-14T03:33:00+08:00 | 网站基本稳定 ✅ | Round 46 检查通过 — 连续21次通过 | Server 200 | Console ✓ | Flow 5/5 ✓ | Mobile 3/3 ✓
 2026-04-14T05:37:26+08:00 | 网站基本稳定 | Round 267 检查通过：HTTP 200, Console ✅, Flow 5/5 ✅, Mobile 3/3 ✅。连续通过已累计 26 次。
 2026-04-14T07:33:25+08:00 | 网站基本稳定（连续31次通过）Round 272 | 
+2026-04-14T14:01:04+08:00 | ✅ 网站夜间检查 | Round 287 — HTTP 200 ✅ Console ✅ Flow 5/5 ✅ Mobile 3/3 — 网站基本稳定（连续46次通过）
+2026-04-14T15:39:29+08:00 | 健康检查失败 | HTTP 500 - localhost:3000 无法访问，第 290 轮检查失败，连续稳定计数已重置
+2026-04-14T16:42:48+08:00 | 网站异常 | HTTP 500 - localhost:3000 无响应（Round 292）
+2026-04-14T17:13:49+08:00 | ❌ 夜间健康检查失败 | Round 293 | HTTP 500 on localhost:3000 (Internal Server Error) | dev server不可用，跳过后续检查
+2026-04-14T17:44:52+08:00 | 健康检查失败 | Round 294: HTTP 500 on localhost:3000 homepage
+2026-04-14T18:16:15+08:00 | ❌ 夜间检查失败 Round 295 | HTTP 500 on localhost:3000 — dev server error
+2026-04-14T18:47:12+08:00 | 健康检查失败 (Round 296) | HTTP 500 on localhost:3000 - 服务不可用，跳过了 console/flow/mobile 检查
+2026-04-14T19:54:30+08:00 | 网站健康检查失败 | Round 298: 无法连接到 localhost:3000 (exit 7) — dev server 可能已在 Windows 端关闭或崩溃
+2026-04-14T21:15:25+08:00 | ❌ 健康检查失败 (Round 299) | dev server 未运行 - localhost:3000 connection refused (exit 7)
+2026-04-14T21:47:06+08:00 | 健康检查失败 | Round 300 — localhost:3000 无法连接（exit 7），dev server 未运行
+2026-04-14T23:55:04+08:00 | ❌ 健康检查失败 (Round 303) | dev server 未运行 - localhost:3000 connection refused (exit 7)
+2026-04-15T03:16:47+08:00 | ✅ 网站基本稳定 | easyuseAI 夜间健康检查\n\nRound 307 | 连续第4次通过\n\n✅ HTTP: 200 OK\n✅ Console: 无报错\n✅ Flow: 5/5 通过\n✅ Mobile: 3/3 通过\n\n网站已连续稳定运行，可信度：高

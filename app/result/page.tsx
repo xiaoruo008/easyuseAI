@@ -234,7 +234,7 @@ function ResultContent() {
             {(data.result.executionActions ?? []).map((action) => (
               <button
                 key={action.id}
-                onClick={() => router.push(`/execute?session=${sessionId}&action=${action.id}`)}
+                onClick={() => router.push(`/execute?session=${sessionId}&action=${action.id}&workflowKey=${data.workflow?.workflowKey ?? ''}`)}
                 className="flex items-center gap-3 p-3.5 md:p-4 rounded-xl border border-gray-200 hover:border-gray-900 transition-all text-left group"
               >
                 <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-gray-100 group-hover:bg-gray-900 group-hover:text-white flex items-center justify-center text-base md:text-lg transition-colors shrink-0">
