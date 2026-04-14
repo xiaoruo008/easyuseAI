@@ -269,8 +269,8 @@ function ResultContent() {
           >
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="font-semibold text-gray-900 text-sm md:text-base">限量免费（限2张）</p>
-                <p className="text-xs md:text-sm text-gray-400 mt-0.5">仅剩2次免费制作机会</p>
+                <p className="font-semibold text-gray-900 text-sm md:text-base">限量0元领取</p>
+                <p className="text-xs md:text-sm text-gray-400 mt-0.5">仅限前100名，顾问30分钟内联系你</p>
               </div>
               <span className="text-xs text-gray-400 bg-gray-50 px-2.5 py-1 rounded-lg shrink-0">免费</span>
             </div>

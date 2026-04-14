@@ -13,7 +13,9 @@ export interface Lead {
   id: string;
   name: string;
   contact: string;       // 手机号
-  businessType: string | null; // 业务类型（对应 serviceType）
+  company: string | null; // 公司名称
+  serviceType: string | null; // 服务类型
+  businessType: string | null; // 业务类型
   note: string | null;
   status: "new" | "contacted" | "closed";
   diagnosisSessionId: string | null;
@@ -98,6 +100,7 @@ export interface MockDiagnosisSession {
   completed: boolean;
   resultType: string | null;
   confidence: number | null;
+  contact: string | null; // 手机号（关联 Lead 时写入）
   createdAt: Date;
   updatedAt: Date;
 }
@@ -106,7 +109,8 @@ export function createSession(): MockDiagnosisSession {
   const now = new Date();
   const s: MockDiagnosisSession = {
     id: cuid(), step: 1, answers: {}, completed: false,
-    resultType: null, confidence: null, createdAt: now, updatedAt: now,
+    resultType: null, confidence: null, contact: null,
+    createdAt: now, updatedAt: now,
   };
   store().sessions.set(s.id, s);
   return s;

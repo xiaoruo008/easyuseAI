@@ -1,12 +1,19 @@
 {
-  "round": 1,
-  "stable_count": 1,
-  "last_check": "2026-04-13T23:25:00Z",
+  "round": 285,
+  "stable_count": 44,
+  "last_check": "2026-04-14T12:36:00Z",
   "last_result": "pass",
   "checks": {
-    "http": "200",
+    "http": "200 - localhost:3000",
     "console": "pass",
     "flow": "pass (5/5)",
-    "mobile": "pass"
+    "mobile": "pass (3/3)",
+    "errors": "none found"
+  },
+  "consecutive_stable": 44,
+  "notes": {
+    "tts": "script ready at public/welcome-voice-script.txt, TTS API not integrated",
+    "health": "HTTP 200, no errors, flow 5/5, mobile 3/3",
+    "stability_note": "网站基本稳定 - 连续44次通过"
   }
 }

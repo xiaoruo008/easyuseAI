@@ -208,44 +208,68 @@ async function cmdDiagnosisFlow() {
     await page.waitForTimeout(1000);
     await page.screenshot({ path: path.join(SCREENSHOTS_DIR, 'diag-q1.png'), fullPage: true });
 
-    // 答题 1-4: 选择第一个选项 A
-    for (let q = 1; q <= 4; q++) {
+    // 答题 1-4: 选择第一个选项，Q5 之后直接等待跳转到 result
+    for (let q = 1; q <= 5; q++) {
       const btns = await page.$$('button');
       if (btns.length > 0) {
         await btns[0].click();
-        await page.waitForTimeout(1500);
-        await page.screenshot({ path: path.join(SCREENSHOTS_DIR, `diag-q${q+1}.png`), fullPage: true });
+        // Q5 之后不等计时器，直接等 URL 变化
+        if (q < 5) {
+          await page.waitForTimeout(1500);
+          await page.screenshot({ path: path.join(SCREENSHOTS_DIR, `diag-q${q+1}.png`), fullPage: true });
+        }
       }
     }
 
-    // Step 5: 输入联系方式
-    const inputs = await page.$$('input');
-    if (inputs.length > 0) {
-      await inputs[0].fill('test@example.com');
-      await page.waitForTimeout(500);
-      await page.screenshot({ path: path.join(SCREENSHOTS_DIR, 'diag-contact.png'), fullPage: true });
+    // Step 6: 等待跳转到 Result 页面（Q5 点击后 router.push 已触发）
+    try {
+      await page.waitForURL('**/result*', { timeout: 10000 });
+      // 等待 result 页面内容加载完成（loading spinner 消失）
+      await page.waitForFunction(() => {
+        const spinner = document.querySelector('.animate-spin');
+        return !spinner;
+      }, { timeout: 8000 }).catch(() => {/* ignore if no spinner */});
+      await page.waitForTimeout(1000);
+      await page.screenshot({ path: path.join(SCREENSHOTS_DIR, 'diag-result.png'), fullPage: true });
+      steps.push({ name: 'Result', passed: true, errors: [], screenshot: 'diag-result.png' });
+      console.log('✓ Result 页面已到达');
+    } catch {
+      steps.push({ name: 'Result', passed: false, errors: ['答题后未跳转到 result'], screenshot: 'diag-stuck.png' });
+      await page.screenshot({ path: path.join(SCREENSHOTS_DIR, 'diag-stuck.png'), fullPage: true });
+      console.log('✗ 答题后未跳转到 result');
+    }
 
-      // 点击提交
-      const submitBtn = await page.$('button');
-      if (submitBtn) {
-        await submitBtn.click();
-        await page.waitForTimeout(3000);
-
-        // 应该跳转到 result
-        const finalUrl = page.url();
-        if (finalUrl.includes('/result')) {
+    // Step 7: 点击 CTA 按钮（如"限量0元领取"），验证跳转到 /submit
+    const ctaTextPatterns = ['限量0元领取', '限量0元', '立即领取', '免费试用', '获取方案'];
+    let ctaClicked = false;
+    try {
+      const allBtns = await page.$$('button');
+      for (const btn of allBtns) {
+        const text = await btn.innerText();
+        if (ctaTextPatterns.some(pt => text.includes(pt))) {
+          await btn.click();
+          ctaClicked = true;
           await page.waitForTimeout(2000);
-          await page.screenshot({ path: path.join(SCREENSHOTS_DIR, 'diag-result.png'), fullPage: true });
-          steps.push({ name: 'Result', passed: true, errors: [], screenshot: 'diag-result.png' });
-          console.log('✓ Result 页面已到达');
-        } else {
-          steps.push({ name: 'Result', passed: false, errors: [`未跳转到 result，仍在 ${finalUrl}`], screenshot: 'diag-stuck.png' });
-          await page.screenshot({ path: path.join(SCREENSHOTS_DIR, 'diag-stuck.png'), fullPage: true });
-          console.log(`✗ 未跳转到 result，当前: ${finalUrl}`);
+          await page.screenshot({ path: path.join(SCREENSHOTS_DIR, 'diag-submit.png'), fullPage: true });
+          break;
         }
       }
+    } catch (err) {
+      console.log(`  CTA 点击异常: ${err instanceof Error ? err.message : String(err)}`);
+    }
+
+    if (ctaClicked) {
+      const currentUrl = page.url();
+      if (currentUrl.includes('/submit')) {
+        steps.push({ name: 'Submit', passed: true, errors: [], screenshot: 'diag-submit.png' });
+        console.log('✓ Submit 页面已到达');
+      } else {
+        steps.push({ name: 'Submit', passed: false, errors: [`点击 CTA 后未到达 submit，仍在 ${currentUrl}`], screenshot: 'diag-stuck.png' });
+        console.log(`✗ 点击 CTA 后未到达 submit，当前: ${currentUrl}`);
+      }
     } else {
-      steps.push({ name: 'Contact-Input', passed: false, errors: ['找不到输入框'], screenshot: 'diag-no-input.png' });
+      steps.push({ name: 'Submit', passed: false, errors: ['未找到 CTA 按钮'], screenshot: 'diag-result.png' });
+      console.log('✗ 未找到 CTA 按钮');
     }
 
     steps.push({ name: 'Diagnosis', passed: true, errors: [], screenshot: 'diag-q1.png' });

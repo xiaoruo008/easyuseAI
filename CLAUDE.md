@@ -6,16 +6,16 @@
 
 ```bash
 # 打开首页并截图
-pnpm browser home
+npx tsx scripts/browser.ts home
 
 # 跑主流程（首页→diagnosis→result→execute→submit）
-pnpm browser flow
+npx tsx scripts/browser.ts flow
 
 # 检查控制台报错
-pnpm browser console http://localhost:3000
+npx tsx scripts/browser.ts console http://localhost:3000
 
 # 截取指定 URL
-pnpm browser screenshot <url> <filename>
+npx tsx scripts/browser.ts screenshot <url> <filename>
 ```
 
 ## 依赖
@@ -23,6 +23,8 @@ pnpm browser screenshot <url> <filename>
 - `@playwright/test`（已安装）
 - `tsx`（已安装，用于执行 TypeScript 脚本）
 - Chromium 浏览器（`npx playwright install chromium`，首次需下载约 400MB）
+
+> ⚠️ `pnpm browser` 不在此项目的 `package.json` 中注册。**必须**使用 `npx tsx scripts/browser.ts <command>`，不能用 `pnpm browser`。
 
 ## 输出文件
 
@@ -37,7 +39,7 @@ pnpm browser screenshot <url> <filename>
 可通过环境变量指定基础 URL：
 
 ```bash
-BASE_URL=https://your-site.vercel.app pnpm browser flow
+BASE_URL=https://your-site.vercel.app npx tsx scripts/browser.ts flow
 ```
 
 ## 详见

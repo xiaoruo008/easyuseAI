@@ -4,9 +4,11 @@
 
 Claude Code 可以通过以下方式调用浏览器自动化能力：
 
-1. **直接调用脚本**：`pnpm browser <command>`
+1. **直接调用脚本**（推荐）：`npx tsx scripts/browser.ts <command>`
 2. **在 Bash 中运行**单个 Playwright 命令
 3. **编写临时脚本**到 `scripts/` 目录后执行
+
+> ⚠️ `pnpm browser` 不在此项目的 `package.json` 中注册，不要使用。
 
 ## 能力范围
 
@@ -36,18 +38,23 @@ Claude Code 可以通过以下方式调用浏览器自动化能力：
 
 ## 常用命令速查
 
+**注意：** `pnpm browser` 不在此项目的 `package.json` 中注册。直接用 `tsx` 调用脚本：
+
 ```bash
 # 1. 打开首页截图
-pnpm browser home
+npx tsx scripts/browser.ts home
 
 # 2. 跑主流程（包含 5 个页面截图 + 控制台检查）
-pnpm browser flow
+npx tsx scripts/browser.ts flow
 
 # 3. 检查控制台报错
-pnpm browser console http://localhost:3000
+npx tsx scripts/browser.ts console http://localhost:3000
 
 # 4. 截图任意 URL
-pnpm browser screenshot https://example.com output.png
+npx tsx scripts/browser.ts screenshot https://example.com output.png
+
+# 5. 移动端截图 (iPhone 14 Pro)
+npx tsx scripts/browser.ts mobile
 ```
 
 ## 技术栈

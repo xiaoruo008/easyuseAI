@@ -19,7 +19,17 @@ export async function createSession() {
   });
 }
 
-export async function getSession(id: string) {
+export async function getSession(id: string): Promise<{
+  id: string;
+  step: number;
+  answers: import("@prisma/client/runtime/library").JsonValue;
+  completed: boolean;
+  resultType: string | null;
+  confidence: number | null;
+  createdAt: Date;
+  updatedAt: Date;
+  contact?: string | null;
+} | null> {
   if (USE_MOCK) return mock.getSession(id);
   return prisma.diagnosisSession.findUnique({ where: { id } });
 }

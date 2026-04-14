@@ -95,7 +95,7 @@ function ExecuteContent() {
 
   const handleCreate = async () => {
     // 免费试用次数用完，拦截
-    if (freeLimitReached || hasResult) {
+    if (freeLimitReached) {
       return;
     }
 
@@ -130,8 +130,16 @@ function ExecuteContent() {
       const next = prev + 1;
       localStorage.setItem("trial_count", String(next));
       if (next >= FREE_MAX) setFreeLimitReached(true);
-    } catch {
-      alert("制作失败，请重试");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "";
+      // 网络波动安抚型错误提示
+      if (message.includes("timeout") || message.includes("ETIMEDOUT")) {
+        setError("生成超时，可能是网络波动。建议：1) 稍等 1 分钟后重试；2) 检查网络连接。");
+      } else if (message.includes("2049") || message.includes("quota")) {
+        setError("免费次数已用完。您可以：1) 留下联系方式获取 3 张免费券；2) 付费解锁。");
+      } else {
+        setError("制作时遇到点小问题，可能是网络波动或 AI 服务暂时繁忙。建议：1) 稍等 1 分钟再试；2) 检查网络连接；3) 如果多次失败，请联系顾问协助。");
+      }
     } finally {
       setWorking(false);
     }
