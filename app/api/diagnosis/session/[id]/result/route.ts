@@ -39,10 +39,11 @@ export async function GET(
       try {
         // 构建用户画像 Prompt
         const diagnosisText = DIAGNOSIS_QUESTIONS.map((q) => {
-          const ans = answers[q.id] ?? "未作答";
+          const ans = answers["q" + q.id];
+          if (!ans) return null;
           const opt = q.options.find((o) => o.value === ans);
           return `Q${q.id}: ${q.text}\nA${q.id}: ${opt?.label ?? ans}`;
-        }).join("\n");
+        }).filter(Boolean).join("\n");
 
         const personaPrompt = [
           {
@@ -50,11 +51,12 @@ export async function GET(
             content: `你是一个专业的商业咨询师。根据用户的诊断答案，生成一句精准的用户画像描述。
 
 规则：
-1. 画像必须基于用户的真实回答，不能编造
+1. 画像必须基于用户已作答的答案，未作答的题目请忽略，不要提及"未作答"
 2. 一句话说明用户的核心痛点和特征
 3. 格式：「用户类型 + 痛点描述 + 期望」
 4. 语言简洁专业，适合直接展示给用户
 5. 不要解释，直接输出画像句子
+6. 不要输出任何推理过程，不要输出任何XML标签
 
 示例：
 "内容引流效率低、有产品但缺流量的电商商家，期望找到高效的内容生产方式"
@@ -68,7 +70,15 @@ export async function GET(
         ];
 
         const personaResponse = await chat(personaPrompt);
-        aiPersona = personaResponse.content.trim();
+        // 过滤 MiniMax 推理标签（如 <think>...</think> 或其他模型输出残留）
+        const raw = personaResponse.content.trim();
+        // 匹配 <think>...</think> 以及其他可能的 XML/HTML 标签残留
+        const stripped = raw
+          .replace(/<think>[\s\S]*?<\/think>/gi, "")
+          .replace(/<[^>]+>/gi, "")
+          .replace(/\s+/g, " ")
+          .trim();
+        aiPersona = stripped;
       } catch (aiErr) {
         // AI 生成失败时降级使用规则结果，不阻塞主流程
         console.warn("[/api/diagnosis/session/[id]/result] AI persona generation failed:", aiErr);
