@@ -29,7 +29,7 @@ export async function GET(
     });
 
     // 从诊断结果类型推导时尚字段（action 由客户端后续步骤提供）
-    const derived = deriveFashionFieldsFromDiagnosis(result.type, action);
+    const derived = deriveFashionFieldsFromDiagnosis(result.type, action, answers);
     const fields = { ...derived, contact: "" };
     const workflow = resolveWorkflow(fields);
 
@@ -39,7 +39,7 @@ export async function GET(
       try {
         // 构建用户画像 Prompt
         const diagnosisText = DIAGNOSIS_QUESTIONS.map((q) => {
-          const ans = answers["q" + q.id];
+          const ans = answers[q.id];
           if (!ans) return null;
           const opt = q.options.find((o) => o.value === ans);
           return `Q${q.id}: ${q.text}\nA${q.id}: ${opt?.label ?? ans}`;
@@ -75,8 +75,23 @@ export async function GET(
         // 2. <think>...</think> 格式（部分模型输出）
         // 3. 其他 <...> XML/HTML 残留
         const raw = personaResponse.content.trim();
-        let stripped = raw
-          .replace(/igonre\*\*[\s\S]*?igonre\*\*/gi, "")           // igonre**...**
+        // eslint-disable-next-line prefer-const
+        let stripped = raw;
+        // Step 1: Remove thinking block markers (igonre** and **igonre)
+        // These are structural markers, not content
+        stripped = stripped.replace(/\*\*igonre\*\*/gi, "");  // **igonre** markers
+        stripped = stripped.replace(/igonre\*\*/gi, "");       // igonre** markers
+        // Step 2: Remove **thinking content blocks** (non-thinking **...** content may remain as actual response)
+        let prev = "";
+        while (prev !== stripped) {
+          prev = stripped;
+          stripped = stripped.replace(/\*\*[^*]+\*\*/g, "");
+        }
+        // Step 3: If result is too short (< 10 chars), likely only thinking content was removed — use rule-based persona
+        if (stripped.length < 10) {
+          stripped = result.persona;
+        }
+        stripped = stripped
           .replace(/<[\s\S]*?>/gi, "")                       // <anything>
           .replace(/\s+/g, " ")
           .trim();
