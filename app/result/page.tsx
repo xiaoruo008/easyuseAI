@@ -1,38 +1,33 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import type { DiagnosisResult, WorkflowStep } from "@/lib/diagnosis";
-import type { DiagnosisFields, WorkflowConfig } from "@/lib/workflow";
-import PaymentModal from "@/components/PaymentModal";
+import { RESULT_TITLES, RESULT_DESCRIPTIONS, type ResultType } from "@/lib/diagnosis";
 
-interface ResultData {
-  session: { id: string; completed: boolean };
-  result: DiagnosisResult | undefined;
-  fields?: DiagnosisFields;
-  workflow?: { workflowKey: string; config: WorkflowConfig | null; matched: boolean };
-}
-
-const FIELD_LABELS: Record<string, Record<string, string>> = {
-  market: { domestic: "国内电商", cross_border: "跨境电商" },
-  gender: { menswear: "男装", womenswear: "女装", unisex: "通用" },
-  category: { suit_set: "套装", top: "上衣", dress: "连衣裙", pants: "裤子", lingerie: "内衣" },
-  targetImage: { main_white: "白底主图", hero_branded: "官网品牌图", model: "模特图", lifestyle: "场景图" },
+const WORKFLOWS: Record<ResultType, { step: number; title: string; desc: string; icon: string }[]> = {
+  type_a: [
+    { step: 1, title: "分析产品特征", desc: "了解你的产品定位、风格、目标用户", icon: "🔍" },
+    { step: 2, title: "确定出图方案", desc: "根据你的平台和用途，选择最优的出图风格", icon: "🎯" },
+    { step: 3, title: "内部工作流出图", desc: "我们用稳定的工作流跑图，不用你操心", icon: "⚡" },
+    { step: 4, title: "筛选交付", desc: "多张里挑最好的一张给你，不满意重做", icon: "✅" },
+  ],
+  type_b: [
+    { step: 1, title: "上传产品图", desc: "随手一拍发给我们就行", icon: "📤" },
+    { step: 2, title: "顾问确认需求", desc: "我们的人帮你确认想要的效果", icon: "💬" },
+    { step: 3, title: "AI出图工作流", desc: "专业工作流执行，不需要你懂任何AI知识", icon: "🤖" },
+    { step: 4, title: "48h内交付", desc: "收到确认后48小时内发给你", icon: "📦" },
+  ],
+  type_c: [
+    { step: 1, title: "评估产品", desc: "分析你的产品适合哪种出图方案", icon: "📋" },
+    { step: 2, title: "制定出图计划", desc: "给你算一笔账，找到性价比最高的方案", icon: "💰" },
+    { step: 3, title: "执行出图", desc: "稳定工作流执行，不是抽卡", icon: "🎯" },
+    { step: 4, title: "交付成果", desc: "交付可用的电商主图，不满意重做", icon: "✅" },
+  ],
 };
 
-const MOCK_IMAGES: Record<string, { src: string; label: string }> = {
-  main_white: { src: "/images/home/white-product.png", label: "白底电商主图" },
-  hero_branded: { src: "/images/home/home-brand.png", label: "官网品牌图" },
-  model: { src: "/images/home/home-model.png", label: "模特上身图" },
-  lifestyle: { src: "/images/home/home-scene.png", label: "场景氛围图" },
-};
-
-function TimelineStep({ step, title, desc, icon }: WorkflowStep) {
+function TimelineStep({ step, title, desc, icon }: { step: number; title: string; desc: string; icon: string }) {
   return (
     <div className="relative flex gap-5 pb-8 last:pb-0">
-      {/* vertical line */}
       <div className="flex flex-col items-center">
         <div className="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center text-lg shrink-0 text-white">
           {icon}
@@ -48,29 +43,25 @@ function TimelineStep({ step, title, desc, icon }: WorkflowStep) {
   );
 }
 
-function ResultContent() {
-  const params = useSearchParams();
-  const router = useRouter();
-  const sessionId = params.get("session");
-  const [data, setData] = useState<ResultData | null>(null);
+export default function ResultPage() {
+  const [resultType, setResultType] = useState<ResultType | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [paymentType, setPaymentType] = useState<"paid" | "pro" | null>(null);
 
   useEffect(() => {
-    if (!sessionId) {
-      setError("请重新开始");
+    try {
+      const stored = localStorage.getItem("diagnosis_result");
+      if (stored) {
+        const data = JSON.parse(stored);
+        setResultType(data.result_type || "type_b");
+      } else {
+        setResultType("type_b");
+      }
+    } catch {
+      setResultType("type_b");
+    } finally {
       setLoading(false);
-      return;
     }
-    fetch(`/api/diagnosis/session/${sessionId}/result`)
-      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
-      .then((d) => { setData(d); setLoading(false); })
-      .catch(() => {
-        setError("加载失败，请重新开始");
-        setLoading(false);
-      });
-  }, [sessionId]);
+  }, []);
 
   if (loading) {
     return (
@@ -83,28 +74,10 @@ function ResultContent() {
     );
   }
 
-  if (error || !data?.result) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="text-center space-y-4 max-w-sm">
-          <h2 className="text-xl font-bold text-gray-900">出了点问题</h2>
-          <p className="text-gray-500">{error ?? "未找到结果"}</p>
-          <Link
-            href="/diagnosis"
-            className="inline-block px-6 py-3 bg-gray-900 text-white rounded-xl font-medium hover:bg-gray-800 transition-colors"
-          >
-            重新开始
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  const result = data.result;
-  const { persona, painPoint, workflow, immediateValue, urgency, suggestedBudget } = result;
-  const fields = data.fields;
-  const wf = data.workflow;
-  const mockImg = MOCK_IMAGES[fields?.targetImage ?? "main_white"] ?? MOCK_IMAGES.main_white;
+  const type = resultType || "type_b";
+  const title = RESULT_TITLES[type];
+  const description = RESULT_DESCRIPTIONS[type];
+  const workflow = WORKFLOWS[type];
 
   return (
     <div className="min-h-screen bg-white">
@@ -116,210 +89,80 @@ function ResultContent() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </Link>
-          <span className="text-xs md:text-sm text-gray-400">分析结果</span>
+          <span className="text-xs md:text-sm text-gray-400">← 返回首页</span>
         </div>
       </header>
 
       <main className="max-w-2xl mx-auto px-4 md:px-6 py-8 md:py-12 space-y-8 md:space-y-10">
 
-        {/* ── 你的选择 ─────────────────────────────── */}
-        {fields && (
-          <section className="space-y-2.5 md:space-y-3">
-            <p className="text-xs font-medium text-amber-600 tracking-wide">你的选择</p>
-            <div className="grid grid-cols-2 gap-2 md:gap-3">
-              {(["market", "category", "targetImage"] as const).map((k) => (
-                <div key={k} className="rounded-xl border border-gray-200 px-3 md:px-4 py-2.5 md:py-3">
-                  <p className="text-[10px] md:text-[11px] text-gray-400">
-                    {k === "market" ? "市场" : k === "category" ? "服装类型" : "图片方向"}
-                  </p>
-                  <p className="text-xs md:text-sm font-semibold text-gray-900 mt-0.5">
-                    {FIELD_LABELS[k]?.[fields[k]] ?? fields[k]}
-                  </p>
-                </div>
-              ))}
-              {wf?.matched && wf.config && (
-                <div className="rounded-xl border-2 border-amber-400 bg-amber-50 px-3 md:px-4 py-2.5 md:py-3">
-                  <p className="text-[10px] md:text-[11px] text-amber-600">匹配方案</p>
-                  <p className="text-xs md:text-sm font-semibold text-gray-900 mt-0.5">{wf.config.label}</p>
-                </div>
-              )}
-            </div>
-          </section>
-        )}
-
-        {/* ── 示例效果 ─────────────────────────── */}
-        <section className="space-y-2.5 md:space-y-3">
-          <p className="text-xs font-medium text-amber-600 tracking-wide">示例效果</p>
-          <div className="rounded-2xl border border-gray-200 overflow-hidden bg-gray-50">
-            <div className="flex">
-              <div className="relative flex-1 bg-gray-100 min-h-[160px] md:min-h-[280px]">
-                <Image src="/images/home/home-before.jpg" alt="原图" fill className="object-contain p-2 md:p-3" unoptimized />
-                <span className="absolute top-2 left-2 text-[10px] bg-black/60 text-white/80 px-2 py-0.5 rounded-full">原图</span>
-              </div>
-              <div className="w-px bg-gray-200 flex-shrink-0" />
-              <div className="relative flex-1 bg-white min-h-[160px] md:min-h-[280px]">
-                <Image src={mockImg.src} alt={mockImg.label} fill className="object-contain p-2 md:p-3" unoptimized />
-                <span className="absolute top-2 right-2 text-[10px] bg-amber-500 text-white px-2 py-0.5 rounded-full">{mockImg.label}</span>
-              </div>
-            </div>
-            <div className="border-t border-gray-200 px-4 md:px-5 py-3 md:py-4 space-y-1.5 md:space-y-2">
-              <p className="text-sm font-semibold text-gray-900">你也可以做出这种效果</p>
-              <p className="text-xs text-gray-500 leading-relaxed">
-                上方是我们用同款服装生成的示例图 · 实际交付为高清无水印原图
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* ── 你的情况 ─────────────────────────────── */}
+        {/* ── 诊断结论 ─────────────────────────────── */}
         <section className="space-y-3">
-          <p className="text-xs font-medium text-amber-600 tracking-wide">你的情况</p>
-          <div className="bg-gray-900 rounded-xl p-5 text-white">
-            <p className="text-sm md:text-lg font-medium leading-relaxed">{persona}</p>
+          <p className="text-xs font-medium text-amber-600 tracking-wide">诊断结论</p>
+          <div className="bg-gray-900 rounded-2xl p-6 md:p-8 text-white">
+            <h1 className="text-lg md:text-xl font-bold leading-relaxed mb-3">
+              {title}
+            </h1>
+            <p className="text-white/70 text-sm md:text-base leading-relaxed">
+              {description}
+            </p>
           </div>
         </section>
 
-        {/* ── 核心问题 ────────────────────────────── */}
-        <section className="space-y-3">
-          <p className="text-xs font-medium text-amber-600 tracking-wide">核心问题</p>
-          <div className="rounded-xl border border-gray-200 p-5">
-            <p className="text-gray-800 leading-relaxed text-sm md:text-base">{painPoint}</p>
-            <div className="flex gap-4 md:gap-6 mt-4 md:mt-5 pt-4 md:pt-5 border-t border-gray-100">
-              <div>
-                <p className="text-xs text-gray-400">紧迫程度</p>
-                <p className="text-sm font-semibold text-gray-700 mt-0.5">{urgency}</p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-400">建议预算</p>
-                <p className="text-sm font-semibold text-gray-700 mt-0.5">{suggestedBudget}</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── 我们帮你搞定 ──────────────────────────── */}
+        {/* ── 案例展示 ─────────────────────────────── */}
         <section className="space-y-4">
-          <p className="text-xs font-medium text-amber-600 tracking-wide">我们帮你搞定</p>
+          <p className="text-xs font-medium text-amber-600 tracking-wide">案例效果</p>
+          <div className="grid grid-cols-2 gap-3 md:gap-4">
+            {[
+              { label: "换背景", before: "背景乱", after: "干净专业" },
+              { label: "商品精修", before: "质感糙", after: "高级精致" },
+              { label: "模特上身", before: "没模特", after: "真实上身" },
+              { label: "场景图", before: "白底图", after: "生活场景" },
+            ].map((c) => (
+              <div key={c.label} className="bg-gray-100 rounded-xl overflow-hidden">
+                <div className="bg-gray-200 border-b border-gray-300 h-24 md:h-32 flex items-center justify-center">
+                  <div className="text-center">
+                    <p className="text-xs text-gray-400">Before</p>
+                    <p className="text-sm font-medium text-gray-500">{c.before}</p>
+                  </div>
+                </div>
+                <div className="bg-gray-50 h-24 md:h-32 flex items-center justify-center">
+                  <div className="text-center">
+                    <p className="text-xs text-gray-400">After</p>
+                    <p className="text-sm font-medium text-gray-700">{c.after}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── 服务流程 ──────────────────────────────── */}
+        <section className="space-y-4">
+          <p className="text-xs font-medium text-amber-600 tracking-wide">服务流程</p>
           <div className="pl-1">
-            {(workflow ?? []).map((step) => (
+            {workflow.map((step) => (
               <TimelineStep key={step.step} {...step} />
             ))}
           </div>
         </section>
 
-        {/* ── 即时交付 ──────────────────────────────── */}
-        <section className="space-y-3">
-          <p className="text-xs font-medium text-amber-600 tracking-wide">{immediateValue.label}</p>
-          <div className="bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
-            <div className="px-6 pt-5 pb-4">
-              <p className="text-sm font-semibold text-gray-900 mb-3">{immediateValue.title}</p>
-              <div className="space-y-3">
-                {(immediateValue.content ?? []).map((line, i) => (
-                  <p key={i} className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
-                    {line}
-                  </p>
-                ))}
-              </div>
-            </div>
-            <div className="bg-gray-100 border-t border-gray-200 px-6 py-3">
-              <p className="text-xs text-gray-500">以上是现场制作的内容，你可以直接使用</p>
-            </div>
-          </div>
-        </section>
-
-        {/* ── 立刻开始 ────────────────────────────── */}
+        {/* ── 主CTA ──────────────────────────────── */}
         <section className="space-y-2.5 md:space-y-3">
-          <p className="text-xs font-medium text-amber-600 tracking-wide">免费试用</p>
-          <div className="grid grid-cols-1 gap-2">
-            {(data.result.executionActions ?? []).map((action) => (
-              <button
-                key={action.id}
-                onClick={() => router.push(`/execute?session=${sessionId}&action=${action.id}&workflowKey=${data.workflow?.workflowKey ?? ''}`)}
-                className="flex items-center gap-3 p-3.5 md:p-4 rounded-xl border border-gray-200 hover:border-gray-900 transition-all text-left group"
-              >
-                <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-gray-100 group-hover:bg-gray-900 group-hover:text-white flex items-center justify-center text-base md:text-lg transition-colors shrink-0">
-                  {action.icon}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-gray-900 text-sm md:text-base">{action.label}</p>
-                  <p className="text-xs text-gray-400 mt-0.5 truncate">{action.desc}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                  {action.category === "image" && (
-                    <span className="text-[10px] font-medium text-amber-600 bg-amber-50 px-1.5 md:px-2 py-0.5 rounded-full">图片</span>
-                  )}
-                  <span className="text-[10px] font-medium text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">试用</span>
-                </div>
-                <svg className="w-4 h-4 text-gray-300 group-hover:text-gray-900 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            ))}
-          </div>
+          <Link
+            href="/upload"
+            className="block w-full py-4 bg-gray-900 text-white rounded-2xl font-bold text-base md:text-lg hover:bg-gray-800 transition-colors shadow-lg shadow-gray-900/10 text-center"
+          >
+            上传我的产品图，免费试做一张
+          </Link>
+          <p className="text-center text-xs text-gray-400">上传后48小时内顾问微信联系你</p>
         </section>
 
-        {/* ── 获取服务 ─────────────────────────────── */}
-        <section className="space-y-2.5 md:space-y-3 pb-6 md:pb-8">
-          <p className="text-xs font-medium text-gray-400 tracking-wide">获取服务</p>
-
-          {/* 免费体验 */}
-          <button
-            onClick={() => router.push(`/submit?session=${sessionId}`)}
-            className="w-full p-4 md:p-5 border border-gray-200 rounded-xl text-left hover:border-gray-900 transition-all group"
-          >
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="font-semibold text-gray-900 text-sm md:text-base">限量0元领取</p>
-                <p className="text-xs md:text-sm text-gray-400 mt-0.5">仅限前100名，顾问30分钟内联系你</p>
-              </div>
-              <span className="text-xs text-gray-400 bg-gray-50 px-2.5 py-1 rounded-lg shrink-0">免费</span>
-            </div>
-          </button>
-
-          {/* ¥99 标准档 */}
-          <button
-            onClick={() => setPaymentType("paid")}
-            className="w-full p-4 md:p-5 border-2 border-gray-900 bg-gray-50 rounded-xl text-left hover:bg-gray-100 transition-all group"
-          >
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="font-semibold text-gray-900 text-sm md:text-base">标准制作</p>
-                <p className="text-xs md:text-sm text-gray-400 mt-0.5">5张同规格图片，批量制作</p>
-              </div>
-              <div className="text-right shrink-0">
-                <span className="text-base md:text-lg font-bold text-gray-900">¥99</span>
-                <p className="text-xs text-gray-400">立即制作</p>
-              </div>
-            </div>
-          </button>
-
-          {/* ¥299 完整交付 */}
-          <button
-            onClick={() => setPaymentType("pro")}
-            className="w-full p-4 md:p-5 bg-gray-900 rounded-xl text-left hover:bg-gray-800 transition-all group"
-          >
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="font-semibold text-white text-sm md:text-base">完整交付</p>
-                <p className="text-xs md:text-sm text-gray-400 mt-0.5">顾问帮你落地全部流程，交付能用的成果</p>
-              </div>
-              <span className="text-xs md:text-sm font-semibold text-amber-400 shrink-0">了解详情</span>
-            </div>
-          </button>
-
-          <div className="text-center pt-1.5 md:pt-2">
-            <Link href="/diagnosis" className="text-xs text-gray-300 hover:text-gray-500 transition-colors">
-              重新开始 →
-            </Link>
-          </div>
-        </section>
-
-        {/* ── 加微信获取高清版本（CTA之后）───────────── */}
+        {/* ── 底部链接 ─────────────────────────────── */}
         <section className="space-y-2.5 md:space-y-3">
-          <div className="rounded-xl bg-gray-900 p-5 md:p-6 text-center space-y-2.5 md:space-y-3">
-            <p className="text-white font-semibold text-base md:text-lg">加微信获取高清版本</p>
+          <div className="rounded-xl bg-gray-900 p-5 md:p-6 text-center space-y-3">
+            <p className="text-white font-semibold text-base md:text-lg">加微信咨询</p>
             <p className="text-white/50 text-xs md:text-sm">顾问发你高清图 + 使用建议</p>
-            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-lg px-4 md:px-5 py-2.5 md:py-3 mt-1">
+            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-lg px-4 md:px-5 py-2.5 md:py-3">
               <span className="text-white text-sm font-medium">微信：easyuseai</span>
               <button
                 onClick={() => navigator.clipboard.writeText("easyuseai")}
@@ -330,24 +173,15 @@ function ResultContent() {
             </div>
             <p className="text-white/30 text-xs">免费，不推销，只发结果</p>
           </div>
+
+          <div className="flex items-center justify-center gap-6 pt-1">
+            <Link href="/diagnosis" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
+              重新诊断 →
+            </Link>
+          </div>
         </section>
 
-        {paymentType && (
-          <PaymentModal type={paymentType} onClose={() => setPaymentType(null)} />
-        )}
       </main>
     </div>
-  );
-}
-
-export default function ResultPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <p className="text-gray-400 text-sm">加载中...</p>
-      </div>
-    }>
-      <ResultContent />
-    </Suspense>
   );
 }

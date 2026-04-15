@@ -15,10 +15,31 @@ const AFTER_IMAGES = [
 const REAL_BEFORE = "/images/home/home-before.jpg";
 
 const CASES = [
-  { id: "bg-swap", label: "换背景", tag: "最常见", beforeUrl: REAL_BEFORE, afterUrl: AFTER_IMAGES[0].src, from: "¥29/张", scene: "电商主图 · 小红书 · 抖音", result: "背景乱 → 干净专业，点击欲望更强" },
-  { id: "retouch", label: "商品精修", tag: "电商必备", beforeUrl: REAL_BEFORE, afterUrl: AFTER_IMAGES[1].src, from: "¥99/5张", scene: "淘宝 · 京东 · 拼多多", result: "光线差/色偏 → 像品牌官网图" },
-  { id: "model", label: "模特图", tag: "高转化", beforeUrl: REAL_BEFORE, afterUrl: AFTER_IMAGES[2].src, from: "¥299/套", scene: "种草笔记 · 详情页 · 广告图", result: "没质感 → 有信任感，客户更愿意买" },
-  { id: "scene", label: "场景图", tag: "种草专用", beforeUrl: REAL_BEFORE, afterUrl: AFTER_IMAGES[3].src, from: "¥99起", scene: "小红书 · 朋友圈 · 公众号", result: "单品平铺 → 有氛围感，种草更有说服力" },
+  { id: "bg-swap", label: "换背景", tag: "最常见", beforeUrl: REAL_BEFORE, afterUrl: AFTER_IMAGES[0].src, from: "¥29/张", scene: "淘宝主图 · 小红书 · 抖音", result: "背景乱 → 干净专业，点击欲望更强" },
+  { id: "retouch", label: "商品精修", tag: "电商必备", beforeUrl: REAL_BEFORE, afterUrl: AFTER_IMAGES[1].src, from: "¥99/5张", scene: "淘宝详情 · 亚马逊 · 独立站", result: "光线差/色偏 → 像品牌官网图" },
+  { id: "model", label: "模特图", tag: "高转化", beforeUrl: REAL_BEFORE, afterUrl: AFTER_IMAGES[2].src, from: "¥299/套", scene: "淘宝女装 · 亚马逊服饰 · TikTok", result: "没质感 → 有信任感，客户更愿意买" },
+  { id: "scene", label: "场景图", tag: "种草专用", beforeUrl: REAL_BEFORE, afterUrl: AFTER_IMAGES[3].src, from: "¥99起", scene: "淘宝主图 · 小红书种草 · 详情页", result: "单品平铺 → 有氛围感，种草更有说服力" },
+];
+
+const PAIN_POINTS = [
+  {
+    id: "expensive",
+    emoji: "📷",
+    title: "实拍太贵",
+    desc: "一次摄影几千块，新品测款根本烧不起",
+  },
+  {
+    id: "complex",
+    emoji: "🤯",
+    title: "AI太难用",
+    desc: "词写不出来，出图全靠运气，十张里一张能用",
+  },
+  {
+    id: "slow",
+    emoji: "⏰",
+    title: "时间太长",
+    desc: "自己调图一坐就是几小时，改个细节又全乱",
+  },
 ];
 
 export default function HomePage() {
@@ -134,10 +155,10 @@ export default function HomePage() {
               </span>
             </div>
             <h1 className="text-xl sm:text-3xl lg:text-5xl font-bold text-white leading-[1.15] tracking-tight mb-4 md:mb-6">
-              随手拍一张<br className="hidden sm:block" /> 0提示词自动出图
+              电商产品图<br className="hidden sm:block" /> 上传就能出
             </h1>
             <p className="text-white/50 text-sm md:text-lg leading-relaxed mb-6 md:mb-8">
-              一张随手拍 → 4K级电商摄影图
+              不用学提示词，不用懂AI工具，上传产品图即可
             </p>
             {/* CTA */}
             <div className="flex flex-col gap-2.5">
@@ -145,13 +166,54 @@ export default function HomePage() {
                 href="/diagnosis"
                 className="inline-flex items-center justify-center gap-2 px-6 md:px-8 py-3.5 md:py-4 bg-white text-gray-900 rounded-xl font-bold hover:bg-gray-100 transition-all text-base shadow-lg shadow-white/10"
               >
-                限量0元领取
+                免费试做一张
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </Link>
-              <p className="text-center text-white/30 text-xs">仅限前100名，顾问30分钟内联系你</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 痛点区 */}
+      <section className="py-12 md:py-20 px-4 md:px-6 bg-gray-950 border-t border-white/5">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-lg sm:text-2xl lg:text-3xl font-bold text-white tracking-tight mb-2 md:mb-3">你是不是也遇到过这些问题</h2>
+            <p className="text-white/40 text-sm">电商出图路上的三座大山</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+            {PAIN_POINTS.map((p) => (
+              <div key={p.id} className="bg-gray-900/50 rounded-2xl overflow-hidden border border-white/10 hover:border-white/20 transition-all flex flex-col p-5 md:p-6">
+                <div className="text-3xl md:text-4xl mb-3">{p.emoji}</div>
+                <h3 className="text-base md:text-lg font-bold text-white mb-2">{p.title}</h3>
+                <p className="text-white/50 text-sm leading-relaxed">{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 解决方案区 */}
+      <section className="py-12 md:py-20 px-4 md:px-6 bg-gray-900 border-t border-white/5">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-tight mb-2 md:mb-3">我们帮你把AI用好</h2>
+            <p className="text-white/40 text-sm">调参的事交给我们，你只管上传等着收图</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+            {[
+              { step: "01", title: "上传产品图", desc: "随手一拍就行" },
+              { step: "02", title: "选风格场景", desc: "想要的风格点一下" },
+              { step: "03", title: "48h收图", desc: "坐等收货不用盯" },
+            ].map((s) => (
+              <div key={s.step} className="bg-white/5 rounded-2xl p-5 md:p-6 border border-white/10 text-center">
+                <div className="text-3xl md:text-4xl font-bold text-amber-400 mb-3">{s.step}</div>
+                <h3 className="text-white font-semibold text-base md:text-lg mb-1">{s.title}</h3>
+                <p className="text-white/40 text-sm">{s.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -228,9 +290,9 @@ export default function HomePage() {
       {/* CTA */}
       <section className="py-12 md:py-20 px-4 md:px-6 bg-gray-950 border-t border-white/5">
         <div className="max-w-2xl mx-auto text-center space-y-4 md:space-y-5">
-          <h2 className="text-2xl md:text-4xl font-bold text-white tracking-tight">发一张图过来</h2>
-          <p className="text-white/40 text-base md:text-lg">我们帮你做成能用的版本，当天发给你</p>
-          <Link href="/diagnosis" className="inline-flex items-center gap-2 px-8 md:px-10 py-3.5 md:py-4 bg-white text-gray-900 rounded-xl font-semibold hover:bg-gray-100 transition-colors text-base md:text-lg">开始制作</Link>
+          <h2 className="text-2xl md:text-4xl font-bold text-white tracking-tight">想试试？先做个诊断</h2>
+          <p className="text-white/40 text-base md:text-lg">3道题告诉你怎么出图最划算</p>
+          <Link href="/diagnosis" className="inline-flex items-center gap-2 px-8 md:px-10 py-3.5 md:py-4 bg-white text-gray-900 rounded-xl font-semibold hover:bg-gray-100 transition-colors text-base md:text-lg">立即开始</Link>
         </div>
       </section>
 

@@ -8,7 +8,7 @@ function SubmitContent() {
   const params = useSearchParams();
   const sessionId = params.get("session") ?? "";
 
-  const [form, setForm] = useState({ name: "", phone: "", company: "", note: "" });
+  const [form, setForm] = useState({ name: "", wechat_id: "", product_category: "", notes: "" });
   const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -17,8 +17,8 @@ function SubmitContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name.trim() || !form.phone.trim()) {
-      setError("姓名和电话为必填项");
+    if (!form.name.trim() || !form.wechat_id.trim()) {
+      setError("姓名和微信号为必填项");
       return;
     }
     setError(null);
@@ -37,25 +37,32 @@ function SubmitContent() {
         } catch { /* ignore */ }
       }
 
-      // 1. 创建 Lead
+      // 1. 读取 upload 页数据
+      let uploadData: { selected_styles: string[]; platform: string; notes: string } | undefined;
+      try {
+        const stored = localStorage.getItem("upload_data");
+        if (stored) uploadData = JSON.parse(stored);
+      } catch { /* ignore */ }
+
+      // 2. 创建 Lead
       const leadRes = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: form.name,
-          phone: form.phone,
-          company: form.company || undefined,
-          note: form.note || undefined,
+          wechat_id: form.wechat_id,
+          product_category: form.product_category || undefined,
+          notes: form.notes || undefined,
           diagnosisSessionId: sessionId || undefined,
           serviceType,
-          contact: form.phone,
+          upload_data: uploadData,
         }),
       });
 
       if (!leadRes.ok) throw new Error("提交失败");
       const lead = await leadRes.json();
 
-      // 2. 上传附件（如果有）
+      // 3. 上传附件（如果有）
       if (fileRef.current?.files?.[0]) {
         setUploading(true);
         const fd = new FormData();
@@ -78,11 +85,20 @@ function SubmitContent() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
         <div className="max-w-md w-full bg-white rounded-2xl shadow-sm border p-6 md:p-8 text-center space-y-4">
           <div className="text-5xl">✅</div>
-          <h1 className="text-2xl font-bold text-gray-900">提交成功！</h1>
+          <h1 className="text-2xl font-bold text-gray-900">收到了！</h1>
           <p className="text-gray-500 leading-relaxed">
-            我们已收到你的资料，<strong>24小时内</strong>会有专属顾问联系你。
-            请保持电话畅通。
+            48小时内顾问会微信联系你，记得通过哦
           </p>
+          <div className="bg-gray-50 rounded-xl p-4 space-y-2">
+            <p className="text-gray-400 text-sm">也可以直接加微信咨询</p>
+            <p className="text-indigo-600 font-semibold text-lg">easyuseai</p>
+            <button
+              onClick={() => navigator.clipboard.writeText("easyuseai")}
+              className="text-xs text-indigo-500 hover:text-indigo-700 underline"
+            >
+              点击复制
+            </button>
+          </div>
           <div className="pt-4 space-y-2">
             <Link href="/" className="block w-full py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-colors">
               返回首页
@@ -107,8 +123,8 @@ function SubmitContent() {
       </header>
 
       <main className="max-w-xl mx-auto px-4 md:px-6 py-8 md:py-10">
-        <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-1.5 md:mb-2">留下联系方式</h1>
-        <p className="text-gray-500 text-sm mb-6 md:mb-8">顾问会在24小时内联系你，帮你把事情落地</p>
+        <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-1.5 md:mb-2">留下联系方式，我们帮你做一版图</h1>
+        <p className="text-gray-500 text-sm mb-6 md:mb-8">48小时内顾问会微信联系你</p>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border p-5 md:p-6 space-y-4 md:space-y-5">
           <div>
@@ -126,26 +142,26 @@ function SubmitContent() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              手机号 <span className="text-red-500">*</span>
+              微信号 <span className="text-red-500">*</span>
             </label>
             <input
-              type="tel"
-              placeholder="11位手机号"
-              value={form.phone}
-              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              type="text"
+              placeholder="你的微信号"
+              value={form.wechat_id}
+              onChange={(e) => setForm({ ...form, wechat_id: e.target.value })}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              公司/店铺（选填）
+              店铺/品类（选填）
             </label>
             <input
               type="text"
-              placeholder="公司名称或电商店铺"
-              value={form.company}
-              onChange={(e) => setForm({ ...form, company: e.target.value })}
+              placeholder="淘宝女装、亚马逊家居…"
+              value={form.product_category}
+              onChange={(e) => setForm({ ...form, product_category: e.target.value })}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
             />
           </div>
@@ -155,10 +171,10 @@ function SubmitContent() {
               补充说明（选填）
             </label>
             <textarea
-              placeholder="可以描述你遇到的具体问题，或者想解决的问题"
+              placeholder="目标买家是谁…"
               rows={3}
-              value={form.note}
-              onChange={(e) => setForm({ ...form, note: e.target.value })}
+              value={form.notes}
+              onChange={(e) => setForm({ ...form, notes: e.target.value })}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
             />
           </div>
@@ -191,7 +207,7 @@ function SubmitContent() {
               disabled={submitting || uploading}
               className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
             >
-              {submitting ? (uploading ? "上传中..." : "提交中...") : "提交资料"}
+              {submitting ? (uploading ? "上传中..." : "提交中...") : "确认提交"}
             </button>
           </div>
         </form>
