@@ -1,9 +1,9 @@
 /**
  * 诊断结果类型 → 时尚工作流字段映射
- * 
- * 五道题诊断产生 ResultType (traffic/customer/efficiency/unclear)
+ *
+ * 五道题诊断产生 ResultType (image_poor/image_cost/image_stability/image_start)
  * 十二时尚工作流需要 Market/Gender/Category/TargetImage
- * 
+ *
  * 这个映射层解决两个系统之间的连接问题:
  * 1. 诊断问题是业务痛点，不是服装类别
  * 2. 需要根据诊断结果和执行动作推导合适的时尚字段
@@ -15,25 +15,25 @@ import type { Market, Gender, Category, TargetImage } from "@/lib/types/fashion"
 // 诊断结果类型 → 时尚字段（默认值）
 // 这些是通用默认值，适用于没有明确时尚偏好时的推导
 const DIAGNOSIS_DEFAULTS: Record<ResultType, { market: Market; gender: Gender; category: Category }> = {
-  traffic: {
-    market: "domestic",   // 引流需求 → 国内电商为主
+  image_poor: {
+    market: "domestic",   // 图片质量差 → 国内电商为主
     gender: "womenswear", // WORKFLOW_MAP 无 unisex，默认女性用户
     category: "top",       // 上装最常见
   },
-  customer: {
+  image_cost: {
     market: "domestic",
     gender: "womenswear",
-    category: "top",       // 客服效率 → 白底主图最实用
+    category: "top",       // 成本敏感 → 白底主图最实惠
   },
-  efficiency: {
+  image_stability: {
     market: "domestic",
     gender: "womenswear",
-    category: "top",       // 数据整理 → 商品主图
+    category: "top",       // AI不稳定 → 商品主图
   },
-  unclear: {
+  image_start: {
     market: "domestic",
     gender: "womenswear",
-    category: "top",       // 方向不明 → 默认上衣
+    category: "top",       // 刚开始 → 默认上衣
   },
 };
 
@@ -74,7 +74,7 @@ export function deriveFashionFieldsFromDiagnosis(
   resultType: ResultType,
   action: string
 ): FashionWorkflowFields {
-  const defaults = DIAGNOSIS_DEFAULTS[resultType] ?? DIAGNOSIS_DEFAULTS["unclear"];
+  const defaults = DIAGNOSIS_DEFAULTS[resultType] ?? DIAGNOSIS_DEFAULTS["image_start"];
   const targetImage = ACTION_TARGET_IMAGE_MAP[action] ?? "main_white";
   const category = ACTION_CATEGORY_OVERRIDE[action] ?? defaults.category;
 
