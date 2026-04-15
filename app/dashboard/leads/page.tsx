@@ -79,10 +79,10 @@ const STATUS_LABELS: Record<string, { label: string; color: string }> = {
 };
 
 const TYPE_LABELS: Record<string, string> = {
-  traffic: "流量获客",
-  customer: "客服自动化",
-  efficiency: "效率提升",
-  unclear: "需求待挖掘",
+  image_poor: "流量获客",
+  image_cost: "客服自动化",
+  image_stability: "效率提升",
+  image_start: "需求待挖掘",
 };
 
 
