@@ -76,7 +76,7 @@ export async function GET(
         // 3. 其他 <...> XML/HTML 残留
         const raw = personaResponse.content.trim();
         let stripped = raw
-          .replace(/igonre\*\*[\s\S]*?\*\*/gi, "")           // igonre**...**
+          .replace(/igonre\*\*[\s\S]*?igonre\*\*/gi, "")           // igonre**...**
           .replace(/<[\s\S]*?>/gi, "")                       // <anything>
           .replace(/\s+/g, " ")
           .trim();
