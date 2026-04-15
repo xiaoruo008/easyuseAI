@@ -56,7 +56,7 @@ export async function GET(
 3. 格式：「用户类型 + 痛点描述 + 期望」
 4. 语言简洁专业，适合直接展示给用户
 5. 不要解释，直接输出画像句子
-6. 不要输出任何推理过程，不要输出任何XML标签
+6. 不要输出任何推理过程，不要输出任何标签
 
 示例：
 "内容引流效率低、有产品但缺流量的电商商家，期望找到高效的内容生产方式"
@@ -70,12 +70,14 @@ export async function GET(
         ];
 
         const personaResponse = await chat(personaPrompt);
-        // 过滤 MiniMax 推理标签（如 <think>...</think> 或其他模型输出残留）
+        // 过滤 MiniMax 推理标签：
+        // 1. igonre**...** 格式（MiniMax thinking tags）
+        // 2. <think>...</think> 格式（部分模型输出）
+        // 3. 其他 <...> XML/HTML 残留
         const raw = personaResponse.content.trim();
-        // 匹配 <think>...</think> 以及其他可能的 XML/HTML 标签残留
-        const stripped = raw
-          .replace(/<think>[\s\S]*?<\/think>/gi, "")
-          .replace(/<[^>]+>/gi, "")
+        let stripped = raw
+          .replace(/igonre\*\*[\s\S]*?\*\*/gi, "")           // igonre**...**
+          .replace(/<[\s\S]*?>/gi, "")                       // <anything>
           .replace(/\s+/g, " ")
           .trim();
         aiPersona = stripped;
