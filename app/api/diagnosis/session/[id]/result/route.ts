@@ -29,7 +29,7 @@ export async function GET(
     });
 
     // 从诊断结果类型推导时尚字段（action 由客户端后续步骤提供）
-    const derived = deriveFashionFieldsFromDiagnosis(result.type, action, answers);
+    const derived = deriveFashionFieldsFromDiagnosis(result.type, action);
     const fields = { ...derived, contact: "" };
     const workflow = resolveWorkflow(fields);
 

@@ -2,28 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { RESULT_TITLES, RESULT_DESCRIPTIONS, type ResultType } from "@/lib/diagnosis";
-
-const WORKFLOWS: Record<ResultType, { step: number; title: string; desc: string; icon: string }[]> = {
-  type_a: [
-    { step: 1, title: "分析产品特征", desc: "了解你的产品定位、风格、目标用户", icon: "🔍" },
-    { step: 2, title: "确定出图方案", desc: "根据你的平台和用途，选择最优的出图风格", icon: "🎯" },
-    { step: 3, title: "内部工作流出图", desc: "我们用稳定的工作流跑图，不用你操心", icon: "⚡" },
-    { step: 4, title: "筛选交付", desc: "多张里挑最好的一张给你，不满意重做", icon: "✅" },
-  ],
-  type_b: [
-    { step: 1, title: "上传产品图", desc: "随手一拍发给我们就行", icon: "📤" },
-    { step: 2, title: "顾问确认需求", desc: "我们的人帮你确认想要的效果", icon: "💬" },
-    { step: 3, title: "AI出图工作流", desc: "专业工作流执行，不需要你懂任何AI知识", icon: "🤖" },
-    { step: 4, title: "48h内交付", desc: "收到确认后48小时内发给你", icon: "📦" },
-  ],
-  type_c: [
-    { step: 1, title: "评估产品", desc: "分析你的产品适合哪种出图方案", icon: "📋" },
-    { step: 2, title: "制定出图计划", desc: "给你算一笔账，找到性价比最高的方案", icon: "💰" },
-    { step: 3, title: "执行出图", desc: "稳定工作流执行，不是抽卡", icon: "🎯" },
-    { step: 4, title: "交付成果", desc: "交付可用的电商主图，不满意重做", icon: "✅" },
-  ],
-};
+import { WORKFLOWS, PERSONAS, PAIN_POINTS, type ResultType, type WorkflowStep } from "@/lib/diagnosis";
 
 function TimelineStep({ step, title, desc, icon }: { step: number; title: string; desc: string; icon: string }) {
   return (
@@ -52,12 +31,12 @@ export default function ResultPage() {
       const stored = localStorage.getItem("diagnosis_result");
       if (stored) {
         const data = JSON.parse(stored);
-        setResultType(data.result_type || "type_b");
+        setResultType(data.result_type || "image_start");
       } else {
-        setResultType("type_b");
+        setResultType("image_start");
       }
     } catch {
-      setResultType("type_b");
+      setResultType("image_start");
     } finally {
       setLoading(false);
     }
@@ -74,10 +53,10 @@ export default function ResultPage() {
     );
   }
 
-  const type = resultType || "type_b";
-  const title = RESULT_TITLES[type];
-  const description = RESULT_DESCRIPTIONS[type];
-  const workflow = WORKFLOWS[type];
+  const type = (resultType || "image_start") as ResultType;
+  const title = PERSONAS[type] ?? "诊断结果";
+  const description = PAIN_POINTS[type] ?? "";
+  const workflow = WORKFLOWS[type] ?? [];
 
   return (
     <div className="min-h-screen bg-white">
@@ -140,7 +119,7 @@ export default function ResultPage() {
         <section className="space-y-4">
           <p className="text-xs font-medium text-amber-600 tracking-wide">服务流程</p>
           <div className="pl-1">
-            {workflow.map((step) => (
+            {(workflow as WorkflowStep[]).map((step: WorkflowStep) => (
               <TimelineStep key={step.step} {...step} />
             ))}
           </div>

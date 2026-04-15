@@ -180,7 +180,7 @@ export function calculateResult(answers: Record<number, AnswerValue>): Diagnosis
 
 // ─── 用户画像 ─────────────────────────────────────────────────
 
-const PERSONAS: Record<ResultType, string> = {
+export const PERSONAS: Record<ResultType, string> = {
   image_poor: "产品有，但图片拍出来不好看，想提升品质又不知道怎么做的卖家",
   image_cost: "觉得专业摄影太贵，想找性价比更高的出图方案的卖家",
   image_stability: "自己试过AI出图，但效果不稳定、时间不可控的卖家",
@@ -189,7 +189,7 @@ const PERSONAS: Record<ResultType, string> = {
 
 // ─── 核心问题 ─────────────────────────────────────────────────
 
-const PAIN_POINTS: Record<ResultType, string> = {
+export const PAIN_POINTS: Record<ResultType, string> = {
   image_poor:
     "你的产品不差，但图片拉低了整体档次——买家看到图不想点，这是转化率低的主要原因",
   image_cost:
@@ -202,7 +202,7 @@ const PAIN_POINTS: Record<ResultType, string> = {
 
 // ─── AI工作流（具体步骤，不是功能罗列）──────────────────────────
 
-const WORKFLOWS: Record<ResultType, WorkflowStep[]> = {
+export const WORKFLOWS: Record<ResultType, WorkflowStep[]> = {
   image_poor: [
     { step: 1, title: "分析产品特征", desc: "了解你的产品定位、风格、目标用户", icon: "🔍" },
     { step: 2, title: "确定出图方案", desc: "根据你的平台和用途，选择最优的出图风格", icon: "🎯" },
