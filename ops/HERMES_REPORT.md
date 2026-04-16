@@ -1,18 +1,23 @@
 # HERMES_REPORT
-更新时间：2026-04-17 01:59 UTC+8
-执行轮次：第二十轮
+更新时间：2026-04-17 14:51 UTC+8
+执行轮次：第三三九轮
 
 ## 本轮执行摘要
 
-**P36 - monitoring artifacts 提交（已完成）**
+**P25 WIP - Result API fire-and-forget LLM 生成（已提交）**
 
 ### 执行内容
-1. 读取 docs/SYSTEM_PROGRESS.md 和 docs/KNOWN_ISSUES.md
-2. 检查 git status → 发现 4 个未提交监控文件
-3. 运行 `scripts/quick-smoke.js` → wk=domestic_menswear_suit_set_model ✅, persona=yes ✅, ms=11697
-4. git add + commit + push → `9ad9c35` ✅
-5. 更新 docs/ 头部的 P36 时间戳
-6. 再次 commit + push → `f8a7db7` ✅
+1. 分析 Result API 代码结构，理解 P25 async 优化方案
+2. 将同步 `await chat()` 改为 `Promise.then().catch()` fire-and-forget 模式
+3. TypeScript 编译通过 ✅
+4. Smoke test：暖启动 ~6.7s（冷启动 ~14s），差异来自服务器预热而非异步
+5. Git commit → `8b14cab` ✅
+
+### 关键发现
+- Next.js App Router 在 serverless 环境中，**Node.js 仍会等待未处理的 Promise 完成**才发送 HTTP 响应
+- 真正的异步需要 `next/dist/server/after`（`unstable_after`）或任务队列
+- 当前 fire-and-forget 改动是朝向异步的一步，但未实现真正的响应时间优化
+- 热启动 ~6.7s 说明 MiniMax API 响应 ~6-7s，冷启动 ~14s 含模型加载开销
 
 ### 系统状态
 | 模块 | 状态 |
@@ -20,12 +25,11 @@
 | 五道题问卷 | ✅ 可用 |
 | Result API | ✅ 可用（含LLM画像生成） |
 | Execute API | ✅ 可用 |
-| 全链路 | ✅ 稳定运行（round 337, consecutive_stable=16） |
+| 全链路 | ✅ 稳定运行（round 339, consecutive_stable=17） |
 | TypeScript编译 | ✅ 干净 |
 
 ### 提交记录
-- `9ad9c35` — chore: P36 monitoring artifacts（+22/-6, 4文件）
-- `f8a7db7` — docs: update P36 timestamp（+30/-4, 2文件）
+- `8b14cab` — P25 (WIP): Fire-and-forget LLM persona generation in Result API（+25/-34, 1文件）
 
 ---
 
@@ -33,13 +37,15 @@
 
 | 优先级 | 任务 | 状态 |
 |--------|------|------|
-| 🟡 | Result API LLM响应时间 ~16s | P28 session缓存部分缓解 |
-| 🟡 | P25 Result API性能优化（异步化） | 待处理 |
+| 🟡 | P25 Result API 性能优化（异步化） | ⚠️ WIP：fire-and-forget 已提交，真正异步需要 unstable_after |
+| 🟢 | 五道题系统 | ✅ 已完成 |
+| 🟢 | 工作流匹配 | ✅ 已完成 |
+| 🟢 | 输出结构化模板 | ✅ 已完成（WORKFLOW.md） |
 
 ## 下一步
-1. **P25 - Result API 性能优化**：将 LLM 画像生成改为异步处理，避免首次调用 ~16s 阻塞
-2. **五道题系统第一轮目标已达成**：Submit → Result → Execute → Lead 全链路 ✅ 完整走通
-3. 当前重点转向稳定性维护和性能优化
+1. **P25 真正异步**：需要 Next.js `unstable_after` 支持，当前 fire-and-forget 改动是前置步骤
+2. 继续监控系统稳定性和健康检查
+3. 暂无其他紧急任务
 
 ---
 
