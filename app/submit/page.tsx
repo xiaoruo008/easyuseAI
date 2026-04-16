@@ -192,6 +192,9 @@ function SubmitContent() {
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
               上传资料（选填，最多10MB）
             </label>
+            <div className="mb-2 p-3 bg-amber-50 border border-amber-100 rounded-lg text-xs text-amber-700">
+              💡 小提示：上传一张<strong>随手拍产品图</strong>+一张<strong>你喜欢的参考图</strong>，我们会按这个方向免费试做1张
+            </div>
             <input
               ref={fileRef}
               type="file"

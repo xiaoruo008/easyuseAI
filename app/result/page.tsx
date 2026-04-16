@@ -324,13 +324,59 @@ export default function ResultPage() {
         {/* ── 成本计算器 ─────────────────────────────── */}
         <CostCalculator />
 
+        {/* ── 免费试做1张 ─────────────────────────────── */}
+        <section className="space-y-4">
+          <p className="text-xs font-medium text-amber-600 tracking-wide">免费体验</p>
+          <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-5 md:p-6 border border-amber-100">
+            <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">
+              免费试做 1 张，看看适不适合你
+            </h3>
+            <p className="text-gray-500 text-sm mb-4">
+              不用写提示词。你只需要：
+            </p>
+            <ul className="space-y-1.5 text-sm text-gray-600 mb-5">
+              <li className="flex items-start gap-2">
+                <span className="text-amber-500 mt-0.5">1.</span>
+                <span>随手拍一张产品图</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-amber-500 mt-0.5">2.</span>
+                <span>再发一张你喜欢的参考图</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-amber-500 mt-0.5">3.</span>
+                <span>我们免费帮你试做 1 张</span>
+              </li>
+            </ul>
+            <div className="flex flex-col gap-2.5">
+              <Link
+                href={sessionId ? `/submit?session=${sessionId}&action=${resultType}` : `/submit?action=${resultType}`}
+                className="block w-full py-3.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold text-center transition-colors shadow-lg shadow-amber-500/20"
+              >
+                免费试做1张
+              </Link>
+              <a
+                href="https://u.wechat.com/EasyUseAI"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full py-3 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium text-center transition-colors border border-gray-200"
+              >
+                加微信看更多案例
+              </a>
+            </div>
+          </div>
+        </section>
+
         {/* ── 案例展示 ─────────────────────────────── */}
         <section className="space-y-4">
           <p className="text-xs font-medium text-amber-600 tracking-wide">案例效果</p>
           <div className="grid grid-cols-2 gap-3 md:gap-4">
-            {OLD_CASE_STUDIES.map((item) => (
-              <CaseCard key={item.id} item={item} />
-            ))}
+            {CASE_STUDIES.filter((c) => c.resultTypes.includes(resultType!))
+              .sort((a, b) => a.priority - b.priority)
+              .slice(0, 3)
+              .map((item) => (
+                <CaseCard key={item.id} item={item} />
+              ))}
           </div>
         </section>
 

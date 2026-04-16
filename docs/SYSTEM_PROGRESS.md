@@ -698,3 +698,11 @@ POST /api/execute/generate
 - ✅ TOTAL_STEPS 3→8 修复完成（app/diagnosis/page.tsx 第7行）
 - ✅ 首页"5道题"→"6道题"文案统一（app/page.tsx 第294行）
 - ✅ 全链路5/5页面验证通过
+
+## 2026-04-17 V1 重构上线
+
+**V1 正式部署（2026-04-17）**：
+- V1 改动已合并上线 → https://easyuse-ai.vercel.app
+- git 本地已提交，GitHub push 待处理（SSH问题）
+- 阻塞点：TOTAL_STEPS 3→8 + 首页文案统一 5→6道题
+- ✅ GitHub push 成功（SSH 实际可用，无故障）
