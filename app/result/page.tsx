@@ -282,6 +282,8 @@ function TimelineStep({ step, title, desc, icon }: { step: number; title: string
 export default function ResultPage() {
   const [resultType, setResultType] = useState<ResultType | null>(null);
   const [loading, setLoading] = useState(true);
+  // 倒计时（3分钟，制造紧迫感）
+  const [countdown, setCountdown] = useState(3 * 60);
 
   useEffect(() => {
     try {
@@ -298,6 +300,17 @@ export default function ResultPage() {
       setLoading(false);
     }
   }, []);
+
+  // 倒计时逻辑
+  useEffect(() => {
+    if (countdown <= 0) return;
+    const timer = setInterval(() => setCountdown((c) => c - 1), 1000);
+    return () => clearInterval(timer);
+  }, [countdown]);
+
+  // 格式化倒计时 MM:SS
+  const mm = String(Math.floor(countdown / 60)).padStart(2, "0");
+  const ss = String(countdown % 60).padStart(2, "0");
 
   // Get sessionId from URL for CTA link
   const [sessionId, setSessionId] = useState<string>("");
@@ -404,6 +417,12 @@ export default function ResultPage() {
                 <span>我们免费帮你试做 1 张</span>
               </li>
             </ul>
+            {countdown > 0 && (
+              <div className="mb-4 flex items-center justify-center gap-1.5 bg-amber-100 border border-amber-200 rounded-lg px-3 py-2 text-amber-700 text-sm font-medium">
+                <span>⏰ 限时免费，还剩</span>
+                <span className="font-mono font-bold text-amber-800">{mm}:{ss}</span>
+              </div>
+            )}
             <div className="flex flex-col gap-2.5">
               <Link
                 href={sessionId ? `/submit?session=${sessionId}&action=${resultType}` : `/submit?action=${resultType}`}
