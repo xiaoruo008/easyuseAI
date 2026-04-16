@@ -1,17 +1,16 @@
 {
-  "round": 345,
-  "stable_count": 31,
-  "last_check": "2026-04-17T01:38:00.000000Z",
+  "round": 346,
+  "stable_count": 32,
+  "last_check": "2026-04-17T02:17:00.000000Z",
   "last_result": "pass",
   "checks": {
-    "http": "localhost:3005: 200 OK ✓ (注: 3000端口无响应，服务器实际在3005)",
+    "http": "localhost:3005: 200 OK ✓",
     "console": "0 errors ✓",
-    "flow": "5/5 steps pass ✓",
-    "mobile": "3/3 pages load correctly ✓"
+    "smoke": "ms=6269, wk=domestic_menswear_suit_set_model ✓"
   },
-  "consecutive_stable": 24,
+  "consecutive_stable": 25,
   "notes": {
-    "health": "All checks passed. HTTP 200, Console 0 errors, Flow 5/5, Mobile 3/3.",
+    "health": "All checks passed. HTTP 200, TypeScript 0 errors, Smoke test pass.",
     "failure_stage": null
   },
   "notify_stable": true
