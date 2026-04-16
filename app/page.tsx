@@ -283,7 +283,7 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-          <p className="text-center text-white/30 text-xs md:text-sm mt-6 md:mt-8">不确定自己需要什么？<Link href="/diagnosis" className="underline underline-offset-2 hover:text-white/60 transition-colors">先做5道题，让我们帮你判断</Link></p>
+          <p className="text-center text-white/30 text-xs md:text-sm mt-6 md:mt-8">不确定自己需要什么？<Link href="/diagnosis" className="underline underline-offset-2 hover:text-white/60 transition-colors">先做8道题，让我们帮你判断</Link></p>
         </div>
       </section>
 

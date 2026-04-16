@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import Link from "next/link";
 import { DIAGNOSIS_QUESTIONS, calculateResult, type AnswerValue } from "@/lib/diagnosis";
 
-const TOTAL_STEPS = 3;
+const TOTAL_STEPS = 8;
 
 export default function DiagnosisPage() {
   const [currentStep, setCurrentStep] = useState(1);
