@@ -37,8 +37,8 @@ export async function chat(messages: ChatMessage[], timeoutMs = 20000): Promise<
     body: JSON.stringify({
       model: MODEL,
       messages,
-      temperature: 0.8,
-      max_tokens: 2000,
+      temperature: 0.7,
+      max_tokens: 150,
     }),
     signal: controller.signal,
   });
