@@ -1,18 +1,20 @@
 {
-  "round": 359,
+  "round": 360,
   "stable_count": 45,
-  "last_check": "2026-04-17T03:44:00.000000Z",
-  "last_result": "pass",
+  "last_check": "2026-04-17T00:19:00.000000Z",
+  "last_result": "fail",
   "checks": {
-    "http": "localhost:3005: 200 OK ✓",
-    "console": "0 errors ✓",
-    "flow": "5/5 steps pass ✓",
-    "mobile": "3/3 pages load correctly ✓"
+    "http": "localhost:3000: 404 ✗ | localhost:3005: 200 OK ✓",
+    "console": "0 errors ✓ (on port 3005)",
+    "flow": "4/5 (port 3000 首页失败)",
+    "mobile": "0/3 (browser.ts 默认 port 3000)",
+    "note": "dev server 已迁移到 port 3005，browser.ts 脚本未适配"
   },
-  "consecutive_stable": 38,
+  "consecutive_stable": 0,
+  "notify_stable": false,
   "notes": {
-    "health": "All checks passed. HTTP 200 on port 3005, console 0 errors, flow 5/5, mobile 3/3 ✓",
-    "failure_stage": null
-  },
-  "notify_stable": true
+    "health": "HTTP 404 on port 3000 — dev server 迁移到 port 3005",
+    "failure_stage": "http",
+    "action_needed": "更新 browser.ts 支持 BASE_URL 或切换到 port 3005"
+  }
 }
