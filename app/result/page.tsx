@@ -301,10 +301,20 @@ export default function ResultPage() {
 
   // Get sessionId from URL for CTA link
   const [sessionId, setSessionId] = useState<string>("");
+  // 读取路由决策（高优先级用户显示特殊提示）
+  const [routeDecision, setRouteDecision] = useState<{
+    selectedProvider: string;
+    priorityLevel: string;
+    routeReasons: string[];
+  } | null>(null);
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       setSessionId(params.get("session") ?? "");
+      try {
+        const stored = localStorage.getItem("route_decision");
+        if (stored) setRouteDecision(JSON.parse(stored));
+      } catch { /* ignore */ }
     }
   }, []);
 
@@ -357,6 +367,20 @@ export default function ResultPage() {
         <CostCalculator />
 
         {/* ── 免费试做1张 ─────────────────────────────── */}
+        {routeDecision?.selectedProvider === "nanobanana" && (
+          <section className="space-y-2">
+            <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-4 border border-amber-200">
+              <div className="flex items-start gap-3">
+                <span className="text-lg">✨</span>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">已为你匹配高质量商拍路线</p>
+                  <p className="text-xs text-gray-500 mt-0.5">我们检测到你的需求适合跨境卖家标准，当前排队优先级：高</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
         <section className="space-y-4">
           <p className="text-xs font-medium text-amber-600 tracking-wide">免费体验</p>
           <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-5 md:p-6 border border-amber-100">

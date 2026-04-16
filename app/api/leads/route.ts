@@ -104,7 +104,12 @@ export async function POST(req: NextRequest) {
       }).catch((err) => console.warn("[leads] feishu notify failed:", err));
     }
 
-    return NextResponse.json(lead, { status: 201 });
+    return NextResponse.json({
+      lead,
+      selectedProvider: routeDecision.provider,
+      priorityLevel: routeDecision.priorityLevel,
+      routeReasons: routeDecision.reasons,
+    }, { status: 201 });
   } catch {
     return NextResponse.json({ error: "创建线索失败" }, { status: 500 });
   }

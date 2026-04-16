@@ -85,6 +85,19 @@ function SubmitContent() {
       });
 
       if (!leadRes.ok) throw new Error("提交失败");
+      const leadData = await leadRes.json();
+
+      // 存储路由决策（供 result 页展示高优先级提示）
+      if (leadData.selectedProvider) {
+        try {
+          localStorage.setItem("route_decision", JSON.stringify({
+            selectedProvider: leadData.selectedProvider,
+            priorityLevel: leadData.priorityLevel,
+            routeReasons: leadData.routeReasons ?? [],
+          }));
+        } catch { /* ignore */ }
+      }
+
       setSubmitted(true);
     } catch {
       setError("提交失败，请检查网络后重试");
@@ -197,8 +210,9 @@ function SubmitContent() {
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
               上传资料（选填）
             </label>
-            <div className="mb-2 p-3 bg-amber-50 border border-amber-100 rounded-lg text-xs text-amber-700">
-              💡 小提示：上传一张<strong>随手拍产品图</strong>+一张<strong>你喜欢的参考图</strong>，我们会按这个方向免费试做1张
+            <div className="mb-2 p-3 bg-amber-50 border border-amber-100 rounded-lg text-xs text-amber-700 leading-relaxed">
+              💡 小提示：上传一张<strong>随手拍产品图</strong>+一张<strong>你喜欢的参考图</strong>，我们会按这个方向免费试做1张<br />
+              如果你对风格统一和品牌感要求高，我们会优先采用更高质量的出图链路
             </div>
 
             {/* 产品图 */}
