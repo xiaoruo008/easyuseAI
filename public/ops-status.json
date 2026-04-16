@@ -1,18 +1,18 @@
 {
-  "round": 352,
-  "stable_count": 38,
-  "last_check": "2026-04-16T12:35:13.000Z",
+  "round": 353,
+  "stable_count": 39,
+  "last_check": "2026-04-16T13:09:00.000Z",
   "last_result": "pass",
   "checks": {
-    "http": "localhost:3000: 连接失败(退出码7) | localhost:3005: 200 OK ✓",
+    "http": "localhost:3005: 200 OK ✓ (localhost:3000: 连接失败 - 已知端口迁移)",
     "console": "0 errors ✓",
     "flow": "5/5 steps pass ✓",
     "mobile": "3/3 pages load correctly ✓"
   },
-  "consecutive_stable": 31,
+  "consecutive_stable": 32,
   "notes": {
     "health": "All checks passed on port 3005. HTTP 200, console 0 errors, flow 5/5, mobile 3/3. Port 3000 unreachable (known server port migration).",
     "failure_stage": null
   },
-  "notify_stable": false
+  "notify_stable": true
 }
