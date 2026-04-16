@@ -1,6 +1,22 @@
 # CURRENT_TASK
-更新时间：2026-04-16 12:06 UTC+8
-状态：✅ 进行中（第18轮健康检查完成）
+更新时间：2026-04-16 12:13 UTC+8
+状态：✅ 进行中（第19轮完成）
+
+---
+
+## 第三十一轮（2026-04-16 12:13 UTC+8）
+**类型**：DevX / Documentation Fix
+**状态**：✅ 完成
+
+`.env.example` 文档错误修复：
+
+1. `IMAGE_API_KEY=23|MIN...xxxx` → `MINIMAX_API_KEY=your_minimax_api_key_here`（minimax-cn provider 读取 `MINIMAX_API_KEY`，不是 `IMAGE_API_KEY`）
+2. `IMAGE_PROVIDER=minimax` → `IMAGE_PROVIDER=minimax-cn`（与代码中实际 provider 名称一致）
+3. 删除重复的 `MINIMAX_API_KEY=***` 条目
+
+防止新开发者配置错误的环境变量，导致 MiniMax 图片生成静默回退到 Mock Provider。
+
+验证：`pnpm tsc --noEmit` → 0 errors ✅
 
 ---
 

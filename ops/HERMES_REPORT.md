@@ -1,6 +1,37 @@
 # HERMES_REPORT
-更新时间：2026-04-16 12:06 UTC+8
-调度轮次：第18轮（每30分钟自动调度）
+更新时间：2026-04-16 12:13 UTC+8
+调度轮次：第19轮（每30分钟自动调度）
+
+## 第十九轮（2026-04-16 12:13 UTC+8）
+
+### P32 - `.env.example` 文档错误：IMAGE_API_KEY 应为 MINIMAX_API_KEY ✅
+**类型**: DevX / Documentation Fix
+**状态**: ✅ 完成
+
+**问题**: `.env.example` 存在两处误导新开发者的错误：
+
+1. **`IMAGE_API_KEY=23|MIN...xxxx`** — 错误！`minimax-cn` provider 实际读取的是 `MINIMAX_API_KEY`（见 `lib/image/providers/minimax-cn.ts` 第17行：`const MINIMAX_API_KEY = process.env.MINIMAX_API_KEY ?? ""`）。`IMAGE_API_KEY` 是 `fal` provider 使用的环境变量，写成 `IMAGE_API_KEY` 会导致 MiniMax 图片生成静默回退到 Mock Provider。
+2. **`IMAGE_PROVIDER=minimax`** — 虽能工作，但当前系统实际使用的是 `minimax-cn` provider（`lib/image/index.ts` 第14行同时检查 `"minimax"` 和 `"minimax-cn"`），保持与代码一致更好。
+3. **重复的 `MINIMAX_API_KEY`** — 文件中存在两个 `MINIMAX_API_KEY` 条目（原来的 `sk-cp-xxx` 占位符 + 新写的 `your_m...here`），导致歧义。
+
+**修复内容**（`.env.example`）：
+```
+# 修复前
+IMAGE_PROVIDER=minimax
+IMAGE_API_KEY=23|MIN...xxxx   ← 错误！minimax-cn 用 MINIMAX_API_KEY
+MINIMAX_API_KEY=sk-cp-xxx    ← 重复
+
+# 修复后
+IMAGE_PROVIDER=minimax-cn     ← 与代码中的实际 provider 名称一致
+# minimax-cn provider 使用 MINIMAX_API_KEY（不要误写为 IMAGE_API_KEY）
+MINIMAX_API_KEY=your_minimax_api_key_here
+```
+
+**影响范围**: 新开发者参照 `.env.example` 配置环境变量时，不会再被错误的 `IMAGE_API_KEY` 误导，导致图片生成静默失败。
+
+**验证**: `pnpm tsc --noEmit` → exit code 0 ✅
+
+---
 
 ## 第十八轮（2026-04-16 12:06 UTC+8）
 
