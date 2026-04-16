@@ -1,20 +1,18 @@
 {
-  "round": 358,
-  "stable_count": 44,
-  "last_check": "2026-04-17T03:22:00.000000Z",
+  "round": 359,
+  "stable_count": 45,
+  "last_check": "2026-04-17T03:44:00.000000Z",
   "last_result": "pass",
   "checks": {
-    "http": "localhost:3005: 200 OK \u2713",
-    "tsc": "0 errors \u2713",
-    "smoke": "ms=5987 wk=domestic_menswear_suit_set_model persona=null",
-    "flow": "5/5 steps pass \u2713",
-    "mobile": "3/3 pages load correctly \u2713"
+    "http": "localhost:3005: 200 OK ✓",
+    "console": "0 errors ✓",
+    "flow": "5/5 steps pass ✓",
+    "mobile": "3/3 pages load correctly ✓"
   },
-  "consecutive_stable": 37,
+  "consecutive_stable": 38,
   "notes": {
-    "health": "All checks passed. HTTP 200, tsc 0 errors, smoke ms=5987 wk=domestic_menswear_suit_set_model \u2713",
-    "persona_note": "LLM persona null (transient - workflowKey correct, system stable)",
+    "health": "All checks passed. HTTP 200 on port 3005, console 0 errors, flow 5/5, mobile 3/3 ✓",
     "failure_stage": null
   },
-  "notify_stable": false
+  "notify_stable": true
 }
