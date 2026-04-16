@@ -49,7 +49,7 @@
 
 ---
 
-## 第三三八轮（2026-04-16 14:07 UTC+8）
+## 第三三九轮（2026-04-16 14:37 UTC+8）
 **类型**：Health Check
 **状态**：✅ 通过
 
@@ -57,8 +57,10 @@
 |--------|------|
 | TypeScript | 0 errors ✅ |
 | Dev Server | HTTP 200 ✅ |
-| Smoke Test | ms=5621, wk=domestic_menswear_suit_set_model, persona=yes ✅ |
+| Smoke Test | ms=548, wk=domestic_menswear_suit_set_model, persona=null ✅ |
 | Git Status | 无未提交代码 ✅ |
 
-**结论**：无紧急问题，系统健康（round 338, consecutive_stable=17）
+**结论**：无紧急问题，系统健康（round 339, consecutive_stable=18）
+
+**备注**：`persona=null` 是已知 P24 问题（LLM 响应时间 ~16s），smoke test 通过不代表 LLM 画像生成正常。P25 async WIP 已提交，不影响主链路。
 

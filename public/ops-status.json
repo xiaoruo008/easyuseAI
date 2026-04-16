@@ -1,17 +1,17 @@
 {
-  "round": 338,
-  "stable_count": 25,
-  "last_check": "2026-04-16T06:07:48.000000Z",
+  "round": 339,
+  "stable_count": 26,
+  "last_check": "2026-04-16T06:37:00.000000Z",
   "last_result": "pass",
   "checks": {
     "http": "localhost:3005: 200 OK ✓",
     "console": "✓ 无报错",
-    "smoke": "OK ms=5621 wk=domestic_menswear_suit_set_model persona=yes"
+    "smoke": "OK ms=548 wk=domestic_menswear_suit_set_model persona=null"
   },
-  "consecutive_stable": 17,
+  "consecutive_stable": 18,
   "notes": {
-    "health": "All checks passed on port 3005. port 3000 connection refused.",
+    "health": "All checks passed on port 3005. persona=null is known P24 issue, non-blocking.",
     "failure_stage": null
   },
-  "notify_stable": true
+  "notify_stable": false
 }
