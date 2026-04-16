@@ -1,17 +1,17 @@
 {
-  "round": 335,
-  "stable_count": 22,
-  "last_check": "2026-04-16T04:35:53.718992Z",
+  "round": 336,
+  "stable_count": 23,
+  "last_check": "2026-04-16T13:09:00.000000Z",
   "last_result": "pass",
   "checks": {
-    "http": "localhost:3005: 200 OK ✓",
-    "console": "✓ 无报错（仅2处API路由运维日志，Feishu命令+MiniMax健康检查）",
+    "http": "localhost:3005: 200 OK ✓ (port 3000 unreachable)",
+    "console": "✓ 无报错，无失败请求",
     "flow": "5/5 steps pass ✓",
     "mobile": "3/3 pages load correctly ✓"
   },
-  "consecutive_stable": 14,
+  "consecutive_stable": 15,
   "notes": {
-    "health": "All checks passed on port 3005 (port 3000 not responding).",
+    "health": "All checks passed on port 3005. port 3000 connection refused.",
     "failure_stage": null
   },
   "notify_stable": false
