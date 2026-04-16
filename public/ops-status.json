@@ -1,17 +1,17 @@
 {
-  "round": 341,
-  "stable_count": 28,
-  "last_check": "2026-04-16T08:14:00.000000Z",
+  "round": 342,
+  "stable_count": 29,
+  "last_check": "2026-04-16T08:35:00.000000Z",
   "last_result": "pass",
   "checks": {
     "http": "localhost:3005: 200 OK ✓",
-    "console": "✓ 无报错",
-    "flow": "5/5 步骤通过",
-    "mobile": "✓ 首页/Diagnosis/Result 全部通过"
+    "typescript": "0 errors ✓",
+    "smoke_test": "OK ms=6183 wk=domestic_menswear_suit_set_model persona=null (fire-and-forget expected)"
   },
-  "consecutive_stable": 20,
+  "consecutive_stable": 21,
   "notes": {
-    "health": "All checks passed. Console: 无报错, Flow: 5/5, Mobile: OK",
+    "health": "All checks passed. TypeScript: 0 errors, HTTP 200, Smoke Test: wk=domestic_menswear_suit_set_model",
+    "persona_null_explained": "First call to Result API returns aiPersona=null (fire-and-forget pattern, LLM runs async in background). Subsequent calls for same session return cached value.",
     "failure_stage": null
   },
   "notify_stable": false
