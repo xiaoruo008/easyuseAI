@@ -198,19 +198,10 @@ function CaseCard({ item }: { item: CaseStudyItem }) {
   const [beforeError, setBeforeError] = useState(false);
   const [afterError, setAfterError] = useState(false);
 
-  // aspectRatio → padding-top percentage for container height
-  const aspectPadding: Record<string, string> = {
-    "3:4": "pb-[133%]",
-    "4:5": "pb-[125%]",
-    "1:1": "pb-[100%]",
-    "9:16": "pb-[177%]",
-  };
-  const padClass = aspectPadding[item.aspectRatio] ?? "pb-[125%]";
-
   return (
-    <div className="rounded-xl overflow-hidden bg-gray-100">
-      {/* 图片容器 — 用 padding-bottom 撑起高度，实现统一比例 */}
-      <div className={`relative w-full ${padClass}`}>
+    <div className="rounded-xl overflow-hidden bg-gray-100 aspect-[3/4]">
+      {/* 图片容器 — 统一比例，强制裁剪 */}
+      <div className="relative w-full h-full">
         {/* Before 图 */}
         <div className="absolute inset-0 left-0 w-1/2">
           {!beforeError ? (

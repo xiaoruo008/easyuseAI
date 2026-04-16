@@ -1,19 +1,17 @@
 {
-  "timestamp": "2026-04-16T16:22:23.502Z",
+  "timestamp": "2026-04-16T18:46:59.998Z",
   "baseUrl": "http://localhost:3000",
   "summary": {
     "total": 5,
-    "passed": 4,
-    "failed": 1
+    "passed": 5,
+    "failed": 0
   },
   "steps": [
     {
       "name": "首页",
       "url": "http://localhost:3000",
-      "passed": false,
-      "errors": [
-        "页面内容为空"
-      ],
+      "passed": true,
+      "errors": [],
       "screenshot": "flow-首页.png"
     },
     {
