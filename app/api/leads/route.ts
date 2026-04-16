@@ -23,23 +23,44 @@ export async function POST(req: NextRequest) {
       diagnosisSessionId: null,
     });
 
-    // n8n webhook 通知（失败不阻塞主流程）
-    const webhookUrl = process.env.N8N_WEBHOOK_URL;
+    // 飞书通知
+    const webhookUrl = process.env.FEISHU_WEBHOOK_URL;
     if (webhookUrl) {
+      const card = {
+        msg_type: "interactive",
+        card: {
+          header: {
+            title: {
+              tag: "plain_text",
+              content: "🆕 新线索来了",
+            },
+            template: "purple",
+          },
+          elements: [
+            {
+              tag: "div",
+              text: {
+                tag: "lark_md",
+                content: [
+                  `**姓名：** ${name}`,
+                  `**微信：** ${wechat}`,
+                  `**品类：** ${category ?? resultType ?? "-"}`,
+                  `**类型：** ${resultType ?? "-"}`,
+                  remark ? `**备注：** ${remark}` : null,
+                  productImage ? `**产品图：** ${productImage}` : null,
+                  referenceImage ? `**参考图：** ${referenceImage}` : null,
+                ].filter(Boolean).join("\n"),
+              },
+            },
+          ],
+        },
+      };
+
       fetch(webhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          wechat,
-          category: category ?? null,
-          platform: platform ?? null,
-          resultType: resultType ?? null,
-          productImage: productImage ?? null,
-          referenceImage: referenceImage ?? null,
-          remark: remark ?? null,
-        }),
-      }).catch((err) => console.warn("[leads] n8n webhook failed:", err));
+        body: JSON.stringify(card),
+      }).catch((err) => console.warn("[leads] feishu notify failed:", err));
     }
 
     return NextResponse.json(lead, { status: 201 });
