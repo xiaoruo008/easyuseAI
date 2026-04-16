@@ -46,8 +46,8 @@ export async function GET(
       if (personaCache.has(id)) {
         aiPersona = personaCache.get(id)!;
       } else {
-        try {
-        // 构建用户画像 Prompt
+        // Fire-and-forget：立即返回，不等 LLM 完成
+        // 首次调用 aiPersona=null（用 rule-based），LLM 在后台更新缓存供后续调用复用
         const diagnosisText = DIAGNOSIS_QUESTIONS.map((q) => {
           const ans = answers[q.id];
           if (!ans) return null;
@@ -91,39 +91,30 @@ export async function GET(
           },
         ];
 
-        const personaResponse = await chat(personaPrompt);
-        // 过滤 MiniMax 推理标签：
-        // 1. igonre**...** 格式（MiniMax thinking tags）
-        // 2. <think>...</think> 格式（部分模型输出）
-        // 3. 其他 <...> XML/HTML 残留
-        const raw = personaResponse.content.trim();
-        // eslint-disable-next-line prefer-const
-        let stripped = raw;
-        // Step 1: Remove thinking block markers (igonre** and **igonre)
-        // These are structural markers, not content
-        stripped = stripped.replace(/\*\*igonre\*\*/gi, "");  // **igonre** markers
-        stripped = stripped.replace(/igonre\*\*/gi, "");       // igonre** markers
-        // Step 2: Remove **thinking content blocks** (non-thinking **...** content may remain as actual response)
-        let prev = "";
-        while (prev !== stripped) {
-          prev = stripped;
-          stripped = stripped.replace(/\*\*[^*]+\*\*/g, "");
-        }
-        // Step 3: If result is too short (< 10 chars), likely only thinking content was removed — use rule-based persona
-        if (stripped.length < 10) {
-          stripped = result.persona;
-        }
-        stripped = stripped
-          .replace(/<[\s\S]*?>/gi, "")                       // <anything>
-          .replace(/\s+/g, " ")
-          .trim();
-        aiPersona = stripped;
-        personaCache.set(id, aiPersona);
-      } catch (aiErr) {
-        // AI 生成失败时降级使用规则结果，不阻塞主流程
-        console.warn("[/api/diagnosis/session/[id]/result] AI persona generation failed:", aiErr);
+        chat(personaPrompt)
+          .then((personaResponse) => {
+            const raw = personaResponse.content.trim();
+            let stripped = raw;
+            stripped = stripped.replace(/\*\*igonre\*\*/gi, "");
+            stripped = stripped.replace(/igonre\*\*/gi, "");
+            let prev = "";
+            while (prev !== stripped) {
+              prev = stripped;
+              stripped = stripped.replace(/\*\*[^*]+\*\*/g, "");
+            }
+            if (stripped.length < 10) stripped = result.persona;
+            stripped = stripped
+              .replace(/<[\s\S]*?>/gi, "")
+              .replace(/\s+/g, " ")
+              .trim();
+            personaCache.set(id, stripped);
+          })
+          .catch((aiErr) => {
+            console.warn("[/api/diagnosis/session/[id]/result] AI persona generation failed:", aiErr);
+          });
+
+        // 首次调用返回 null（rule-based）；同 session 后续调用走缓存
         aiPersona = null;
-      }
       }
     }
 
