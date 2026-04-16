@@ -22,14 +22,13 @@ export async function POST(req: NextRequest) {
 
     const payload = {
       name,
-      contact,
-      businessType: businessType || serviceType || null,
-      serviceType,
-      note,
-      diagnosisSessionId,
+      wechat: contact,
+      category: businessType || serviceType || null,
+      platform: null,
+      resultType: serviceType || null,
       productImage: productImageUrl || null,
       referenceImage: referenceImageUrl || null,
-      submittedAt: new Date().toISOString(),
+      remark: note || null,
     };
 
     const webhookRes = await fetch(webhookUrl, {
