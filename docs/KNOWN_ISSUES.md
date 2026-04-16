@@ -1,6 +1,6 @@
 # KNOWN_ISSUES
-更新时间：2026-04-16 13:25 UTC+8
-最后整合：P35 - monitoring artifacts 提交（2026-04-16 13:25）
+更新时间：2026-04-17 01:59 UTC+8
+最后整合：P36 - monitoring artifacts 提交（2026-04-17 01:59）
 
 > 📌 相关文档：[PROJECT_NORTH_STAR.md](./PROJECT_NORTH_STAR.md) ｜ [SYSTEM_PROGRESS.md](./SYSTEM_PROGRESS.md)
 

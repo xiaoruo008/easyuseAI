@@ -1,6 +1,6 @@
 # SYSTEM_PROGRESS
-更新时间：2026-04-16 13:25 UTC+8
-最后整合：P35 - monitoring artifacts 提交（2026-04-16 13:25）
+更新时间：2026-04-17 01:59 UTC+8
+最后整合：P36 - monitoring artifacts 提交（2026-04-17 01:59）
 
 > 📌 相关文档：[PROJECT_NORTH_STAR.md](./PROJECT_NORTH_STAR.md) ｜ [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)
 
@@ -45,6 +45,32 @@ Git status 发现 3 个未提交文件（ops-summary.md, public/browser-report.j
 - Commit: `8b1e2b3`
 - 3 个文件变更：+35 行插入，-19 行删除
 - 推送：`859d649..8b1e2b3 main -> main` ✅
+
+---
+
+## 本轮修复（2026-04-17 第二十轮）
+
+**P36 - monitoring artifacts 提交（已完成，2026-04-17 01:59）**：
+
+执行 `scripts/quick-smoke.js` 验证系统状态：
+
+```
+OK ms=11697 wk=domestic_menswear_suit_set_model persona=yes
+```
+- workflowKey: domestic_menswear_suit_set_model ✅
+- aiPersona: yes（LLM画像生成正常）✅
+- 总耗时: 11,697ms（正常，首次调用 LLM）
+
+Git status 发现 4 个未提交文件（ops-summary.md, public/browser-report.json, public/ops-status.json, public/pending-notifications.json），为 monitoring artifacts。
+
+ops-status.json 显示：round=337, consecutive_stable=16, all checks pass。
+
+**执行**：`git add ops-summary.md public/browser-report.json public/ops-status.json public/pending-notifications.json && git commit && git push`
+
+**提交结果**：
+- Commit: `9ad9c35`
+- 4 个文件变更：+22 行插入，-6 行删除
+- 推送：`a7db8ca..9ad9c35 main -> main` ✅
 
 ---
 
