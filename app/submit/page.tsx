@@ -24,96 +24,73 @@ function SubmitContent() {
     }
     setError(null);
     setSubmitting(true);
+    setUploading(true);
 
     try {
       // 0. 读取 session resultType
-      let serviceType: string | undefined;
+      let resultType: string | undefined;
       if (sessionId) {
         try {
           const r = await fetch(`/api/diagnosis/session/${sessionId}/result`);
           if (r.ok) {
             const d = await r.json();
-            serviceType = d.result?.type ?? d.session?.resultType ?? undefined;
+            resultType = d.result?.type ?? d.session?.resultType ?? undefined;
           }
         } catch { /* ignore */ }
       }
 
-      // 1. 读取 upload 页数据
-      let uploadData: { selected_styles: string[]; platform: string; notes: string } | undefined;
-      try {
-        const stored = localStorage.getItem("upload_data");
-        if (stored) uploadData = JSON.parse(stored);
-      } catch { /* ignore */ }
+      // 1. 先上传文件得 URL
+      const productFile = productImageRef.current?.files?.[0];
+      const referenceFile = referenceImageRef.current?.files?.[0];
 
-      // 2. 创建 Lead
+      let productImage: string | undefined;
+      let referenceImage: string | undefined;
+
+      if (productFile) {
+        const fd = new FormData();
+        fd.append("file", productFile);
+        const r = await fetch("/api/upload", { method: "POST", body: fd });
+        if (r.ok) {
+          const data = await r.json();
+          productImage = data.url;
+        }
+      }
+
+      if (referenceFile) {
+        const fd = new FormData();
+        fd.append("file", referenceFile);
+        const r = await fetch("/api/upload", { method: "POST", body: fd });
+        if (r.ok) {
+          const data = await r.json();
+          referenceImage = data.url;
+        }
+      }
+
+      setUploading(false);
+
+      // 2. 提交 JSON（/api/leads 内部触发 n8n webhook）
       const leadRes = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: form.name,
-          contact: form.wechat_id,
-          businessType: form.product_category || undefined,
-          note: form.notes || undefined,
-          diagnosisSessionId: sessionId || undefined,
-          serviceType,
+          wechat: form.wechat_id,
+          category: form.product_category || undefined,
+          platform: undefined,
+          resultType,
+          productImage,
+          referenceImage,
+          remark: form.notes || undefined,
         }),
       });
 
       if (!leadRes.ok) throw new Error("提交失败");
-      const lead = await leadRes.json();
-
-      // 3. 上传双图（产品图 + 参考图）— 上传失败不影响主流程
-      const productFile = productImageRef.current?.files?.[0];
-      const referenceFile = referenceImageRef.current?.files?.[0];
-      let productImageUrl: string | undefined;
-      let referenceImageUrl: string | undefined;
-      if (productFile || referenceFile) {
-        setUploading(true);
-        try {
-          const fd = new FormData();
-          fd.append("leadId", lead.id);
-          if (productFile) fd.append("productImage", productFile);
-          if (referenceFile) fd.append("referenceImage", referenceFile);
-          const uploadRes = await fetch("/api/assets", { method: "POST", body: fd });
-          if (uploadRes.ok) {
-            const assets = await uploadRes.json();
-            assets.forEach((a: { role: string; url: string }) => {
-              if (a.role === "productImage") productImageUrl = a.url;
-              if (a.role === "referenceImage") referenceImageUrl = a.url;
-            });
-          }
-        } catch (uploadErr) {
-          console.warn("[submit] 文件上传异常:", uploadErr);
-        } finally {
-          setUploading(false);
-        }
-      }
-
-      // 4. 通知 n8n（有 URL 才发）
-      try {
-        await fetch("/api/notify", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: form.name,
-            contact: form.wechat_id,
-            businessType: form.product_category || undefined,
-            serviceType,
-            note: form.notes || undefined,
-            diagnosisSessionId: sessionId || undefined,
-            productImageUrl,
-            referenceImageUrl,
-          }),
-        });
-      } catch {
-        // 通知失败不阻塞
-      }
-
       setSubmitted(true);
     } catch {
       setError("提交失败，请检查网络后重试");
     } finally {
       setSubmitting(false);
+      setUploading(false);
     }
   };
 

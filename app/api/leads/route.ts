@@ -9,20 +9,38 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, contact, phone, businessType, serviceType, note, diagnosisSessionId } = body;
+    const { name, wechat, category, platform, resultType, productImage, referenceImage, remark } = body;
 
-    const contactValue = contact || phone;
-    if (!name || !contactValue) {
-      return NextResponse.json({ error: "姓名和联系方式必填" }, { status: 400 });
+    if (!name || !wechat) {
+      return NextResponse.json({ error: "姓名和微信号必填" }, { status: 400 });
     }
 
     const lead = await createLead({
       name,
-      contact: contactValue,
-      businessType: businessType ?? serviceType ?? null,
-      note: note ?? null,
-      diagnosisSessionId: diagnosisSessionId ?? null,
+      contact: wechat,
+      businessType: category ?? resultType ?? null,
+      note: remark ?? null,
+      diagnosisSessionId: null,
     });
+
+    // n8n webhook 通知（失败不阻塞主流程）
+    const webhookUrl = process.env.N8N_WEBHOOK_URL;
+    if (webhookUrl) {
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          wechat,
+          category: category ?? null,
+          platform: platform ?? null,
+          resultType: resultType ?? null,
+          productImage: productImage ?? null,
+          referenceImage: referenceImage ?? null,
+          remark: remark ?? null,
+        }),
+      }).catch((err) => console.warn("[leads] n8n webhook failed:", err));
+    }
 
     return NextResponse.json(lead, { status: 201 });
   } catch {
