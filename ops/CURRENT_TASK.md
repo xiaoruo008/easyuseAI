@@ -1,6 +1,20 @@
 # CURRENT_TASK
-更新时间：2026-04-16 12:13 UTC+8
-状态：✅ 进行中（第19轮完成）
+更新时间：2026-04-16 12:54 UTC+8
+状态：✅ 进行中（第20轮完成）
+
+---
+
+## 第二十轮（2026-04-16 12:54 UTC+8）
+**类型**：Performance Optimization（AI chat 参数）
+**状态**：✅ 完成
+
+`lib/ai.ts` chat() 参数优化：
+- `temperature: 0.8 → 0.7`（更稳定收敛）
+- `max_tokens: 2000 → 150`（更短输出，更快生成）
+
+注意：`timeoutMs` 已在 P27 修复为 20000ms，本次不涉及。
+
+验证：`npx tsc --noEmit` → 0 errors ✅
 
 ---
 
