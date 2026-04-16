@@ -1,7 +1,7 @@
 {
-  "round": 340,
-  "stable_count": 27,
-  "last_check": "2026-04-16T07:33:09.060000Z",
+  "round": 341,
+  "stable_count": 28,
+  "last_check": "2026-04-16T08:14:00.000000Z",
   "last_result": "pass",
   "checks": {
     "http": "localhost:3005: 200 OK ✓",
@@ -9,10 +9,10 @@
     "flow": "5/5 步骤通过",
     "mobile": "✓ 首页/Diagnosis/Result 全部通过"
   },
-  "consecutive_stable": 19,
+  "consecutive_stable": 20,
   "notes": {
     "health": "All checks passed. Console: 无报错, Flow: 5/5, Mobile: OK",
     "failure_stage": null
   },
-  "notify_stable": true
+  "notify_stable": false
 }
