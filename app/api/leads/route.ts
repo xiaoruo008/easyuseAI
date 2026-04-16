@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createLead, getAllLeads } from "@/lib/db";
+import { createLead, getAllLeads, getSession } from "@/lib/db";
+import { routeGenerationModel, type RouteDecisionInput } from "@/lib/route-decision";
 
 export async function GET() {
   const leads = await getAllLeads();
@@ -9,18 +10,55 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, wechat, category, platform, resultType, productImage, referenceImage, remark } = body;
+    const { name, wechat, category, platform, resultType, productImage, referenceImage, remark, diagnosisSessionId } = body;
 
     if (!name || !wechat) {
       return NextResponse.json({ error: "姓名和微信号必填" }, { status: 400 });
     }
+
+    // 读取 session 数据用于路由判断
+    interface SessionDataForRouting {
+      painPoint?: string;
+      resultType?: string;
+      answers?: Record<string, unknown>;
+    }
+    let sessionData: SessionDataForRouting | null = null;
+    if (diagnosisSessionId) {
+      try {
+        const session = await getSession(diagnosisSessionId);
+        if (session) {
+          sessionData = {
+            painPoint: (session as unknown as { painPoint?: string }).painPoint,
+            resultType: session.resultType ?? undefined,
+            answers: session.answers as Record<string, unknown> | undefined,
+          };
+        }
+      } catch {
+        console.warn("[leads] failed to fetch session for routing:", diagnosisSessionId);
+      }
+    }
+
+    // 构建路由决策输入
+    const routeInput: RouteDecisionInput = {
+      painPoint: sessionData?.painPoint,
+      resultType: resultType ?? sessionData?.resultType,
+      platform: platform ?? (sessionData?.answers as Record<string, unknown>)?.platform as string | string[] | undefined,
+      monthlyFrequency: (sessionData?.answers as Record<string, unknown>)?.monthlyFrequency as string | undefined,
+      brandStyle: (sessionData?.answers as Record<string, unknown>)?.brandStyle as string | undefined,
+      hasProductImage: Boolean(productImage),
+      hasReferenceImage: Boolean(referenceImage),
+      hasWechat: Boolean(wechat),
+    };
+
+    // 执行路由判断
+    const routeDecision = routeGenerationModel(routeInput);
 
     const lead = await createLead({
       name,
       contact: wechat,
       businessType: category ?? resultType ?? null,
       note: remark ?? null,
-      diagnosisSessionId: null,
+      diagnosisSessionId: diagnosisSessionId ?? null,
     });
 
     // 飞书通知
@@ -49,6 +87,9 @@ export async function POST(req: NextRequest) {
                   remark ? `**备注：** ${remark}` : null,
                   productImage ? `**产品图：** ${productImage}` : null,
                   referenceImage ? `**参考图：** ${referenceImage}` : null,
+                  `**推荐模型：** ${routeDecision.provider === "nanobanana" ? "NanoBanana（高质量）" : "MiniMax（默认）"}`,
+                  `**优先级：** ${routeDecision.priorityLevel === "high_value" ? "高价值客户" : "普通客户"}`,
+                  routeDecision.reasons.length > 0 ? `**路由原因：** ${routeDecision.reasons.join("；")}` : null,
                 ].filter(Boolean).join("\n"),
               },
             },
