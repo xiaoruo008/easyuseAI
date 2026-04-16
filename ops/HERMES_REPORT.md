@@ -1,6 +1,6 @@
 # HERMES REPORT
-更新时间：2026-04-16T13:07:30Z
-调度轮次：22
+更新时间：2026-04-17T02:35:00Z
+调度轮次：28
 
 ## 系统健康检查
 
@@ -9,19 +9,22 @@
 | HTTP (localhost:3005) | 200 ✅ |
 | TypeScript 编译 | 0 errors ✅ |
 | Smoke Test | OK ✅ |
-| Git Status | 无未提交代码 ✅ |
-| consecutive_stable | 31 ✅ |
+| Git Status | 1 commit (ops files) ✅ |
+| consecutive_stable | 35 ✅ |
 
 ## Smoke Test 详情
 ```
-OK ms=98 wk=domestic_menswear_suit_model persona=null
+OK ms=5961 wk=domestic_menswear_suit_set_model persona=null
 ```
 - `persona=null` 说明：dev 环境 `AI_API_KEY` 未设置，LLM 画像生成禁用（走 rule-based fallback），这是预期行为
-- `ms=98`：快速返回，无 LLM 调用（fire-and-forget P25 优化）
+- `ms=5961`：正常 LLM 调用时长
 - workflowKey 正确路由 ✅
 
+## Git Commit
+- `5f71cb2` auto: round 27 - health check pass, stable_count=42, consecutive_stable=35
+
 ## 结论
-系统健康，无紧急问题。连续稳定 31 轮。
+系统健康，无紧急问题。连续稳定 35 轮。
 
 ## 注意事项
 - dev 环境 `AI_API_KEY` 为空，LLM 画像生成在 dev 中禁用（预期行为）
