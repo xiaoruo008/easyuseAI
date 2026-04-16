@@ -1,15 +1,14 @@
 {
-  "round": 337,
-  "stable_count": 24,
-  "last_check": "2026-04-17T01:51:00.000000Z",
+  "round": 338,
+  "stable_count": 25,
+  "last_check": "2026-04-16T06:07:48.000000Z",
   "last_result": "pass",
   "checks": {
-    "http": "localhost:3005: 200 OK ✓ (port 3000 unreachable)",
-    "console": "✓ 无报错，无失败请求",
-    "flow": "5/5 steps pass ✓",
-    "mobile": "3/3 pages load correctly ✓"
+    "http": "localhost:3005: 200 OK ✓",
+    "console": "✓ 无报错",
+    "smoke": "OK ms=5621 wk=domestic_menswear_suit_set_model persona=yes"
   },
-  "consecutive_stable": 16,
+  "consecutive_stable": 17,
   "notes": {
     "health": "All checks passed on port 3005. port 3000 connection refused.",
     "failure_stage": null
