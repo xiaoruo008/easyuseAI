@@ -5,7 +5,77 @@ import Link from "next/link";
 import Image from "next/image";
 import { WORKFLOWS, PERSONAS, PAIN_POINTS, type ResultType, type WorkflowStep } from "@/lib/diagnosis";
 
-// 成本计算器组件
+// ── 案例数据结构 ───────────────────────────────────────────────
+export type CaseCategory = "model" | "brand_scene" | "lifestyle" | "detail_upgrade";
+
+export interface CaseStudyItem {
+  id: string;
+  category: CaseCategory;
+  resultTypes: string[]; // 哪些诊断结果可复用这组案例
+  title: string;
+  subtitle: string;
+  beforeImage: string;
+  afterImage: string;
+  aspectRatio: "1:1" | "3:4" | "4:5" | "9:16";
+  beforeLabel: string;
+  afterLabel: string;
+  priority: number;
+}
+
+const CASE_STUDIES: CaseStudyItem[] = [
+  {
+    id: "model-full",
+    category: "model",
+    resultTypes: ["image_poor", "image_cost", "image_stability", "image_start"],
+    title: "模特上身",
+    subtitle: "真实感强，提升买家下单信心",
+    beforeImage: "/images/cases/suit-white.jpg",
+    afterImage: "/images/cases/suit-model.jpg",
+    aspectRatio: "3:4",
+    beforeLabel: "白底图",
+    afterLabel: "真实模特效果",
+    priority: 1,
+  },
+  {
+    id: "brand-scene",
+    category: "brand_scene",
+    resultTypes: ["image_poor", "image_cost", "image_stability"],
+    title: "品牌场景图",
+    subtitle: "有调性，种草内容更吸睛",
+    beforeImage: "/images/cases/suit-white.jpg",
+    afterImage: "/images/cases/suit-brand.jpg",
+    aspectRatio: "1:1",
+    beforeLabel: "白底图",
+    afterLabel: "品牌场景效果",
+    priority: 2,
+  },
+  {
+    id: "lifestyle-scene",
+    category: "lifestyle",
+    resultTypes: ["image_poor", "image_start"],
+    title: "生活场景图",
+    subtitle: "有氛围感，种草更有说服力",
+    beforeImage: "/images/cases/suit-white.jpg",
+    afterImage: "/images/cases/suit-scene.jpg",
+    aspectRatio: "3:4",
+    beforeLabel: "白底图",
+    afterLabel: "生活场景图",
+    priority: 3,
+  },
+  {
+    id: "detail-upgrade",
+    category: "detail_upgrade",
+    resultTypes: ["image_cost", "image_poor", "image_stability"],
+    title: "商品精修",
+    subtitle: "提升质感，详情页转化更高",
+    beforeImage: "/images/cases/suit-before.jpg",
+    afterImage: "/images/cases/suit-model.jpg",
+    aspectRatio: "1:1",
+    beforeLabel: "原图",
+    afterLabel: "精修效果图",
+    priority: 4,
+  },
+];
 function CostCalculator() {
   const [monthlyCount, setMonthlyCount] = useState(20);
 
@@ -69,38 +139,62 @@ function CostCalculator() {
 }
 
 // 案例展示组件（带真实图片）
-const CASE_STUDIES = [
+const OLD_CASE_STUDIES: CaseStudyItem[] = [
   {
-    label: "换背景",
-    beforeImg: "/images/cases/suit-white.jpg",
-    afterImg: "/images/cases/suit-brand.jpg",
-    beforeAlt: "白底图",
-    afterAlt: "品牌场景图",
+    id: "case-bg",
+    category: "lifestyle",
+    resultTypes: ["image_poor", "image_cost", "image_stability"],
+    title: "换背景",
+    subtitle: "白底图→品牌场景图",
+    beforeImage: "/images/cases/suit-white.jpg",
+    afterImage: "/images/cases/suit-brand.jpg",
+    aspectRatio: "1:1",
+    beforeLabel: "白底图",
+    afterLabel: "品牌场景图",
+    priority: 1,
   },
   {
-    label: "商品精修",
-    beforeImg: "/images/cases/suit-before.jpg",
-    afterImg: "/images/cases/suit-model.jpg",
-    beforeAlt: "原图",
-    afterAlt: "模特上身效果图",
+    id: "case-retouch",
+    category: "lifestyle",
+    resultTypes: ["image_poor", "image_cost", "image_stability"],
+    title: "商品精修",
+    subtitle: "原图→模特上身效果图",
+    beforeImage: "/images/cases/suit-before.jpg",
+    afterImage: "/images/cases/suit-model.jpg",
+    aspectRatio: "3:4",
+    beforeLabel: "原图",
+    afterLabel: "模特上身效果图",
+    priority: 2,
   },
   {
-    label: "模特上身",
-    beforeImg: "/images/cases/suit-white.jpg",
-    afterImg: "/images/cases/suit-model.jpg",
-    beforeAlt: "白底图",
-    afterAlt: "真实模特效果",
+    id: "case-model",
+    category: "lifestyle",
+    resultTypes: ["image_poor", "image_cost", "image_stability", "image_start"],
+    title: "模特上身",
+    subtitle: "白底图→真实模特效果",
+    beforeImage: "/images/cases/suit-white.jpg",
+    afterImage: "/images/cases/suit-model.jpg",
+    aspectRatio: "3:4",
+    beforeLabel: "白底图",
+    afterLabel: "真实模特效果",
+    priority: 3,
   },
   {
-    label: "场景图",
-    beforeImg: "/images/cases/suit-white.jpg",
-    afterImg: "/images/cases/suit-scene.jpg",
-    beforeAlt: "白底图",
-    afterAlt: "生活场景图",
+    id: "case-scene",
+    category: "lifestyle",
+    resultTypes: ["image_poor", "image_cost", "image_stability"],
+    title: "场景图",
+    subtitle: "白底图→生活场景图",
+    beforeImage: "/images/cases/suit-white.jpg",
+    afterImage: "/images/cases/suit-scene.jpg",
+    aspectRatio: "1:1",
+    beforeLabel: "白底图",
+    afterLabel: "生活场景图",
+    priority: 4,
   },
 ];
 
-function CaseCard({ case: c }: { case: typeof CASE_STUDIES[0] }) {
+function CaseCard({ item }: { item: CaseStudyItem }) {
   const [imgError, setImgError] = useState(false);
 
   return (
@@ -108,8 +202,8 @@ function CaseCard({ case: c }: { case: typeof CASE_STUDIES[0] }) {
       <div className="relative bg-gray-200 border-b border-gray-300 h-24 md:h-32">
         {!imgError ? (
           <Image
-            src={c.beforeImg}
-            alt={c.beforeAlt}
+            src={item.beforeImage}
+            alt={item.beforeLabel}
             fill
             className="object-cover"
             onError={() => setImgError(true)}
@@ -118,7 +212,7 @@ function CaseCard({ case: c }: { case: typeof CASE_STUDIES[0] }) {
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center">
               <p className="text-xs text-gray-400">Before</p>
-              <p className="text-sm font-medium text-gray-500">{c.beforeAlt}</p>
+              <p className="text-sm font-medium text-gray-500">{item.beforeLabel}</p>
             </div>
           </div>
         )}
@@ -127,7 +221,7 @@ function CaseCard({ case: c }: { case: typeof CASE_STUDIES[0] }) {
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
             <p className="text-xs text-gray-400">After</p>
-            <p className="text-sm font-medium text-gray-700">{c.afterAlt}</p>
+            <p className="text-sm font-medium text-gray-700">{item.afterLabel}</p>
           </div>
         </div>
       </div>
@@ -234,8 +328,8 @@ export default function ResultPage() {
         <section className="space-y-4">
           <p className="text-xs font-medium text-amber-600 tracking-wide">案例效果</p>
           <div className="grid grid-cols-2 gap-3 md:gap-4">
-            {CASE_STUDIES.map((c) => (
-              <CaseCard key={c.label} case={c} />
+            {OLD_CASE_STUDIES.map((item) => (
+              <CaseCard key={item.id} item={item} />
             ))}
           </div>
         </section>
