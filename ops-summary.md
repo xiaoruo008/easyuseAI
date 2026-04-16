@@ -1,5 +1,18 @@
 # Ops Summary
 
+## Round 365 — 2026-04-17 03:19:00
+
+**结果**: ✅ 全部通过
+
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit)
+- Mobile: 3/3 pages (首页, Diagnosis, Result)
+- 连续通过: 5 次
+- 累计 stable: 50 次
+
+---
+
 ## Round 359 — 2026-04-17 03:44:00
 
 **结果**: ✅ 全部通过
@@ -55,3 +68,43 @@
 
 **问题**: 脚本 `browser.ts` 硬编码端口 3000，与当前 dev server 端口 3005 不一致。需要更新脚本或配置以支持 BASE_URL。
 
+
+---
+
+## Round 364 — 2026-04-17 02:45:00
+
+**结果**: ✅ 全部通过
+
+- HTTP: 200 OK (port 3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 3/3 pages (首页, Diagnosis, Result) ✓
+- 连续通过: 4 次
+- 累计 stable: 49 次
+- 通知: 网站基本稳定 ✓ (4 consecutive passes — first stable notification)
+
+---
+
+## Round 362 — 2026-04-17 01:38:00
+
+**结果**: ✅ 全部通过
+
+- HTTP: 200 OK (port 3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 3/3 pages (首页, Diagnosis, Result) ✓
+- 连续通过: 2 次
+- 累计 stable: 47 次
+- 通知: 网站基本稳定 ✓
+
+## Round 367 — 2026-04-17 04:26:00
+
+**结果**: ✅ 全部通过
+
+- HTTP: 200 OK (port 3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 3/3 pages (首页, Diagnosis, Result) ✓
+- 连续通过: 7 次
+- 累计 stable: 52 次
+- 通知: 网站基本稳定 ✓ (7 consecutive passes — stable notification)
