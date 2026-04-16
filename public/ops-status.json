@@ -1,17 +1,17 @@
 {
-  "round": 331,
-  "stable_count": 18,
-  "last_check": "2026-04-16T01:53:22Z",
+  "round": 333,
+  "stable_count": 20,
+  "last_check": "2026-04-16T03:23:45Z",
   "last_result": "pass",
   "checks": {
-    "http": "localhost:3005: 200 OK ✓",
+    "http": "localhost:3005: 200 OK ✓ (localhost:3000 down)",
     "console": "✓ 无报错，无失败请求",
     "flow": "5/5 steps pass ✓",
     "mobile": "3/3 pages load correctly ✓"
   },
-  "consecutive_stable": 10,
+  "consecutive_stable": 12,
   "notes": {
-    "health": "All checks passed on port 3005.",
+    "health": "All checks passed on port 3005 (port 3000 not responding).",
     "failure_stage": null
   }
 }
