@@ -417,7 +417,7 @@ export default function ResultPage() {
                 rel="noopener noreferrer"
                 className="block w-full py-3 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium text-center transition-colors border border-gray-200"
               >
-                加微信看更多案例
+                加微信：z425659107（免费试做1张，10分钟给你）
               </a>
             </div>
           </div>
@@ -463,9 +463,9 @@ export default function ResultPage() {
             <p className="text-white font-semibold text-base md:text-lg">加微信咨询</p>
             <p className="text-white/50 text-xs md:text-sm">顾问发你高清图 + 使用建议</p>
             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-lg px-4 md:px-5 py-2.5 md:py-3">
-              <span className="text-white text-sm font-medium">微信：easyuseai</span>
+              <span className="text-white text-sm font-medium">微信：z425659107</span>
               <button
-                onClick={() => navigator.clipboard.writeText("easyuseai")}
+                onClick={() => navigator.clipboard.writeText("z425659107")}
                 className="text-white/50 hover:text-white text-xs transition-colors"
               >
                 复制

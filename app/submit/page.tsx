@@ -117,10 +117,10 @@ function SubmitContent() {
             48小时内顾问会微信联系你，记得通过哦
           </p>
           <div className="bg-gray-50 rounded-xl p-4 space-y-2">
-            <p className="text-gray-400 text-sm">也可以直接加微信咨询</p>
-            <p className="text-indigo-600 font-semibold text-lg">easyuseai</p>
+            <p className="text-gray-400 text-sm">加微信：z425659107（免费试做1张，10分钟给你）</p>
+            <p className="text-indigo-600 font-semibold text-lg">z425659107</p>
             <button
-              onClick={() => navigator.clipboard.writeText("easyuseai")}
+              onClick={() => navigator.clipboard.writeText("z425659107")}
               className="text-xs text-indigo-500 hover:text-indigo-700 underline"
             >
               点击复制

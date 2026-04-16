@@ -11,7 +11,7 @@ const PRICE_LABELS: Record<string, string> = {
 };
 
 const CONTACT_INFO = {
-  wechat: "easyuseai",
+  wechat: "z425659107",
 };
 
 const PAYMENT_ACCOUNT = {
