@@ -186,3 +186,13 @@
 
 - **当前问题修复进度** → 详见 [SYSTEM_PROGRESS.md](./SYSTEM_PROGRESS.md)
 - **项目最终目标** → 详见 [PROJECT_NORTH_STAR.md](./PROJECT_NORTH_STAR.md)
+
+---
+
+## V1 重构教训（2026-04-17）
+
+**诊断问卷 TOTAL_STEPS 硬编码问题**：
+Claude Code 在 `lib/diagnosis.ts` 中新增了 Q6-Q8（8道题），但只改了数据层，没改 `app/diagnosis/page.tsx` 中的 `const TOTAL_STEPS = 3`。
+导致问卷题库有8题，但页面只跑3题就跳走。
+
+**教训**：数据文件改了 ≠ UI组件改了。并行分发任务时需明确"数据+UI同步修改"作为一个原子任务。

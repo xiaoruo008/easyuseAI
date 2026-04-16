@@ -695,3 +695,6 @@ POST /api/execute/generate
 - Dev server 运行中：localhost:3005 ✅
 - V1 页面验收：进行中
 
+- ✅ TOTAL_STEPS 3→8 修复完成（app/diagnosis/page.tsx 第7行）
+- ✅ 首页"5道题"→"6道题"文案统一（app/page.tsx 第294行）
+- ✅ 全链路5/5页面验证通过

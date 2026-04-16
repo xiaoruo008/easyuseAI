@@ -1,3 +1,15 @@
+### Round 347 — 2026-04-16T10:23:00Z ✅ PASS
+- ⚠️ Server: localhost:3000 连接失败(退出码7) | ✅ localhost:3005 返回 200 OK
+- ✅ Console: ✓ 无报错，无失败请求
+- ✅ Flow: 5/5 steps pass (首页→diagnosis→result→execute→submit)
+- ✅ Mobile: 3/3 pages load correctly (首页/diagnosis/result)
+- 结论: **全部检查通过（服务器在 port 3005，非 3000）**
+- 连续稳定: 26/2 次通过 ✓（已达到连续稳定阈值）✓
+
+最后更新: 2026-04-16T10:23:00Z
+
+---
+
 ### Round 343 — 2026-04-16T08:57:00Z ✅ PASS
 - ⚠️ Server: localhost:3000 连接失败(退出码7) | ✅ localhost:3005 返回 200 OK
 - ✅ Console: ✓ 无报错，无失败请求
@@ -102,7 +114,7 @@
 最后更新: 2026-04-15T18:02:07.178839+00:00
 ---
 
-## 当前状态：✅ 全部检查通过（第11次连续稳定）
+## 当前状态：✅ 全部检查通过（第26次连续稳定）
 
 ## 检查记录
 

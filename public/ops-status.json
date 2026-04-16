@@ -1,16 +1,17 @@
 {
-  "round": 346,
-  "stable_count": 32,
-  "last_check": "2026-04-17T02:17:00.000000Z",
+  "round": 348,
+  "stable_count": 34,
+  "last_check": "2026-04-16T11:09:48.000000Z",
   "last_result": "pass",
   "checks": {
     "http": "localhost:3005: 200 OK ✓",
     "console": "0 errors ✓",
-    "smoke": "ms=6269, wk=domestic_menswear_suit_set_model ✓"
+    "flow": "5/5 steps pass ✓",
+    "mobile": "3/3 pages load correctly ✓"
   },
-  "consecutive_stable": 25,
+  "consecutive_stable": 27,
   "notes": {
-    "health": "All checks passed. HTTP 200, TypeScript 0 errors, Smoke test pass.",
+    "health": "All checks passed. HTTP 200, console 0 errors, flow 5/5, mobile 3/3.",
     "failure_stage": null
   },
   "notify_stable": true
