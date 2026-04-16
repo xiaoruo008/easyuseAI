@@ -1,6 +1,6 @@
 # SYSTEM_PROGRESS
-更新时间：2026-04-16 11:09 UTC+8
-最后整合：P32 - 全量提交 c29f821（2026-04-16 11:09）
+更新时间：2026-04-16 11:33 UTC+8
+最后整合：P33 - 临时文件清理（2026-04-16 11:33）
 
 > 📌 相关文档：[PROJECT_NORTH_STAR.md](./PROJECT_NORTH_STAR.md) ｜ [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)
 
@@ -21,6 +21,31 @@
 | 页面可用性(线上) | ✅ 可用 | HTTP 200 |
 | TypeScript编译 | ✅ 干净 | tsc --noEmit 无错误 |
 | **Result API 响应时间** | ⚠️ **14.5s** | LLM画像生成阻塞（见P24）；P28 session缓存缓解重复调用 |
+
+---
+
+## 本轮修复（2026-04-16 第十七轮）
+
+**P33 - 临时文件清理（已完成，2026-04-16 11:33）**：
+
+P32 全量提交 c29f821 遗留了 `scripts/_verify-smoke.js.bak` 未清理，该文件来自 P31 临时验证流程。
+
+**执行**：`rm -v scripts/_verify-smoke.js.bak` → `removed` ✅
+
+**提交**：`git add ops/CURRENT_TASK.md ops/HERMES_REPORT.md public/browser-report.json public/ops-status.json public/ops-summary.md public/pending-notifications.json HERMES_REPORT.md && git commit`
+
+**提交结果**：
+- Commit: `1df9b65`
+- 7 个文件变更：+171 行插入，-108 行删除
+- 推送：`b56e977..1df9b65 main -> main` ✅
+
+**烟雾测试**（2026-04-16 11:33）：
+```
+OK ms=19471 wk=domestic_menswear_suit_set_model persona=yes
+```
+- workflowKey: domestic_menswear_suit_set_model ✅
+- aiPersona: yes（LLM画像生成正常）✅
+- 总耗时: 19,471ms（正常）
 
 ---
 
