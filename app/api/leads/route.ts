@@ -44,10 +44,8 @@ export async function POST(req: NextRequest) {
       resultType: resultType ?? sessionData?.resultType,
       platform: platform ?? (sessionData?.answers as Record<string, unknown>)?.platform as string | string[] | undefined,
       monthlyFrequency: (sessionData?.answers as Record<string, unknown>)?.monthlyFrequency as string | undefined,
-      brandStyle: (sessionData?.answers as Record<string, unknown>)?.brandStyle as string | undefined,
       hasProductImage: Boolean(productImage),
       hasReferenceImage: Boolean(referenceImage),
-      hasWechat: Boolean(wechat),
     };
 
     // 执行路由判断
