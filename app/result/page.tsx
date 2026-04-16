@@ -2,7 +2,138 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { WORKFLOWS, PERSONAS, PAIN_POINTS, type ResultType, type WorkflowStep } from "@/lib/diagnosis";
+
+// 成本计算器组件
+function CostCalculator() {
+  const [monthlyCount, setMonthlyCount] = useState(20);
+
+  // 传统摄影成本估算（每件商品）
+  const traditionalCostPerItem = 800; // 模特+场景+后期
+  const traditionalMonthly = monthlyCount * traditionalCostPerItem;
+
+  // AI摄影成本估算
+  const aiMonthly = 299; // 基础月费
+  const aiCostPerExtra = 10; // 超出基础数量的每件费用
+  const aiTotal = monthlyCount > 20 ? aiMonthly + (monthlyCount - 20) * aiCostPerExtra : aiMonthly;
+
+  const savings = traditionalMonthly - aiTotal;
+  const savingsPercent = Math.round((savings / traditionalMonthly) * 100);
+
+  return (
+    <section className="space-y-4">
+      <p className="text-xs font-medium text-amber-600 tracking-wide">成本节省计算器</p>
+      <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-5 md:p-6 text-white space-y-5">
+        <div className="space-y-2">
+          <div className="flex justify-between items-center">
+            <span className="text-white/70 text-sm">每月上新数量</span>
+            <span className="text-lg font-bold">{monthlyCount} 件</span>
+          </div>
+          <input
+            type="range"
+            min="5"
+            max="100"
+            step="5"
+            value={monthlyCount}
+            onChange={(e) => setMonthlyCount(Number(e.target.value))}
+            className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-amber-500"
+          />
+          <div className="flex justify-between text-xs text-white/40">
+            <span>5件</span>
+            <span>100件</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="bg-white/10 rounded-xl p-4 text-center">
+            <p className="text-white/50 text-xs mb-1">传统摄影</p>
+            <p className="text-xl font-bold">¥{traditionalMonthly.toLocaleString()}</p>
+            <p className="text-white/40 text-xs">/月</p>
+          </div>
+          <div className="bg-white/10 rounded-xl p-4 text-center">
+            <p className="text-white/50 text-xs mb-1">AI摄影</p>
+            <p className="text-xl font-bold text-emerald-400">¥{aiTotal.toLocaleString()}</p>
+            <p className="text-white/40 text-xs">/月</p>
+          </div>
+        </div>
+
+        <div className="bg-emerald-500/20 border border-emerald-500/30 rounded-xl p-4 text-center">
+          <p className="text-emerald-300 text-sm">预计每月节省</p>
+          <p className="text-2xl font-bold text-emerald-300">¥{savings.toLocaleString()}</p>
+          <p className="text-emerald-400/70 text-xs">节省 {savingsPercent}% 成本</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// 案例展示组件（带真实图片）
+const CASE_STUDIES = [
+  {
+    label: "换背景",
+    beforeImg: "/images/cases/suit-white.jpg",
+    afterImg: "/images/cases/suit-brand.jpg",
+    beforeAlt: "白底图",
+    afterAlt: "品牌场景图",
+  },
+  {
+    label: "商品精修",
+    beforeImg: "/images/cases/suit-before.jpg",
+    afterImg: "/images/cases/suit-model.jpg",
+    beforeAlt: "原图",
+    afterAlt: "模特上身效果图",
+  },
+  {
+    label: "模特上身",
+    beforeImg: "/images/cases/suit-white.jpg",
+    afterImg: "/images/cases/suit-model.jpg",
+    beforeAlt: "白底图",
+    afterAlt: "真实模特效果",
+  },
+  {
+    label: "场景图",
+    beforeImg: "/images/cases/suit-white.jpg",
+    afterImg: "/images/cases/suit-scene.jpg",
+    beforeAlt: "白底图",
+    afterAlt: "生活场景图",
+  },
+];
+
+function CaseCard({ case: c }: { case: typeof CASE_STUDIES[0] }) {
+  const [imgError, setImgError] = useState(false);
+
+  return (
+    <div className="bg-gray-100 rounded-xl overflow-hidden">
+      <div className="relative bg-gray-200 border-b border-gray-300 h-24 md:h-32">
+        {!imgError ? (
+          <Image
+            src={c.beforeImg}
+            alt={c.beforeAlt}
+            fill
+            className="object-cover"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center">
+              <p className="text-xs text-gray-400">Before</p>
+              <p className="text-sm font-medium text-gray-500">{c.beforeAlt}</p>
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="relative bg-gray-50 h-24 md:h-32">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-xs text-gray-400">After</p>
+            <p className="text-sm font-medium text-gray-700">{c.afterAlt}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function TimelineStep({ step, title, desc, icon }: { step: number; title: string; desc: string; icon: string }) {
   return (
@@ -96,30 +227,15 @@ export default function ResultPage() {
           </div>
         </section>
 
+        {/* ── 成本计算器 ─────────────────────────────── */}
+        <CostCalculator />
+
         {/* ── 案例展示 ─────────────────────────────── */}
         <section className="space-y-4">
           <p className="text-xs font-medium text-amber-600 tracking-wide">案例效果</p>
           <div className="grid grid-cols-2 gap-3 md:gap-4">
-            {[
-              { label: "换背景", before: "背景乱", after: "干净专业" },
-              { label: "商品精修", before: "质感糙", after: "高级精致" },
-              { label: "模特上身", before: "没模特", after: "真实上身" },
-              { label: "场景图", before: "白底图", after: "生活场景" },
-            ].map((c) => (
-              <div key={c.label} className="bg-gray-100 rounded-xl overflow-hidden">
-                <div className="bg-gray-200 border-b border-gray-300 h-24 md:h-32 flex items-center justify-center">
-                  <div className="text-center">
-                    <p className="text-xs text-gray-400">Before</p>
-                    <p className="text-sm font-medium text-gray-500">{c.before}</p>
-                  </div>
-                </div>
-                <div className="bg-gray-50 h-24 md:h-32 flex items-center justify-center">
-                  <div className="text-center">
-                    <p className="text-xs text-gray-400">After</p>
-                    <p className="text-sm font-medium text-gray-700">{c.after}</p>
-                  </div>
-                </div>
-              </div>
+            {CASE_STUDIES.map((c) => (
+              <CaseCard key={c.label} case={c} />
             ))}
           </div>
         </section>
@@ -140,7 +256,7 @@ export default function ResultPage() {
             href={sessionId ? `/submit?session=${sessionId}` : "/submit"}
             className="block w-full py-4 bg-gray-900 text-white rounded-2xl font-bold text-base md:text-lg hover:bg-gray-800 transition-colors shadow-lg shadow-gray-900/10 text-center"
           >
-            立即预约顾问，免费试做一张
+            提交需求
           </Link>
           <p className="text-center text-xs text-gray-400">顾问微信联系，48小时内出图</p>
         </section>

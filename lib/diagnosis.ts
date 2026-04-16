@@ -1,4 +1,4 @@
-// lib/diagnosis.ts — 5步诊断（用户业务语言版）
+// lib/diagnosis.ts — 6步诊断（用户业务语言版）
 // 规则：纯业务痛点，不出现任何AI/技术术语
 
 export type AnswerValue = "A" | "B" | "C" | "D";
@@ -74,6 +74,36 @@ export const DIAGNOSIS_QUESTIONS: Question[] = [
       { value: "B", label: "100元以内先试试", scores: { budget: 1 } },
       { value: "C", label: "100~500元，效果好可以持续用", scores: { budget: 2 } },
       { value: "D", label: "500元以上，要最好的效果", scores: { budget: 3 } },
+    ],
+  },
+  {
+    id: 6,
+    text: "你每月大概要出多少款新品图？",
+    options: [
+      { value: "A", label: "1~3款，小批量测款", scores: { monthly_new: 1 } },
+      { value: "B", label: "4~10款，中等规模", scores: { monthly_new: 2 } },
+      { value: "C", label: "11~30款，比较大量", scores: { monthly_new: 3 } },
+      { value: "D", label: "30款以上，频繁上新", scores: { monthly_new: 4 } },
+    ],
+  },
+  {
+    id: 7,
+    text: "你的产品主要是什么类型？",
+    options: [
+      { value: "A", label: "服装/鞋包配饰", scores: { product_type: 1 } },
+      { value: "B", label: "美妆/护肤/个护", scores: { product_type: 2 } },
+      { value: "C", label: "家居/家装/软装", scores: { product_type: 3 } },
+      { value: "D", label: "其他品类", scores: { product_type: 4 } },
+    ],
+  },
+  {
+    id: 8,
+    text: "你的产品图主要用在哪个平台？",
+    options: [
+      { value: "A", label: "淘宝/天猫/京东", scores: { platform: 1 } },
+      { value: "B", label: "小红书/抖音/快手", scores: { platform: 2 } },
+      { value: "C", label: "亚马逊/独立站/跨境", scores: { platform: 3 } },
+      { value: "D", label: "多平台都要用", scores: { platform: 4 } },
     ],
   },
 ];

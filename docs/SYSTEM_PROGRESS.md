@@ -675,3 +675,23 @@ POST /api/execute/generate
 1. **P25 - Result API 性能优化**：将 LLM 画像生成改为异步或添加 session 级缓存，避免15s阻塞
 2. **添加 `/api/health` 端点**：生产部署后自动生效（dev server workaround 已就位）
 3. **给 cron-e2e-execute-chain.js 添加超时控制**：避免脚本无限等待
+
+## 本轮重构（2026-04-17）
+
+**V1 页面信息架构重构 - 完成文案+实现（2026-04-17）**：
+
+- ✅ 首页/策划单/结果页文案重写 → `docs/V1_COPY.md`
+- ✅ 诊断问卷从3题扩为6题 → `lib/diagnosis.ts`（Q6-Q8新增）
+- ✅ 结果页增加成本计算器 + 案例区修复 + CTA改"提交需求"
+- ✅ /execute 从主链路移除，降级为 beta
+- ⏳ pnpm build 验证 → 待进行
+
+**链路切换**：`/` → `/diagnosis` → `/result` → `/submit`（/execute 降级）
+
+
+## 2026-04-17 V1 重构验收阶段
+
+- Telegram cron 投递修复：unattended-agent + north-star-agent → origin ✅
+- Dev server 运行中：localhost:3005 ✅
+- V1 页面验收：进行中
+
