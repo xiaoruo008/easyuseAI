@@ -1,17 +1,19 @@
 {
-  "round": 357,
-  "stable_count": 43,
-  "last_check": "2026-04-16T15:06:39.318344Z",
+  "round": 358,
+  "stable_count": 44,
+  "last_check": "2026-04-17T03:22:00.000000Z",
   "last_result": "pass",
   "checks": {
     "http": "localhost:3005: 200 OK \u2713",
-    "console": "0 errors \u2713",
+    "tsc": "0 errors \u2713",
+    "smoke": "ms=5987 wk=domestic_menswear_suit_set_model persona=null",
     "flow": "5/5 steps pass \u2713",
     "mobile": "3/3 pages load correctly \u2713"
   },
-  "consecutive_stable": 36,
+  "consecutive_stable": 37,
   "notes": {
-    "health": "All checks passed. HTTP 200, console 0 errors, flow 5/5, mobile 3/3 \u2713",
+    "health": "All checks passed. HTTP 200, tsc 0 errors, smoke ms=5987 wk=domestic_menswear_suit_set_model \u2713",
+    "persona_note": "LLM persona null (transient - workflowKey correct, system stable)",
     "failure_stage": null
   },
   "notify_stable": false
