@@ -1,17 +1,18 @@
 {
-  "round": 339,
-  "stable_count": 26,
-  "last_check": "2026-04-16T06:37:00.000000Z",
+  "round": 340,
+  "stable_count": 27,
+  "last_check": "2026-04-16T07:33:09.060000Z",
   "last_result": "pass",
   "checks": {
     "http": "localhost:3005: 200 OK ✓",
     "console": "✓ 无报错",
-    "smoke": "OK ms=548 wk=domestic_menswear_suit_set_model persona=null"
+    "flow": "5/5 步骤通过",
+    "mobile": "✓ 首页/Diagnosis/Result 全部通过"
   },
-  "consecutive_stable": 18,
+  "consecutive_stable": 19,
   "notes": {
-    "health": "All checks passed on port 3005. persona=null is known P24 issue, non-blocking.",
+    "health": "All checks passed. Console: 无报错, Flow: 5/5, Mobile: OK",
     "failure_stage": null
   },
-  "notify_stable": false
+  "notify_stable": true
 }

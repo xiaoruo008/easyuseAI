@@ -1,6 +1,18 @@
 # 夜间值守报告
 
 
+### Round 340 — 2026-04-16T07:33:09Z ✅ PASS
+- ⚠️ Server: localhost:3000 连接失败(退出码7) | ✅ localhost:3005 返回 200 OK
+- ✅ Console: ✓ 无报错，无失败请求
+- ✅ Flow: 5/5 steps pass
+- ✅ Mobile: 3/3 pages load correctly
+- 结论: **全部检查通过（服务器在 port 3005，非 3000）**
+- 连续稳定: 19/2 次通过 ✓（已达到连续稳定阈值）**→ 网站基本稳定**
+
+最后更新: 2026-04-16T07:33:09Z
+
+---
+
 ### Round 333 — 2026-04-16T03:23:45Z ✅ PASS
 - ⚠️ Server: localhost:3000 连接失败(退出码7) | ✅ localhost:3005 返回 200 OK
 - ✅ Console: ✓ 无报错，无失败请求
