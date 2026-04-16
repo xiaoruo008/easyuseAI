@@ -195,35 +195,67 @@ const OLD_CASE_STUDIES: CaseStudyItem[] = [
 ];
 
 function CaseCard({ item }: { item: CaseStudyItem }) {
-  const [imgError, setImgError] = useState(false);
+  const [beforeError, setBeforeError] = useState(false);
+  const [afterError, setAfterError] = useState(false);
+
+  // aspectRatio → padding-top percentage for container height
+  const aspectPadding: Record<string, string> = {
+    "3:4": "pb-[133%]",
+    "4:5": "pb-[125%]",
+    "1:1": "pb-[100%]",
+    "9:16": "pb-[177%]",
+  };
+  const padClass = aspectPadding[item.aspectRatio] ?? "pb-[125%]";
 
   return (
-    <div className="bg-gray-100 rounded-xl overflow-hidden">
-      <div className="relative bg-gray-200 border-b border-gray-300 h-24 md:h-32">
-        {!imgError ? (
-          <Image
-            src={item.beforeImage}
-            alt={item.beforeLabel}
-            fill
-            className="object-cover"
-            onError={() => setImgError(true)}
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center">
-              <p className="text-xs text-gray-400">Before</p>
-              <p className="text-sm font-medium text-gray-500">{item.beforeLabel}</p>
+    <div className="rounded-xl overflow-hidden bg-gray-100">
+      {/* 图片容器 — 用 padding-bottom 撑起高度，实现统一比例 */}
+      <div className={`relative w-full ${padClass}`}>
+        {/* Before 图 */}
+        <div className="absolute inset-0 left-0 w-1/2">
+          {!beforeError ? (
+            <Image
+              src={item.beforeImage}
+              alt={item.beforeLabel}
+              fill
+              className="object-cover"
+              onError={() => setBeforeError(true)}
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+              <p className="text-xs text-gray-400">原图</p>
             </div>
-          </div>
-        )}
-      </div>
-      <div className="relative bg-gray-50 h-24 md:h-32">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-xs text-gray-400">After</p>
-            <p className="text-sm font-medium text-gray-700">{item.afterLabel}</p>
-          </div>
+          )}
+          <span className="absolute top-1.5 left-1.5 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded">
+            Before
+          </span>
         </div>
+
+        {/* After 图 */}
+        <div className="absolute inset-0 right-0 w-1/2">
+          {!afterError ? (
+            <Image
+              src={item.afterImage}
+              alt={item.afterLabel}
+              fill
+              className="object-cover"
+              onError={() => setAfterError(true)}
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+              <p className="text-xs text-gray-400">效果图</p>
+            </div>
+          )}
+          <span className="absolute top-1.5 right-1.5 bg-amber-500 text-white text-[10px] px-1.5 py-0.5 rounded">
+            After
+          </span>
+        </div>
+      </div>
+
+      {/* 标题 */}
+      <div className="p-2.5 bg-white">
+        <p className="text-xs font-medium text-gray-800">{item.title}</p>
+        <p className="text-[11px] text-gray-400 mt-0.5">{item.subtitle}</p>
       </div>
     </div>
   );

@@ -13,7 +13,8 @@ function SubmitContent() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
+  const productImageRef = useRef<HTMLInputElement>(null);
+  const referenceImageRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,24 +62,51 @@ function SubmitContent() {
       if (!leadRes.ok) throw new Error("提交失败");
       const lead = await leadRes.json();
 
-      // 3. 上传附件（如果有）— 上传失败不影响主流程，仅记录警告
-      if (fileRef.current?.files?.[0]) {
+      // 3. 上传双图（产品图 + 参考图）— 上传失败不影响主流程
+      const productFile = productImageRef.current?.files?.[0];
+      const referenceFile = referenceImageRef.current?.files?.[0];
+      let productImageUrl: string | undefined;
+      let referenceImageUrl: string | undefined;
+      if (productFile || referenceFile) {
         setUploading(true);
         try {
           const fd = new FormData();
-          fd.append("file", fileRef.current.files[0]);
           fd.append("leadId", lead.id);
+          if (productFile) fd.append("productImage", productFile);
+          if (referenceFile) fd.append("referenceImage", referenceFile);
           const uploadRes = await fetch("/api/assets", { method: "POST", body: fd });
-          if (!uploadRes.ok) {
-            const err = await uploadRes.json().catch(() => ({}));
-            console.warn("[submit] 文件上传失败:", err);
+          if (uploadRes.ok) {
+            const assets = await uploadRes.json();
+            assets.forEach((a: { role: string; url: string }) => {
+              if (a.role === "productImage") productImageUrl = a.url;
+              if (a.role === "referenceImage") referenceImageUrl = a.url;
+            });
           }
         } catch (uploadErr) {
-          // 网络错误不影响主流程：lead 已创建，文件上传为可选步骤
           console.warn("[submit] 文件上传异常:", uploadErr);
         } finally {
           setUploading(false);
         }
+      }
+
+      // 4. 通知 n8n（有 URL 才发）
+      try {
+        await fetch("/api/notify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: form.name,
+            contact: form.wechat_id,
+            businessType: form.product_category || undefined,
+            serviceType,
+            note: form.notes || undefined,
+            diagnosisSessionId: sessionId || undefined,
+            productImageUrl,
+            referenceImageUrl,
+          }),
+        });
+      } catch {
+        // 通知失败不阻塞
       }
 
       setSubmitted(true);
@@ -190,17 +218,33 @@ function SubmitContent() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              上传资料（选填，最多10MB）
+              上传资料（选填）
             </label>
             <div className="mb-2 p-3 bg-amber-50 border border-amber-100 rounded-lg text-xs text-amber-700">
               💡 小提示：上传一张<strong>随手拍产品图</strong>+一张<strong>你喜欢的参考图</strong>，我们会按这个方向免费试做1张
             </div>
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/*,.pdf,.doc,.docx"
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-700 file:font-medium hover:file:bg-indigo-100 cursor-pointer"
-            />
+
+            {/* 产品图 */}
+            <div className="mb-2">
+              <p className="text-xs text-gray-500 mb-1">① 随手拍产品图</p>
+              <input
+                ref={productImageRef}
+                type="file"
+                accept="image/*"
+                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-700 file:font-medium hover:file:bg-indigo-100 cursor-pointer"
+              />
+            </div>
+
+            {/* 参考图 */}
+            <div>
+              <p className="text-xs text-gray-500 mb-1">② 你喜欢的参考图</p>
+              <input
+                ref={referenceImageRef}
+                type="file"
+                accept="image/*"
+                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-50 file:text-indigo-700 file:font-medium hover:file:bg-indigo-100 cursor-pointer"
+              />
+            </div>
           </div>
 
           {error && (
