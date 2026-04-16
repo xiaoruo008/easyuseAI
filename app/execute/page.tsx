@@ -5,6 +5,7 @@ import { Suspense, useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { DiagnosisResult } from "@/lib/diagnosis";
+import { mapResultTypeToTrendingDiagnosisType } from "@/lib/diagnosis";
 
 interface ResultData {
   session: { id: string; completed: boolean };
@@ -12,7 +13,7 @@ interface ResultData {
 }
 
 type TextResult = { title: string; items: string[] };
-type ImageResult = { imageUrl: string; thumbnailUrl?: string; provider: string; model: string; source: string };
+type ImageResult = { imageUrl: string; thumbnailUrl?: string; provider: string; model: string; source: string; workflowLabel?: string };
 
 const IMAGE_ACTIONS = new Set(["product_photo", "model_photo", "background_swap", "lifestyle", "fashion_model", "fashion_lifestyle"]);
 
@@ -112,6 +113,7 @@ function ExecuteContent() {
         userPainPoint: diagnosisResult.painPoint,
         userPersona: diagnosisResult.persona,
         workflowKey,
+        diagnosisType: mapResultTypeToTrendingDiagnosisType(diagnosisResult.type),
       };
       if (isImageTask) {
         body.prompt = prompt || undefined;
@@ -128,7 +130,7 @@ function ExecuteContent() {
       const d = await res.json();
 
       if (d.taskCategory === "image") {
-        setImageResult({ ...d.result, source: d.source ?? "mock" });
+        setImageResult({ ...d.result, source: d.source ?? "mock", workflowLabel: d.workflowLabel ?? undefined });
       } else {
         setTextResult(d.result);
       }
@@ -347,7 +349,9 @@ function ExecuteContent() {
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <h3 className="font-semibold text-sm">你的图做好了</h3>
+              <h3 className="font-semibold text-sm">
+                {imageResult.workflowLabel ? `${imageResult.workflowLabel} · 你的图做好了` : "你的图做好了"}
+              </h3>
             </div>
             <div className="rounded-xl border border-gray-200 overflow-hidden">
               <div className="relative bg-gray-50 max-h-80 md:max-h-96" style={{ aspectRatio: "1/1" }}>

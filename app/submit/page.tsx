@@ -50,26 +50,35 @@ function SubmitContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: form.name,
-          wechat_id: form.wechat_id,
-          product_category: form.product_category || undefined,
-          notes: form.notes || undefined,
+          contact: form.wechat_id,
+          businessType: form.product_category || undefined,
+          note: form.notes || undefined,
           diagnosisSessionId: sessionId || undefined,
           serviceType,
-          upload_data: uploadData,
         }),
       });
 
       if (!leadRes.ok) throw new Error("提交失败");
       const lead = await leadRes.json();
 
-      // 3. 上传附件（如果有）
+      // 3. 上传附件（如果有）— 上传失败不影响主流程，仅记录警告
       if (fileRef.current?.files?.[0]) {
         setUploading(true);
-        const fd = new FormData();
-        fd.append("file", fileRef.current.files[0]);
-        fd.append("leadId", lead.id);
-        await fetch("/api/assets", { method: "POST", body: fd });
-        setUploading(false);
+        try {
+          const fd = new FormData();
+          fd.append("file", fileRef.current.files[0]);
+          fd.append("leadId", lead.id);
+          const uploadRes = await fetch("/api/assets", { method: "POST", body: fd });
+          if (!uploadRes.ok) {
+            const err = await uploadRes.json().catch(() => ({}));
+            console.warn("[submit] 文件上传失败:", err);
+          }
+        } catch (uploadErr) {
+          // 网络错误不影响主流程：lead 已创建，文件上传为可选步骤
+          console.warn("[submit] 文件上传异常:", uploadErr);
+        } finally {
+          setUploading(false);
+        }
       }
 
       setSubmitted(true);

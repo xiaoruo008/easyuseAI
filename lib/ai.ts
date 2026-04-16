@@ -25,7 +25,9 @@ interface ChatResponse {
   usage: { prompt_tokens: number; completion_tokens: number; total_tokens: number };
 }
 
-export async function chat(messages: ChatMessage[]): Promise<ChatResponse> {
+export async function chat(messages: ChatMessage[], timeoutMs = 20000): Promise<ChatResponse> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   const res = await fetch(`${BASE_URL}/chat/completions`, {
     method: "POST",
     headers: {
@@ -38,7 +40,9 @@ export async function chat(messages: ChatMessage[]): Promise<ChatResponse> {
       temperature: 0.8,
       max_tokens: 2000,
     }),
+    signal: controller.signal,
   });
+  clearTimeout(timer);
 
   if (!res.ok) {
     const text = await res.text().catch(() => "unknown error");

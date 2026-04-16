@@ -4,8 +4,9 @@ import { generateContent, isAIEnabled, healthCheckAI } from "@/lib/ai";
 import { generateImageFromOptions } from "@/lib/image";
 import type { GenerateResult } from "@/lib/ai";
 import type { ImageTaskOutput } from "@/lib/image";
-import { routeFromAction, getRetryPrompt, WORKFLOW_TO_TEMPLATE_KEY_MAP, findRoute, PATTERN_PROMPTS } from "@/lib/types/fashion";
+import { routeFromAction, getRetryPrompt, WORKFLOW_TO_TEMPLATE_KEY_MAP, findRoute, PATTERN_PROMPTS, type TargetImage } from "@/lib/types/fashion";
 import { deriveFashionFieldsFromDiagnosis } from "@/lib/diagnosis-workflow-map";
+import { WORKFLOW_MAP, buildWorkflowKey } from "@/lib/workflow";
 import type { ResultType } from "@/lib/diagnosis";
 
 // ── 静态文案结果 ─────────────────────────────────
@@ -118,8 +119,9 @@ async function generateImageWithRetry(opts: {
   aspectRatio?: string;
   category?: string;
   style?: "minimal" | "luxury" | "commercial";
+  diagnosisType?: "traffic" | "customer" | "efficiency" | "unclear";
 }): Promise<{ output: ImageTaskOutput; errorMessage: string | null }> {
-  const { templateId, originalImageUrl, userRefinement, aspectRatio, style } = opts;
+  const { templateId, originalImageUrl, userRefinement, aspectRatio, style, diagnosisType } = opts;
 
   // 第1次：正常生成
   try {
@@ -130,6 +132,7 @@ async function generateImageWithRetry(opts: {
       userRefinement,
       aspectRatio: (aspectRatio as "1:1" | "3:4" | "16:9") ?? "1:1",
       style,
+      diagnosisType,
     });
     return { output, errorMessage: null };
   } catch (err) {
@@ -146,6 +149,7 @@ async function generateImageWithRetry(opts: {
       userRefinement: safeRefinement + (userRefinement ? ` ${userRefinement}` : ""),
       aspectRatio: (aspectRatio as "1:1" | "3:4" | "16:9") ?? "1:1",
       style,
+      diagnosisType,
     });
     return { output, errorMessage: "prompt_v2" };
   } catch (err) {
@@ -160,6 +164,8 @@ async function generateImageWithRetry(opts: {
       variables: {},
       originalImageUrl,
       aspectRatio: "1:1",
+      style,
+      diagnosisType,
     });
     return { output, errorMessage: "stable_fallback" };
   } catch (err) {
@@ -220,6 +226,7 @@ export async function POST(req: NextRequest) {
     userBusinessType,
     userPainPoint,
     userPersona,
+    diagnosisType,
   } = body as {
     sessionId?: string;
     action: string;
@@ -240,6 +247,7 @@ export async function POST(req: NextRequest) {
     userBusinessType?: string;
     userPainPoint?: string;
     userPersona?: string;
+    diagnosisType?: string;
   };
 
   const isImageAction = IMAGE_ACTIONS.has(action);
@@ -289,6 +297,16 @@ export async function POST(req: NextRequest) {
     const templateId = route.templateId;
     const templateKey = route.key;
 
+    // 根据推导的时尚字段构建 workflowKey，用于查询工作流标签
+    const workflowKeyForLabel = buildWorkflowKey({
+      market: resolvedMarket as "domestic" | "cross_border",
+      gender: resolvedGender as "menswear" | "womenswear",
+      category: cat as "top" | "dress" | "suit_set",
+      targetImage: resolvedTargetImage as TargetImage,
+      contact: "",
+    });
+    const workflowLabel = WORKFLOW_MAP[workflowKeyForLabel]?.label ?? null;
+
     // 从 PATTERN_PROMPTS 获取图案指导（作为生成基础 prompt）
     const basePatternPrompt = PATTERN_PROMPTS[templateKey] ?? null;
 
@@ -334,6 +352,7 @@ export async function POST(req: NextRequest) {
       aspectRatio,
       category: cat,
       style: (style as "minimal" | "luxury" | "commercial") ?? undefined,
+      diagnosisType: (diagnosisType as "traffic" | "customer" | "efficiency" | "unclear") ?? undefined,
     });
 
     // ③ 写回 Task
@@ -362,6 +381,7 @@ export async function POST(req: NextRequest) {
       taskId,
       templateKey,
       templateId,
+      workflowLabel,
       result: {
         imageUrl: output.imageUrl,
         thumbnailUrl: output.thumbnailUrl,
@@ -378,15 +398,16 @@ export async function POST(req: NextRequest) {
   let result: GenerateResult;
   let errorMessage: string | null = null;
 
-  if (resolvedLeadId) {
-    await createTask({
-      leadId: resolvedLeadId,
-      taskType,
-      status: "doing",
-      inputData: { action, type, businessType, painPoint },
-      outputData: null,
-    }).then((t) => t as { id: string });
-  }
+  // 创建任务并捕获 taskId（与图片生成保持一致）
+  const textTaskId = resolvedLeadId
+    ? await createTask({
+        leadId: resolvedLeadId,
+        taskType,
+        status: "doing",
+        inputData: { action, type, businessType, painPoint },
+        outputData: null,
+      }).then((t) => (t as { id: string }).id)
+    : null;
 
   if (isAIEnabled()) {
     try {
@@ -402,11 +423,21 @@ export async function POST(req: NextRequest) {
     result = { ...mock, source: "mock" };
   }
 
+  // 生成完成后更新任务状态（与图片生成保持一致）
+  if (textTaskId) {
+    await updateTask(textTaskId, {
+      status: errorMessage ? "failed" : "done",
+      outputData: { title: result.title, items: result.items },
+      errorMessage: errorMessage ?? null,
+    });
+  }
+
   return NextResponse.json({
     success: !errorMessage,
     action,
     type,
     taskCategory: "text",
+    taskId: textTaskId,
     result: { title: result.title, items: result.items },
     source: result.source,
     model: result.model,

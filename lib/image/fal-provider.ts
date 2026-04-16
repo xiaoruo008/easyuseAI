@@ -20,6 +20,8 @@ const TYPE_PROMPT_PREFIX: Record<string, string> = {
     "Professional fashion model photography, studio setting, commercial quality, elegant pose,",
   background_swap:
     "Professional product placed in an elegant scene, photorealistic background,",
+  lifestyle:
+    "Product beautifully placed in a lifestyle scene, warm natural lighting, aspirational home aesthetic,",
 };
 
 export class FalImageProvider implements ImageProvider {

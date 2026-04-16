@@ -61,9 +61,7 @@ export async function updateSession(
 export async function createLead(data: {
   name: string;
   contact: string;
-  company?: string | null;
   businessType?: string | null;
-  serviceType?: string | null;
   note?: string | null;
   diagnosisSessionId?: string | null;
 }) {
@@ -71,8 +69,6 @@ export async function createLead(data: {
     return mock.createLead({
       name: data.name,
       contact: data.contact,
-      company: data.company ?? null,
-      serviceType: data.serviceType ?? null,
       businessType: data.businessType ?? null,
       note: data.note ?? null,
       status: "new",
@@ -123,7 +119,6 @@ export async function getAllLeads(filter?: { status?: string; q?: string }) {
     where.OR = [
       { name: { contains: filter.q, mode: "insensitive" } },
       { contact: { contains: filter.q } },
-      { company: { contains: filter.q, mode: "insensitive" } },
       { businessType: { contains: filter.q, mode: "insensitive" } },
     ];
   }
@@ -137,7 +132,7 @@ export async function getAllLeads(filter?: { status?: string; q?: string }) {
 export async function updateLead(id: string, data: Record<string, unknown>) {
   if (USE_MOCK) return mock.updateLead(id, data as Partial<mock.Lead>);
   const patch: Record<string, unknown> = {};
-  for (const key of ["name", "contact", "company", "businessType", "serviceType", "note", "status"]) {
+  for (const key of ["name", "contact", "businessType", "note", "status"]) {
     if (data[key] !== undefined) patch[key] = data[key];
   }
   return prisma.lead.update({ where: { id }, data: patch });

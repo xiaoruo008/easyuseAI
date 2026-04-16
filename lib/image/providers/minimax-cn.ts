@@ -26,6 +26,12 @@ const ASPECT_MAP: Record<string, string> = {
 const MODEL = "image-01";
 
 // 各 type 对应的 prompt 前缀（模板层已做产品不变约束，这里只做类型风格加成）
+const STYLE_GUIDANCE: Record<string, string> = {
+  luxury: "Luxury boutique aesthetic, editorial high-fashion quality, sophisticated refined mood, premium color grading, polished presentation.",
+  minimal: "Minimalist clean aesthetic, simple and elegant composition, generous white space, understated sophistication.",
+  commercial: "Commercial e-commerce standard, retail-ready quality, clean professional presentation, high conversion aesthetic.",
+};
+
 const TYPE_PROMPT_PREFIX: Record<string, string> = {
   product_photo: "Professional e-commerce product photography, clean studio lighting,",
   model_photo: "Professional fashion/lifestyle product photography,",
@@ -33,6 +39,14 @@ const TYPE_PROMPT_PREFIX: Record<string, string> = {
   background: "Clean pure white or light neutral background, seamless studio product photography,",
   enhance: "Professional commercial product photography, bright natural window light,",
   lifestyle: "Product beautifully placed in a lifestyle scene, warm natural lighting,",
+};
+
+// 爆款前缀：根据诊断类型注入转化率增强 prompt
+const TRENDING_PROMPT_PREFIX: Record<string, string> = {
+  traffic: "Trending on social media, highly shareable viral content, ",
+  customer: "Resonates deeply with target customers, emotional connection, ",
+  efficiency: "Streamlined productivity aesthetic, clean and efficient visual, ",
+  unclear: "Versatile commercial appeal, broad audience engagement, ",
 };
 
 interface MiniMaxCNResponse {
@@ -65,7 +79,10 @@ export class MiniMaxCNProvider implements ImageProvider {
 
     const aspectRatio = ASPECT_MAP[input.aspectRatio ?? "1:1"] ?? "1:1";
     const typePrefix = TYPE_PROMPT_PREFIX[input.type] ?? TYPE_PROMPT_PREFIX.product_photo;
-    const fullPrompt = `${typePrefix} ${input.prompt}`.slice(0, 1500);
+    const styleGuidance = input.style ? (STYLE_GUIDANCE[input.style] ?? "") : "";
+    const stylePrefix = styleGuidance ? `${styleGuidance} ` : "";
+    const trendingPrefix = input.diagnosisType ? (TRENDING_PROMPT_PREFIX[input.diagnosisType] ?? "") : "";
+    const fullPrompt = `${trendingPrefix}${stylePrefix}${typePrefix} ${input.prompt}`.slice(0, 1500);
 
     const body: Record<string, unknown> = {
       model: MODEL,
@@ -85,17 +102,6 @@ export class MiniMaxCNProvider implements ImageProvider {
     }
 
     const url = `${MINIMAX_IMAGE_BASE_URL}/v1/image_generation`;
-
-    console.log("[MiniMax-CN] 生成请求");
-    console.log("  provider:  minimax-cn");
-    console.log("  endpoint: ", url);
-    console.log("  key 存在: true");
-    console.log("  model:    ", MODEL);
-    console.log("  type:     ", input.type);
-    console.log("  style:    ", input.style ?? "(未指定)");
-    console.log("  aspectRatio:", aspectRatio);
-    console.log("  hasReference:", !!input.referenceImageUrl);
-    console.log("  prompt 字数:", fullPrompt.length);
 
     let res: Response;
     try {
@@ -124,9 +130,6 @@ export class MiniMaxCNProvider implements ImageProvider {
     } catch {
       rawText = "(无法读取响应体)";
     }
-
-    console.log("[MiniMax-CN] 响应 HTTP:", status);
-    if (rawText) console.log("[MiniMax-CN] 响应 body 前300字:", rawText.slice(0, 300));
 
     // ── 解析响应 ────────────────────────────────────────
     if (status !== 200) {
@@ -187,7 +190,6 @@ export class MiniMaxCNProvider implements ImageProvider {
     let imageUrl = "";
     if (json.data?.image_base64?.length) {
       imageUrl = `data:image/jpeg;base64,${json.data.image_base64[0]}`;
-      console.log("[MiniMax-CN] 使用 base64 返回");
     } else if (json.data?.image_urls?.length) {
       imageUrl = decodeURIComponent(json.data.image_urls[0]);
     }
@@ -196,8 +198,6 @@ export class MiniMaxCNProvider implements ImageProvider {
       console.error("[MiniMax-CN] ❌ 图片数据为空", JSON.stringify(json.data));
       throw new Error("[MiniMax-CN] 接口返回了空图片数据");
     }
-
-    console.log("[MiniMax-CN] ✅ 生成成功，图片URL:", imageUrl.slice(0, 80) + "...");
 
     return {
       imageUrl,
@@ -215,7 +215,10 @@ export class MiniMaxCNProvider implements ImageProvider {
 
     const aspectRatio = ASPECT_MAP[input.aspectRatio ?? "1:1"] ?? "1:1";
     const typePrefix = TYPE_PROMPT_PREFIX[input.type] ?? TYPE_PROMPT_PREFIX.product_photo;
-    const fullPrompt = `${typePrefix} ${input.prompt}`.slice(0, 1500);
+    const styleGuidance = input.style ? (STYLE_GUIDANCE[input.style] ?? "") : "";
+    const stylePrefix = styleGuidance ? `${styleGuidance} ` : "";
+    const trendingPrefix = input.diagnosisType ? (TRENDING_PROMPT_PREFIX[input.diagnosisType] ?? "") : "";
+    const fullPrompt = `${trendingPrefix}${stylePrefix}${typePrefix} ${input.prompt}`.slice(0, 1500);
 
     const body: Record<string, unknown> = {
       model: MODEL,
@@ -235,8 +238,6 @@ export class MiniMaxCNProvider implements ImageProvider {
     }
 
     const url = `${MINIMAX_IMAGE_BASE_URL}/v1/image_generation`;
-
-    console.log("[MiniMax-CN] 批量生成请求", { n: batchN, type: input.type });
 
     const res = await fetch(url, {
       method: "POST",
@@ -282,8 +283,6 @@ export class MiniMaxCNProvider implements ImageProvider {
     }));
 
     const bestIndex = pickBest(images.map((i) => ({ imageUrl: i.imageUrl, latencyMs: i.latencyMs ?? 0 })));
-
-    console.log(`[MiniMax-CN] 批量生成完成，共 ${images.length} 张，最佳索引: ${bestIndex}`);
 
     return { images, bestIndex };
   }

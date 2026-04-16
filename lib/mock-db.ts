@@ -13,8 +13,6 @@ export interface Lead {
   id: string;
   name: string;
   contact: string;       // 手机号
-  company: string | null; // 公司名称
-  serviceType: string | null; // 服务类型
   businessType: string | null; // 业务类型
   note: string | null;
   status: "new" | "contacted" | "closed";

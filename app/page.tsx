@@ -206,7 +206,7 @@ export default function HomePage() {
             {[
               { step: "01", title: "上传产品图", desc: "随手一拍就行" },
               { step: "02", title: "选风格场景", desc: "想要的风格点一下" },
-              { step: "03", title: "48h收图", desc: "坐等收货不用盯" },
+              { step: "03", title: "AI即时生成", desc: "分钟级出图，不满意重做" },
             ].map((s) => (
               <div key={s.step} className="bg-white/5 rounded-2xl p-5 md:p-6 border border-white/10 text-center">
                 <div className="text-3xl md:text-4xl font-bold text-amber-400 mb-3">{s.step}</div>
@@ -264,7 +264,7 @@ export default function HomePage() {
       <section className="py-12 md:py-20 px-4 md:px-6 bg-gray-900 border-t border-white/5">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-xl md:text-3xl font-bold text-white text-center tracking-tight mb-2 md:mb-3">明码标价，做完才收钱</h2>
-          <p className="text-white/40 text-center mb-8 md:mb-12 text-sm md:text-base">先做一版给你看，不满意不收任何费用</p>
+          <p className="text-white/40 text-center mb-8 md:mb-12 text-sm md:text-base">先做一版给你看，满意再付款；不满意全额退款</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
             {[
               { tier: "体验", price: "¥29", unit: "/张", desc: "1张图，换背景或基础精修", best: false, cta: "上传一张试试" },

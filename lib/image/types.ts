@@ -1,4 +1,4 @@
-export type ImageTaskType = "product_photo" | "model_photo" | "background_swap";
+export type ImageTaskType = "product_photo" | "model_photo" | "background_swap" | "lifestyle";
 
 export type ImageAspectRatio = "1:1" | "3:4" | "16:9";
 
@@ -8,6 +8,8 @@ export interface ImageTaskInput {
   referenceImageUrl?: string;
   style?: "minimal" | "luxury" | "commercial";
   aspectRatio?: ImageAspectRatio;
+  /** 诊断类型，用于注入爆款前缀（可选） */
+  diagnosisType?: "traffic" | "customer" | "efficiency" | "unclear";
 }
 
 export interface ImageTaskOutput {

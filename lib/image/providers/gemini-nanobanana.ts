@@ -58,13 +58,6 @@ export class GeminiNanobananaProvider implements ImageProvider {
       );
     }
 
-    console.log("[Gemini] 生成请求");
-    console.log("  provider:     gemini-nanobanana");
-    console.log("  model:       ", IMAGE_MODEL);
-    console.log("  type:        ", input.type);
-    console.log("  aspectRatio: ", input.aspectRatio ?? "1:1");
-    console.log("  hasReference:", !!input.referenceImageUrl);
-
     // ── 构造请求体 ──────────────────────────────
     const parts: GeminiPart[] = [{ text: input.prompt }];
 
@@ -81,12 +74,9 @@ export class GeminiNanobananaProvider implements ImageProvider {
               data: refBase64,
             },
           });
-          console.log("  referenceImage: 已添加（base64）");
-        } else {
-          console.log("  referenceImage: 获取失败（HTTP", refRes.status + "），跳过");
         }
       } catch (e) {
-        console.log("  referenceImage: 获取异常（", (e as Error).message + "），跳过");
+        // 参考图获取失败不影响主流程，静默跳过
       }
     }
 
@@ -122,9 +112,6 @@ export class GeminiNanobananaProvider implements ImageProvider {
     } catch {
       rawText = "(无法读取响应体)";
     }
-
-    console.log("[Gemini] HTTP 状态:", status);
-    if (rawText) console.log("[Gemini] 响应前200字:", rawText.slice(0, 200));
 
     // ── 错误码解析 ────────────────────────────
     if (status !== 200) {
@@ -178,7 +165,6 @@ export class GeminiNanobananaProvider implements ImageProvider {
     for (const part of responseParts) {
       if (part.inlineData?.mimeType?.startsWith("image/")) {
         imageBase64 = part.inlineData.data;
-        console.log("[Gemini] 找到图片 part，mimeType:", part.inlineData.mimeType);
         break;
       }
     }
@@ -196,7 +182,6 @@ export class GeminiNanobananaProvider implements ImageProvider {
     }
 
     const imageUrl = `data:image/jpeg;base64,${imageBase64}`;
-    console.log("[Gemini] ✅ 生成成功（base64，长度:", imageBase64.length + ")");
 
     return {
       imageUrl,

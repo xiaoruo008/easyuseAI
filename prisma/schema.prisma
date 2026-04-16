@@ -46,7 +46,7 @@ model Diagnosis {
 model Lead {
   id                  String   @id @default(cuid())
   name                String
-  contact             String   // 手机号（唯一 or 索引）
+  contact             String   // 微信号（微信，诊断留资渠道）
   businessType        String?  // 对应 resultType / serviceType
   note                String?
   status              LeadStatus @default(NEW)

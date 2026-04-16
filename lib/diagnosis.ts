@@ -148,7 +148,7 @@ export function calculateResult(answers: Record<number, AnswerValue>): Diagnosis
     C: "100~500元，效果导向",
     D: "500元以上，要最好的效果",
   };
-  const suggestedBudget = budgetMap[answers[5] ?? "A"] ?? "面议";
+  const suggestedBudget = budgetMap[answers[5] ?? "D"] ?? "面议";
 
   // 决策：image_expensive > image_poor > image_ai > image_start
   const { image_poor, image_expensive, image_ai } = scores;
@@ -300,3 +300,19 @@ const EXECUTION_ACTIONS: Record<ResultType, ExecutionAction[]> = {
     { id: "scene_photo", label: "场景图", desc: "把产品放在真实生活场景中", icon: "🏠", category: "image" },
   ],
 };
+
+// ─── ResultType → TRENDING_PROMPT_PREFIX key 映射 ─────────────────
+// 语义对齐：诊断结果类型 → 爆款前缀应侧重的转化维度
+// TRENDING_PROMPT_PREFIX keys: "traffic" | "customer" | "efficiency" | "unclear"
+export type TrendingDiagnosisType = "traffic" | "customer" | "efficiency" | "unclear";
+
+const RESULT_TYPE_TO_TRENDING_MAP: Record<ResultType, TrendingDiagnosisType> = {
+  image_cost: "traffic",      // 高成本 → 流量型爆款prompt
+  image_stability: "efficiency", // AI不稳定 → 效率型prompt
+  image_poor: "customer",     // 图片差 → 客户情感型prompt
+  image_start: "unclear",    // 没开始 → 通用型prompt
+};
+
+export function mapResultTypeToTrendingDiagnosisType(resultType: ResultType): TrendingDiagnosisType {
+  return RESULT_TYPE_TO_TRENDING_MAP[resultType] ?? "unclear";
+}

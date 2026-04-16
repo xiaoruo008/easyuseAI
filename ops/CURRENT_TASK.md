@@ -1,6 +1,229 @@
-# CURRENT TASK
-更新时间：2026-04-15 01:00 UTC+8
-状态：✅ 完成
+# CURRENT_TASK
+更新时间：2026-04-16 10:59 UTC+8
+状态：✅ 进行中（P32 已修复）
+
+---
+
+## 第三十轮（2026-04-16 10:59 UTC+8）
+**类型**：Production Clean-up / Log Quality
+**状态**：✅ 完成
+
+`lib/image/providers/gemini-nanobanana.ts` 中存在 13 条 `console.log` 服务器端调试日志，上线后会持续写入服务器日志，制造噪音。
+
+修复：删除 13 条调试/信息日志（生成请求详情6行、referenceImage处理3行、HTTP状态/响应body、成功日志），保留 5 条 `console.error`/`console.warn` 错误日志。
+
+验证：`pnpm tsc --noEmit` → 0 errors ✅，文件中 console.log 残留数：0 ✅
+
+---
+
+## 第二十九轮（2026-04-16 09:51 UTC+8）
+**类型**：Production Clean-up / Log Quality
+**状态**：✅ 完成
+
+`lib/image/providers/minimax-cn.ts` 中存在 9 条 `console.log` 服务器端调试日志，上线后会持续写入服务器日志，制造噪音。
+
+修复：删除 9 条调试/信息日志（生成请求详情、endpoint/model/type/style、响应 body、base64 返回、成功日志、批量请求/完成、HTTP 状态），保留 6 条 `console.error` 错误日志。
+
+验证：`pnpm tsc --noEmit` → 0 errors ✅
+
+---
+
+## 第二十八轮（2026-04-16 09:25 UTC+8）
+**类型**：Feature Bug / Prompt Engineering（TRENDING_PROMPT_PREFIX 断链）
+**状态**：✅ 完成
+
+`execute/page.tsx` 调用 `/api/execute/generate` 时从未传递 `diagnosisType`，导致 TRENDING_PROMPT_PREFIX（爆款前缀层）永远不生效。
+
+根因：execute page 有 `diagnosisResult.type`（ResultType），但 TRENDING_PROMPT_PREFIX 需要的是 `"traffic" | "customer" | "efficiency" | "unclear"`，两者完全不同，无直接映射。
+
+修复：
+1. `lib/diagnosis.ts` — 新增 `mapResultTypeToTrendingDiagnosisType()` 将 ResultType 语义映射到 trending key
+2. `app/execute/page.tsx` — body 新增 `diagnosisType: mapResultTypeToTrendingDiagnosisType(diagnosisResult.type)`
+
+验证：`pnpm tsc --noEmit` → 0 errors ✅
+
+---
+
+## 第二十七轮（2026-04-16 08:49 UTC+8）
+**类型**：Semantic Bug / Prompt Quality（模板类型映射错误）
+**状态**：✅ 完成
+
+`lifestyle` / `fashion_lifestyle` 动作使用 `lifestyle_scene` 模板，但 `TEMPLATE_TYPE_MAP` 中无 `lifestyle_scene` 映射，默认回退 `"product_photo"`，MiniMax prompt 前缀从"生活场景"语义错位为"电商产品摄影"。
+
+修复：
+1. `lib/image/types.ts` — `ImageTaskType` 新增 `"lifestyle"` 类型
+2. `lib/image/index.ts` — `TEMPLATE_TYPE_MAP`：`lifestyle_scene → "lifestyle"`，`fashion_lifestyle → "lifestyle"`
+3. `lib/image/fal-provider.ts` — `TYPE_PROMPT_PREFIX` 新增 `lifestyle` 条目
+
+验证：`pnpm tsc --noEmit` → 0 errors ✅
+
+---
+
+## 第二十六轮（2026-04-16 08:17 UTC+8）
+**类型**：Content / UX Bug（首页 Case Gallery before 图共用）
+**状态**：🔍 已确认，修复需要图片资源
+
+`app/page.tsx` 第15-21行，4个 case 全部共用 `REAL_BEFORE = "/images/home/home-before.jpg"`，导致每种 case 的 before→after 对比失去真实说服力。
+
+`public/images/home/` 中仅有1张 before 图、4张 after 图。无现有资源满足4个 case 各需独立 before 图的需求。
+
+两个可行方案已记录在 HERMES_REPORT.md：
+- 方案A：获取4张独立 before 图（各 case 对应真实样本）
+- 方案B：重构为单图 showcase（去掉 before 列，只展示4张 after 效果图）
+
+当前无法自动执行：禁止浏览器自动化 + 图片生成非 cron 职责。
+
+---
+
+## 第二十五轮（2026-04-16 07:41 UTC+8）
+**类型**：Reliability Fix（API 超时保护）
+**状态**：✅ 完成
+
+修复 `lib/ai.ts` 的 `chat()` 函数 — 之前 `fetch()` 调用 AI API 无超时设置，网络异常时可能无限期等待。
+
+修复：`chat(messages, timeoutMs = 20000)` — 使用 `AbortController` + `setTimeout` 实现 20 秒超时，`clearTimeout(timer)` 保证无泄漏，向后兼容所有调用方。
+
+验证：`pnpm tsc --noEmit` → 0 errors ✅
+
+---
+
+## 第二十四轮（2026-04-16 06:19 UTC+8）
+**类型**：Bug Fix（计算逻辑一致性）
+**状态**：✅ 完成
+
+修复 `lib/diagnosis.ts` 第151行的默认值不一致问题：
+
+`calculateResult` 的 `budgetMap` 查表使用 `answers[5] ?? "A"`，但 `dominantScore()` 对未作答题目（包括从未展示给用户的Q4/Q5）默认 "D"。当用户只完成3题诊断时，`answers[5]` 永远为 `undefined`，导致 budget 错误回退为 "免费方案优先"（A），而非与 `dominantScore` 一致的 "D"（"500元以上，要最好的效果"）。
+
+修复：`answers[5] ?? "A"` → `answers[5] ?? "D"`
+
+验证：`pnpm tsc --noEmit` → 0 errors ✅
+**类型**：UX Bug Fix
+**状态**：✅ 完成
+
+修复 `app/submit/page.tsx` 文件上传的两处问题：
+
+1. **未检查 HTTP 响应状态** — `await fetch("/api/assets")` 后不判断 `uploadRes.ok`，服务器返回 4xx/5xx 时静默失败。修复：检查 `ok` 并在非 OK 时打印警告。
+2. **错误传播污染主流程** — 上传失败会抛出异常，被外层 catch 捕获显示"提交失败"，但此时 lead 已创建成功。修复：独立 try/catch 隔离上传错误，`finally` 正确重置 `uploading` 状态，`setSubmitted(true)` 在隔离后执行。
+
+验证：`npx tsc --noEmit` → 0 errors ✅
+
+---
+
+## 第二十二轮（2026-04-16 04:46 UTC+8）
+**类型**：Bug Fix
+**状态**：✅ 完成
+
+修复 `app/api/execute/generate/route.ts` 文案生成代码的两处不对称问题：
+
+1. **`createTask()` 返回值未被捕获** — 文本任务创建后 `taskId` 丢失，无法追踪。修复：显式赋值给 `textTaskId` 变量。
+2. **任务状态未更新** — 文案生成完成后无 `updateTask` 调用，任务永远停留在 `"doing"` 状态。修复：生成完成后调用 `updateTask(textTaskId, { status, outputData, errorMessage })`，与图片生成逻辑对齐。
+3. **API 响应缺少 `taskId`** — 修复：在响应中新增 `taskId: textTaskId` 字段。
+
+验证：`npx tsc --noEmit` → 0 errors ✅
+
+---
+
+## 第二十一轮（2026-04-16 03:23 UTC+8）
+**类型**：Critical Bug Fix
+**状态**：✅ 完成
+
+修复 `app/submit/page.tsx` 调用 `/api/leads` 时的字段名不匹配：
+- `wechat_id` → 改为 `contact`（API 字段名）
+- `notes` → 改为 `note`（API 字段名）
+- `product_category` → 改为 `businessType`（字段名对齐）
+- 移除冗余的 `upload_data` 字段
+
+根因：submit 页早期开发时字段名与 leads API 定义不一致，未同步更新。
+
+验证：`npx tsc --noEmit` → 0 errors ✅，Dev Server HTTP 200 ✅
+
+---
+
+## 第二十轮（2026-04-16 02:39 UTC+8）
+**类型**：Feature Enhancement
+**状态**：✅ 完成
+
+实现 TRENDING_PROMPT_PREFIX（爆款前缀层），4个文件，10处改动：
+- `lib/image/types.ts` — ImageTaskInput 新增 diagnosisType 字段
+- `lib/image/index.ts` — GenerateImageOptions 新增 diagnosisType + 透传
+- `lib/image/providers/minimax-cn.ts` — TRENDING_PROMPT_PREFIX 常量 + prompt 构建更新（generate/generateBatch）
+- `app/api/execute/generate/route.ts` — body 解析 + generateImageWithRetry 三次调用透传
+
+验证：`npx tsc --noEmit` → 0 errors ✅
+
+---
+
+## 第十九轮（2026-04-16 01:48 UTC+8）
+**类型**：健康检查
+**状态**：✅ 完成
+
+无紧急问题。系统状态：
+- TypeScript 编译：0 errors ✅
+- Dev Server（PORT=3005）：HTTP 200 ✅
+- 五题系统所有路由问题已全部解决
+- workflowLabel 前端展示已修复
+- style 参数全链路完整注入
+
+待推进：
+1. 端到端主流程测试（browser flow 脚本，需人工介入）
+2. 实现 TRENDING_PROMPT_PREFIX（`ops/A_PLAN_IMPLEMENTATION.md`，>5步，多文件）
+3. 完善提交页（submit）表单字段与后端联调
+
+---
+
+## 第十八轮（2026-04-16 05:17 UTC+8）
+**类型**：前端显示修复
+**状态**：✅ 完成
+
+`workflowLabel` API 响应已添加但前端两处遗漏导致标签被丢弃。本轮修复：
+1. `ImageResult` 类型新增 `workflowLabel?: string`
+2. `setImageResult()` 正确传递 `d.workflowLabel`
+3. 结果卡片标题动态展示 `"国内女装连衣裙 · 官网品牌图 · 你的图做好了"`
+
+根因：第十六轮 API 层添加了 `workflowLabel`，但前端类型和状态处理代码未同步更新。
+
+验证：`npx tsc --noEmit` → 0 errors ✅
+
+---
+
+## 第十七轮（2026-04-16 04:41 UTC+8）
+**类型**：Critical Bug Fix
+**状态**：✅ 完成
+
+修复 `lib/image/providers/minimax-cn.ts` 的 `generate()` 和 `generateBatch()` — 用户选择的 luxury/minimal/commercial 风格从未注入 MiniMax CN API prompt，导致风格偏好完全丢失。根因：CN Provider 遗漏了旧版 `MiniMaxImageProvider` 中已有的 `STYLE_GUIDANCE` 注入逻辑。修复后风格引导正确拼入 prompt，生成结果更符合用户预期。
+
+---
+
+## 第十六轮（2026-04-16 04:01 UTC+8）
+**类型**：Feature Enhancement（结构化输出）
+**状态**：✅ 完成
+
+为 `app/api/execute/generate/route.ts` 图片生成响应新增 `workflowLabel` 字段（从 WORKFLOW_MAP 查询），使前端可直接展示工作流标签（如"国内女装上衣·白底主图"），无需前端修改即可向后兼容。
+
+根因：execute API 响应只有 templateKey（`dress_hero_branded`），前端无法直接显示人类可读的工作流名称。
+
+修复：使用 `buildWorkflowKey(deriveFields)` 重建 workflowKey，从 WORKFLOW_MAP 查询 label，添加到响应。
+
+验证：`npx tsc --noEmit` → 0 errors ✅
+
+---
+
+## 第十五轮（2026-04-16 03:27 UTC+8）
+**类型**：Critical Bug Fix
+**状态**：✅ 完成
+
+修复 `lib/image/index.ts` 的 `getImageProvider()` — `IMAGE_PROVIDER=minimax-cn` 配置导致全部图片生成回退到 Mock Provider。
+
+根因：`.env` 配置 `minimax-cn`，但 `getImageProvider()` 只检查 `"minimax"`，条件不匹配 → 全部回退 Mock。修复后统一使用 `MiniMaxCNProvider`（正确读取 `MINIMAX_IMAGE_BASE_URL=https://api.minimaxi.com`）。
+
+---
+
+## 第十三轮（2026-04-15 21:37 UTC+8）
+**类型**：文档澄清
+**状态**：✅ 完成
+
+发现并纠正了 HERMES_REPORT 中过时的 DeepSeek 描述，确认文案生成已通过 `.env` 配置使用 MiniMax M2.7-highspeed。
 
 ---
 
@@ -356,7 +579,57 @@ const IMAGE_ACTIONS = new Set(["product_photo", "model_photo", "background_swap"
 修改：`app/execute/page.tsx` 第17行
 
 ## 下一步
-1. 端到端主流程测试（browser flow 脚本）
+1. 端到端主流程测试（browser flow 脚本，需人工介入）
 2. 打通文案生成的 MiniMax 调用（当前依赖 DeepSeek）
 3. 修复 `lib/db.ts` Prisma schema 类型错误（`company`/`market` 字段）
+
+---
+
+## 任务 ID
+task-2026-04-15-006
+
+## 任务类型
+task_type: bug-fix
+
+## 分配给
+assigned_to: hermes-agent
+
+## 目标
+修复 `lifestyle`/`fashion_model`/`fashion_lifestyle` 三个 action 在 MiniMax TYPE_PROMPT_PREFIX 中缺失，导致回退到 `product_photo` 前缀语义错位
+
+## 问题描述
+
+`lib/providers/minimax-image.ts` 的 `TYPE_PROMPT_PREFIX` 只定义了 3 个 action（`product_photo`、`model_photo`、`background_swap`）。
+
+`lifestyle`、`fashion_model`、`fashion_lifestyle` 三个 action 回退到 `TYPE_PROMPT_PREFIX.product_photo`，导致时装模特图、生活场景图、时尚生活图的 prompt 都以"产品摄影"开头，语义严重错位。
+
+## 具体修改
+
+文件：`lib/providers/minimax-image.ts`
+
+新增 3 个 TYPE_PROMPT_PREFIX：
+```ts
+lifestyle:
+  "Elegant lifestyle product photography, natural ambient lighting, warm and inviting atmosphere, editorial quality, aspirational home scene,",
+fashion_model:
+  "High-fashion editorial model photography, runway-inspired styling, luxury magazine aesthetic, dramatic lighting, premium fashion quality,",
+fashion_lifestyle:
+  "Luxury lifestyle fashion photography, aspirational brand imagery, natural outdoor setting, editorial elegance, sophisticated mood,",
+```
+
+## 验收标准
+
+- [x] `fashion_model` 使用时装编辑类 prefix（runway/magazine aesthetic）
+- [x] `lifestyle` 使用生活场景类 prefix（natural/ambient/warm atmosphere）
+- [x] `fashion_lifestyle` 使用奢侈品牌类 prefix（luxury/outdoor/editorial）
+- [x] `npx tsc --noEmit` → 0 errors
+
+## 执行结果
+✅ 完成时间：2026-04-15 22:06 UTC+8
+修改：`lib/providers/minimax-image.ts`
+
+## 下一步
+1. 端到端主流程测试（browser flow 脚本，需人工介入）
+2. 验证 `AI_API_KEY` 是否为真实有效 key
+3. 扩展 `ImageTaskType` 支持更多细分类型
 

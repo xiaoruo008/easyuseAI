@@ -27,3 +27,20 @@
 2026-04-14T21:47:06+08:00 | 健康检查失败 | Round 300 — localhost:3000 无法连接（exit 7），dev server 未运行
 2026-04-14T23:55:04+08:00 | ❌ 健康检查失败 (Round 303) | dev server 未运行 - localhost:3000 connection refused (exit 7)
 2026-04-15T03:16:47+08:00 | ✅ 网站基本稳定 | easyuseAI 夜间健康检查\n\nRound 307 | 连续第4次通过\n\n✅ HTTP: 200 OK\n✅ Console: 无报错\n✅ Flow: 5/5 通过\n✅ Mobile: 3/3 通过\n\n网站已连续稳定运行，可信度：高
+2026-04-15T19:21:58+08:00 | ❌ 网站健康检查失败 [Round 308] | 时间: 2026-04-15T11:18:00Z\n阶段: Mobile检查\n错误: Result页JS崩溃 — Cannot read properties of undefined (reading 'type_b')\n\n详情:\n- HTTP: ✅ 200 OK\n- Console: ✅ 无报错\n- Flow: ✅ 5/5 pass\n- Mobile: ❌ FAIL\n\n连续稳定计数: 归零（之前 4 次）
+2026-04-15T21:04:20+08:00 | easyuseAI 健康检查失败 | Round 311 | HTTP 连接失败: localhost:3000 connection refused (exit 7) — dev server 未运行
+2026-04-15T22:16:09+08:00 | 网站基本稳定 ✅ | 连续2次全部检查通过。Round 313: HTTP 200, Console ✓, Flow 5/5 ✓, Mobile 3/3 ✓。Dev server 运行在 port 3005。
+2026-04-15T23:36:30+08:00 | ✅ 网站基本稳定 | easyuseAI 夜间健康检查：连续第4次通过（Round 315）。HTTP✓ Console✓ Flow(5/5)✓ Mobile(3/3)✓。服务器运行在 localhost:3005。
+2026-04-16T02:02:12+08:00 | 网站基本稳定 ✅ | 第319轮检查通过。连续稳定第8次。Server: localhost:3000 down, 3005 up. Console✓ Flow✓ Mobile✓
+2026-04-16T03:09:57+08:00 | ❌ easyuseAI 健康检查失败 (Round 321) | 端口 3000 连接被拒绝，端口 3005 超时。Dev server 完全不可用。请检查 Windows 主机上的 Next.js 进程是否在运行。consecutive_stable 已重置为 0。
+2026-04-16T08:04:31+08:00 | 🌐 easyuseAI 健康检查 | ✅ 所有检查通过（Round 328）
+
+- HTTP: 200 OK (localhost:3005)
+- Console: 无报错，无失败请求
+- Flow: 5/5 步骤通过
+- Mobile: 3/3 页面加载正常
+
+📊 连续第2次通过，网站基本稳定。
+🔄 稳定计数: 15/328
+2026-04-16T09:12:43+08:00 | ✅ 网站基本稳定 | easyuseAI Round 330: HTTP 200 ✓ | Console ✓ | Flow 5/5 ✓ | Mobile 3/3 ✓ | 连续第9次通过
+2026-04-16T09:53:37+08:00 | 网站基本稳定 | easyuseAI dev server 连续稳定检查通过（第10次）

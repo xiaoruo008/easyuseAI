@@ -323,6 +323,7 @@ export const WORKFLOW_TO_TEMPLATE_KEY_MAP: Record<string, FashionTemplateKey> = 
   domestic_menswear_suit_set_main_white: "suit_set_main_white",
   domestic_menswear_suit_set_hero_branded: "suit_set_hero_branded",
   domestic_menswear_suit_set_model: "suit_set_model",
+  domestic_menswear_suit_set_lifestyle: "suit_set_lifestyle",
   // 国内 · 女装上衣
   domestic_womenswear_top_main_white: "top_main_white",
   domestic_womenswear_top_model: "top_model",
@@ -331,10 +332,21 @@ export const WORKFLOW_TO_TEMPLATE_KEY_MAP: Record<string, FashionTemplateKey> = 
   domestic_womenswear_dress_main_white: "dress_main_white",
   domestic_womenswear_dress_hero_branded: "dress_hero_branded",
   domestic_womenswear_dress_model: "dress_model",
+  domestic_womenswear_dress_lifestyle: "dress_lifestyle",
   // 跨境 · 男装套装
   cross_border_menswear_suit_set_main_white: "suit_set_main_white",
+  cross_border_menswear_suit_set_hero_branded: "suit_set_hero_branded",
+  cross_border_menswear_suit_set_model: "suit_set_model",
+  cross_border_menswear_suit_set_lifestyle: "suit_set_lifestyle",
+  // 跨境 · 男装上装
+  cross_border_menswear_top_main_white: "top_main_white",
+  cross_border_menswear_top_model: "top_model",
+  cross_border_menswear_top_lifestyle: "top_lifestyle",
   // 跨境 · 女装连衣裙
   cross_border_womenswear_dress_main_white: "dress_main_white",
+  cross_border_womenswear_dress_hero_branded: "dress_hero_branded",
+  cross_border_womenswear_dress_model: "dress_model",
+  cross_border_womenswear_dress_lifestyle: "dress_lifestyle",
   // 跨境 · 女装上衣
   cross_border_womenswear_top_model: "top_model",
 };

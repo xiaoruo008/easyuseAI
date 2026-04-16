@@ -42,6 +42,15 @@ export default function ResultPage() {
     }
   }, []);
 
+  // Get sessionId from URL for CTA link
+  const [sessionId, setSessionId] = useState<string>("");
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      setSessionId(params.get("session") ?? "");
+    }
+  }, []);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
@@ -128,12 +137,12 @@ export default function ResultPage() {
         {/* ── 主CTA ──────────────────────────────── */}
         <section className="space-y-2.5 md:space-y-3">
           <Link
-            href="/upload"
+            href={sessionId ? `/submit?session=${sessionId}` : "/submit"}
             className="block w-full py-4 bg-gray-900 text-white rounded-2xl font-bold text-base md:text-lg hover:bg-gray-800 transition-colors shadow-lg shadow-gray-900/10 text-center"
           >
-            上传我的产品图，免费试做一张
+            立即预约顾问，免费试做一张
           </Link>
-          <p className="text-center text-xs text-gray-400">上传后48小时内顾问微信联系你</p>
+          <p className="text-center text-xs text-gray-400">顾问微信联系，48小时内出图</p>
         </section>
 
         {/* ── 底部链接 ─────────────────────────────── */}

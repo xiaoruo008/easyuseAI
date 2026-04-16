@@ -19,6 +19,12 @@ const TYPE_PROMPT_PREFIX: Record<string, string> = {
     "Professional fashion model photography, studio setting, natural skin tones, commercial quality, elegant and modern style,",
   background_swap:
     "Professional product placement in an elegant scene, photorealistic rendering, seamless integration,",
+  lifestyle:
+    "Elegant lifestyle product photography, natural ambient lighting, warm and inviting atmosphere, editorial quality, aspirational home scene,",
+  fashion_model:
+    "High-fashion editorial model photography, runway-inspired styling, luxury magazine aesthetic, dramatic lighting, premium fashion quality,",
+  fashion_lifestyle:
+    "Luxury lifestyle fashion photography, aspirational brand imagery, natural outdoor setting, editorial elegance, sophisticated mood,",
 };
 
 const STYLE_GUIDANCE: Record<string, string> = {

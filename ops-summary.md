@@ -1,3 +1,85 @@
+## 2026-04-16T09:08:00Z — Round 330
+
+### Health Check Results
+| Check | Result |
+|-------|--------|
+| HTTP `/` | **200 OK (localhost:3005)** ✓ — port 3000 unreachable (connection refused) |
+| Console errors | **pass — no errors, no failed requests** ✓ |
+| Flow (5 pages) | **pass — 5/5 steps pass** ✓ |
+| Mobile (3 pages) | **pass — 3/3 pages load correctly** ✓ |
+
+### Outcome: ✅ PASS — **All checks passed. 连续第9次通过，网站基本稳定。**
+
+### Health Check Results
+| Check | Result |
+|-------|--------|
+| HTTP `/` | **200 OK (localhost:3005)** ✓ — port 3000 unreachable |
+| Console errors | **pass — no errors, no failed requests** ✓ |
+| Flow (5 pages) | **pass — 5/5 steps pass** ✓ |
+| Mobile (3 pages) | **pass — 3/3 pages load correctly** ✓ |
+
+### Outcome: ✅ PASS — **All checks passed. 连续第6次通过，网站基本稳定。**
+### Consecutive Stable: 6
+
+---
+
+## 2026-04-16T06:49:00Z — Round 326
+
+### Health Check Results
+| Check | Result |
+|-------|--------|
+| HTTP `/` | **200 OK (localhost:3005)** ✓ — port 3000 unreachable |
+| Console errors | **pass — no errors, no failed requests** ✓ |
+| Flow (5 pages) | **pass — 5/5 steps pass** ✓ |
+| Mobile (3 pages) | **pass — 3/3 pages load correctly** ✓ |
+
+### Outcome: ✅ PASS — **All checks passed. 连续第5次通过，网站基本稳定。**
+### Consecutive Stable: 5
+
+---
+
+## 2026-04-15T22:18:56Z — Round 325
+
+### Health Check Results
+| Check | Result |
+|-------|--------|
+| HTTP `/` | **200 OK (localhost:3005)** ✓ — port 3000 unreachable |
+| Console errors | **pass — no errors, no failed requests** ✓ |
+| Flow (5 pages) | **pass — 5/5 steps pass** ✓ |
+| Mobile (3 pages) | **pass — 3/3 pages load correctly** ✓ |
+
+### Outcome: ✅ PASS — **All checks passed. 连续第4次通过，网站基本稳定。**
+### Consecutive Stable: 4
+
+---
+## 2026-04-16T04:51:00Z — Round 323
+
+### Health Check Results
+| Check | Result |
+|-------|--------|
+| HTTP `/` | **200 OK (localhost:3005)** ✓ |
+| Console errors | **pass — no errors, no failed requests** ✓ |
+| Flow (5 pages) | **pass — 5/5 steps pass** ✓ |
+| Mobile (3 pages) | **pass — 3/3 pages load correctly** ✓ |
+
+### Outcome: ✅ PASS — **All checks passed. 连续第2次通过，网站基本稳定 🏠**
+
+---
+
+## 2026-04-15T16:50:50Z — Round 317
+
+### Health Check Results
+| Check | Result |
+|-------|--------|
+| HTTP `/` | **200 OK (localhost:3005)** ✓ |
+| Console errors | **pass — no errors, no failed requests** ✓ |
+| Flow (5 pages) | **pass — 5/5 steps pass** ✓ |
+| Mobile (3 pages) | **pass — 3/3 pages load correctly** ✓ |
+
+### Outcome: ✅ PASS — **All checks passed. 连续第6次通过，网站基本稳定。**
+
+---
+
 ## 2026-04-15T03:12:00Z — Round 307
 
 ### Health Check Results
@@ -317,3 +399,145 @@
 | Mobile (3 pages) | skipped |
 
 ### Outcome: ❌ FAIL — **Cannot connect to localhost:3000 — dev server not running**
+## 2026-04-15 11:56 UTC — round 309
+- http: 200 OK (port 3005)
+- console: pass
+- flow: 5/5 pass
+- mobile: pass
+- **Result: ALL PASS**
+
+## 2026-04-15 20:28 UTC — round 310
+- http: 200 OK (port 3005)
+- console: pass
+- flow: 5/5 pass
+- mobile: pass
+- **Result: ALL PASS — 连续第2次通过，网站基本稳定。**
+
+---
+
+## 2026-04-15 21:03 UTC — round 311
+
+### Health Check Results
+| Check | Result |
+|-------|--------|
+| HTTP `/` | **connection refused (exit 7)** ✗ |
+| Console errors | skipped |
+| Flow (5 pages) | skipped |
+| Mobile (3 pages) | skipped |
+
+### Outcome: ❌ FAIL — **Cannot connect to localhost:3000 — dev server not running**
+### Consecutive Stable: 0 (reset)
+
+## 2026-04-15 13:40 UTC — round 312
+## 2026-04-16T00:11:00Z — Round 316
+
+### Health Check Results
+| Check | Result |
+|-------|--------|
+| HTTP `/` | **000 on localhost:3000 (connection refused) ✗** — **200 OK on localhost:3005 ✓** |
+| Console errors | **pass — no errors, no failed requests** ✓ |
+| Flow (5 pages) | **pass — 5/5 steps pass** ✓ |
+| Mobile (3 pages) | **pass — 3/3 pages load correctly** ✓ |
+
+### Outcome: ✅ PASS — **All checks passed on port 3005. localhost:3000 仍不可达(连接被拒绝)，服务器实际运行在 3005。连续第5次通过，网站基本稳定。**
+### Consecutive Stable: 5
+
+---
+
+## 2026-04-15T15:36:21.443726Z — Round 315
+
+### Health Check Results
+| Check | Result |
+|-------|--------|
+| HTTP `/` | **200 OK (localhost:3005)** ✓ |
+| Console errors | **pass — no errors, no failed requests** ✓ |
+| Flow (5 pages) | **pass — 5/5 steps pass** ✓ |
+| Mobile (3 pages) | **pass — 3/3 pages load correctly** ✓ |
+
+### Outcome: ✅ PASS — **All checks passed. 连续第4次通过，网站基本稳定。**
+### Consecutive Stable: 4
+
+
+### Health Check Results
+| Check | Result |
+|-------|--------|
+| HTTP `/` | **200 OK (localhost:3005)** ✓ |
+| Console errors | **pass — no errors, no failed requests** ✓ |
+| Flow (5 pages) | **pass — 5/5 steps pass** ✓ |
+| Mobile (3 pages) | **pass — 3/3 pages load correctly** ✓ |
+
+### Outcome: ✅ PASS — **All checks passed. 连续第1次通过（恢复自 connection refused 失败）**
+### Consecutive Stable: 1
+
+## 2026-04-16T01:21:00.000000Z — Round 318
+
+### Health Check Results
+| Check | Result |
+|-------|--------|
+| HTTP `/` | **200 OK (localhost:3005)** ✓ |
+| Console errors | **pass — no errors, no failed requests** ✓ |
+| Flow (5 pages) | **pass — 5/5 steps pass** ✓ |
+| Mobile (3 pages) | **pass — 3/3 pages load correctly** ✓ |
+
+### Outcome: ✅ PASS — **All checks passed. 连续第7次通过，网站基本稳定。**
+### Consecutive Stable: 7
+
+---
+
+## 2026-04-15T18:38:49Z — Round 320
+
+### Health Check Results
+| Check | Result |
+|-------|--------|
+| HTTP `/` | **port 3000: connection refused ✗** — **port 3005: timeout ✗** |
+| Console errors | skipped |
+| Flow (5 pages) | skipped |
+| Mobile (3 pages) | skipped |
+
+### Outcome: ❌ FAIL — **Dev server completely down — both port 3000 (refused) and port 3005 (timeout) unreachable**
+### Consecutive Stable: 0 (reset)
+
+---
+
+## 2026-04-16T03:09:00Z — Round 321
+
+### Health Check Results
+| Check | Result |
+|-------|--------|
+| HTTP `/` | **port 3000: connection refused ✗ | port 3005: timeout ✗** |
+| Console errors | skipped |
+| Flow (5 pages) | skipped |
+| Mobile (3 pages) | skipped |
+
+### Outcome: ❌ FAIL — **Dev server completely down — both port 3000 (refused) and port 3005 (timeout) unreachable**
+### Consecutive Stable: 0 (reset)
+
+---
+
+## 2026-04-16T07:59:00Z — Round 328
+
+### Health Check Results
+| Check | Result |
+|-------|--------|
+| HTTP `/` | **200 OK (localhost:3005)** ✓ |
+| Console errors | **pass — no errors, no failed requests** ✓ |
+| Flow (5 pages) | **pass — 5/5 steps pass** ✓ |
+| Mobile (3 pages) | **pass — 3/3 pages load correctly** ✓ |
+
+### Outcome: ✅ PASS — **All checks passed. 连续第7次通过，网站基本稳定。**
+### Consecutive Stable: 7
+
+## 2026-04-16T08:35:00Z — Round 329
+
+### Health Check Results
+| Check | Result |
+|-------|--------|
+| HTTP `/` | **200 OK (localhost:3005)** ✓ |
+| Console errors | **pass — no errors, no failed requests** ✓ |
+| Flow (5 pages) | **pass — 5/5 steps pass** ✓ |
+| Mobile (3 pages) | **pass — 3/3 pages load correctly** ✓ |
+
+### Outcome: ✅ PASS — **All checks passed. 连续第8次通过。**
+### Consecutive Stable: 8
+
+---
