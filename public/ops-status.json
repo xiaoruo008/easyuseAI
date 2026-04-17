@@ -1,7 +1,7 @@
 {
-  "round": 392,
-  "stable_count": 77,
-  "last_check": "2026-04-17T13:53:35.000000+00:00",
+  "round": 395,
+  "stable_count": 80,
+  "last_check": "2026-04-18T00:22:00.000000+00:00",
   "last_result": "pass",
   "checks": {
     "http": "localhost:3000: 200 OK",
@@ -9,8 +9,8 @@
     "flow": "5/5",
     "mobile": "3/3"
   },
-  "consecutive_stable": 32,
-  "notify_stable": false,
+  "consecutive_stable": 35,
+  "notify_stable": true,
   "notes": {
     "health": "All checks passed — http 200 (port 3000), console 0 errors, flow 5/5, mobile 3/3",
     "failure_stage": null,
