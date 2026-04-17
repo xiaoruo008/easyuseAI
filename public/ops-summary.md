@@ -382,3 +382,16 @@
 - 连续稳定: 46/2 次通过 ✓
 
 最后更新: 2026-04-17T01:04:00Z
+
+---
+
+### Round 399 — 2026-04-18T03:47:00Z ❌ FAIL
+- ✅ Server: localhost:3000 返回 200 OK ✓
+- ✅ Console: ✓ 无报错，无失败请求
+- ✅ Flow: 5/5 steps pass (首页→diagnosis→result→execute→submit)
+- ❌ Mobile: **Diagnosis + Result 页面返回 500 Internal Server Error**（mobile viewport）
+- 结论: **Mobile 阶段失败**，HTTP/Console/Flow 均正常，Diagnosis/Result 后端在 mobile UA 下报 500
+- 连续稳定: 0/2（重置）
+- 可能原因: Diagnosis/Result 接口对 mobile User-Agent 返回 500，需检查服务端 mobile 兼容逻辑
+
+最后更新: 2026-04-18T03:47:00Z

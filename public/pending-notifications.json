@@ -56,3 +56,9 @@
 2026-04-17T07:54:57+08:00 | ✅ 网站基本稳定 | Round 374 — 连续14次通过 (2026-04-17 07:51)
 2026-04-17T08:29:19+08:00 | 网站基本稳定 🌐 | easyuseAI 开发服务器连续 15 次检查全部通过（Round 375）。HTTP 200 ✓ | Console 0 errors ✓ | Flow 5/5 ✓ | Mobile 3/3 ✓
 2026-04-17T17:36:46+08:00 | 代码变更 + 健康检查通过 | 8 files changed: ops-summary.md, public/ops-status.json, public/ops-summary.md, browser-report.json, 4 screenshots. Commit: 8d44926. Health: dev server ✓ tsc ✓.
+2026-04-18T02:42:31+08:00 | 网站健康检查失败 | Mobile 阶段: Diagnosis 和 Result 页面返回 500 错误。HTTP 200, Console 0 errors, Flow 5/5 均正常。请检查移动端视图服务端错误。
+2026-04-18T03:16:56+08:00 | easyuseAI 健康检查失败 [Round 398] | HTTP 200 ✓ | Console 0 errors ✓ | Flow 5/5 ✓ | Mobile ❌ (Diagnosis 500, Result 500)
+2026-04-18T03:51:50+08:00 | 🛑 健康检查失败 (Round 399) | Mobile 阶段失败: Diagnosis + Result 页面在 mobile viewport 返回 500 Internal Server Error。HTTP/Console/Flow 均正常。
+2026-04-18T05:23:53+08:00 | 🚨 easyuseAI 健康检查失败 [Round 400] | Mobile 检查失败: Diagnosis (500), Result (500)。与 Round 399 相同问题。HTTP/Console/Flow 正常。稳定计数: 81 次。
+2026-04-18T05:57:48+08:00 | ❌ easyuseAI 夜间健康检查失败 | Round 401 — Mobile 检查失败: Diagnosis (500) + Result (500)。HTTP/Console/Flow 均正常，问题同 Round 398/399/400。
+2026-04-18T06:32:23+08:00 | easyuseAI 夜间检查失败 | Round 402: Mobile 检查失败\n\n- HTTP: 200 OK\n- Console: 0 errors ✓\n- Flow: 5/5 ✓\n- Mobile: Diagnosis(500) + Result(500) ✗\n\n失败模式与 Round 398-401 相同，需检查移动端 Diagnosis/Result 服务端错误。

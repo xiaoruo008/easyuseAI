@@ -1,20 +1,20 @@
 {
-  "round": 396,
+  "round": 402,
   "stable_count": 81,
-  "last_check": "2026-04-17T17:07:00.649593+00:00",
-  "last_result": "pass",
+  "last_check": "2026-04-18T06:28:00.000000+00:00",
+  "last_result": "fail",
   "checks": {
     "http": "localhost:3000: 200 OK",
     "console": "0 errors",
     "flow": "5/5",
-    "mobile": "3/3"
+    "mobile": "FAIL (Diagnosis 500, Result 500)"
   },
-  "consecutive_stable": 36,
-  "notify_stable": true,
+  "consecutive_stable": 0,
+  "notify_stable": false,
   "notes": {
-    "health": "All checks passed — http 200 (port 3000), console 0 errors, flow 5/5, mobile 3/3",
-    "failure_stage": null,
-    "action_needed": null,
-    "stable_notification_sent": true
+    "health": "Mobile failed — Diagnosis/Result pages returned 500 on mobile viewport. Same issue as rounds 398-401.",
+    "failure_stage": "mobile",
+    "action_needed": "Check Diagnosis and Result server-side errors for mobile viewport",
+    "stable_notification_sent": false
   }
 }

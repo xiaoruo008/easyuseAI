@@ -1,3 +1,17 @@
+## Round 397 — 2026-04-17 18:42:06 UTC
+**Result: ❌ FAIL**
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 0/3 pages — **Diagnosis (500), Result (500)** ✗
+- 连续通过: 0 次 (已重置)
+- 累计 stable: 81 次
+- 失败阶段: mobile
+- 操作建议: 检查 Diagnosis 和 Result 页面在移动端视图的服务端错误 (500)
+- 通知: 已发送失败通知
+
+---
+
 ## Round 389 — 2026-04-17 11:52:49 UTC
 **Result: ✅ PASS**
 - HTTP: 200 OK (localhost:3000)
@@ -351,3 +365,52 @@
 - 连续通过: 35 次
 - 累计 stable: 80 次
 - 通知: 无新通知 (已于第374轮发过"网站基本稳定"通知)
+
+## Round 398 — 2026-04-18 03:13:00 UTC
+**Result: ❌ FAIL**
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 0/3 pages — **Diagnosis (500), Result (500)** ✗
+- 连续通过: 0 次 (已重置)
+- 累计 stable: 81 次
+- 失败阶段: mobile
+- 操作建议: 检查 Diagnosis 和 Result 页面在移动端视图的服务端错误 (500)
+- 通知: 已发送失败通知
+
+
+## Round 400 — 2026-04-18T05:20:00.000000+00:00
+**Result: ❌ FAIL**
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 0/3 pages — **Diagnosis (500), Result (500)** ✗
+- 连续通过: 0 次 (已重置)
+- 累计 stable: 81 次
+- 失败阶段: mobile
+- 操作建议: 检查 Diagnosis 和 Result 页面在移动端视图的服务端错误 (500)。与 Round 399 相同的失败模式。
+- 通知: 已发送失败通知
+
+## Round 401 — 2026-04-18T05:54:00.000000+00:00
+**Result: ❌ FAIL**
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 0/3 pages — **Diagnosis (500), Result (500)** ✗
+- 连续通过: 0 次 (已重置)
+- 累计 stable: 81 次
+- 失败阶段: mobile
+- 操作建议: 检查 Diagnosis 和 Result 页面在移动端视图的服务端错误 (500)。与 Round 398/399/400 相同的失败模式。
+- 通知: 已发送失败通知
+
+## Round 402 — 2026-04-18T06:28:00.000000+00:00
+**Result: ❌ FAIL**
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 0/3 pages — **Diagnosis (500), Result (500)** ✗
+- 连续通过: 0 次 (已重置)
+- 累计 stable: 81 次
+- 失败阶段: mobile
+- 操作建议: 检查 Diagnosis 和 Result 页面在移动端视图的服务端错误 (500)。与 Round 398-401 相同的失败模式。
+- 通知: 已发送失败通知
