@@ -414,3 +414,24 @@
 - 失败阶段: mobile
 - 操作建议: 检查 Diagnosis 和 Result 页面在移动端视图的服务端错误 (500)。与 Round 398-401 相同的失败模式。
 - 通知: 已发送失败通知
+
+---
+## Round 403 — 2026-04-18 07:03 UTC
+**Result:** ❌ FAIL
+| Check | Status |
+|-------|--------|
+| HTTP (localhost:3000) | ✅ 200 |
+| Console | ✅ 0 errors |
+| Flow | ✅ 5/5 |
+| Mobile | ❌ FAIL — Diagnosis 500, Result 500 |
+**Notes:** Mobile viewport — Diagnosis and Result pages return 500. Same as rounds 398-402. Stable count resets to 0.
+
+## Round 404 — 2026-04-18T07:40:00.000000+00:00
+**Result:** ❌ FAIL
+| Check | Status |
+|-------|--------|
+| HTTP (localhost:3000) | ✅ 200 |
+| Console | ✅ 0 errors |
+| Flow | ✅ 5/5 |
+| Mobile | ❌ FAIL — Diagnosis 500, Result 500 |
+**Notes:** Mobile viewport — Diagnosis and Result pages return 500. Same as rounds 398-403. Stable count resets to 0.
