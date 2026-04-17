@@ -110,8 +110,8 @@ export async function POST(req: NextRequest) {
         diagnosisSessionId: diagnosisSessionId ?? null,
         productImageUrl: productImage ?? null,
         referenceImageUrl: referenceImage ?? null,
-        // 传递路由决策信息供 n8n 使用
-        routeProvider: routeDecision.provider,
+        // 传递路由决策信息供 n8n 使用（字段名匹配 n8n IF 条件）
+        selectedProvider: routeDecision.provider,
         priorityLevel: routeDecision.priorityLevel,
       };
 

@@ -20,8 +20,13 @@
 
 **卡点: n8n workflow 未激活**
 - 用户需手动打开 http://localhost:5678
-- 找到 "EasyUseAI Lead Router"
-- 点右上角 Activate
+- 找到 "EasyUseAI Lead Router" (ID: 4dhn426ICQaYx5XF)
+- 点右上角 Activate (变绿色)
+
+## 已修复的 Bug
+
+- [x] **字段名不匹配** — leads API 发送 `routeProvider`，n8n IF 节点期望 `selectedProvider`。已修复 `route.ts` 第114行
+- [x] **N8N_WEBHOOK_URL 路径错误** — 从 `/webhook/image-generate` 改为 `/webhook/easyuse-lead`
 
 ## 已完成功能
 
