@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import CaseWall from "@/components/CaseWall";
 
 // 首屏轮播大图
 const AFTER_IMAGES = [
@@ -218,47 +219,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Case Gallery */}
-      <section className="py-12 md:py-20 px-4 md:px-6 bg-gray-950 border-t border-white/5">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-lg sm:text-2xl lg:text-3xl font-bold text-white tracking-tight mb-2 md:mb-3">我们能帮你做成什么样</h2>
-            <p className="text-white/40 text-sm">随便挑了几种最常见的需求，都能做</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
-            {CASES.map((c) => (
-              <div key={c.id} className="bg-gray-900/50 rounded-2xl overflow-hidden border border-white/10 hover:border-white/20 transition-all flex flex-col">
-                <div className="px-3 md:px-4 py-2.5 flex items-center justify-between border-b border-white/5">
-                  <span className="text-xs font-semibold text-white/80">{c.label}</span>
-                  <span className="text-[10px] font-medium text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-full">{c.tag}</span>
-                </div>
-                <div className="flex h-36 md:h-44 flex-shrink-0">
-                  <div className="relative flex-1 bg-gray-900">
-                    <Image src={c.beforeUrl} alt={`${c.label} 原图`} fill className="object-contain p-1" unoptimized />
-                    <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white/70 text-[9px] text-center py-0.5 tracking-wider">原图</div>
-                  </div>
-                  <div className="w-px bg-white/10 flex-shrink-0" />
-                  <div className="relative flex-1 bg-gray-900">
-                    <Image src={c.afterUrl} alt={`${c.label} 效果`} fill className="object-contain p-1" unoptimized />
-                    <div className="absolute bottom-0 left-0 right-0 bg-amber-500/70 text-white text-[9px] text-center py-0.5 tracking-wider">效果</div>
-                  </div>
-                </div>
-                <div className="px-3 md:px-4 pt-3 pb-2 flex-1 flex flex-col">
-                  <p className="text-xs text-white/60 leading-relaxed mb-1.5 md:mb-2 flex-1">{c.result}</p>
-                  <p className="text-[10px] text-white/30 mb-2 md:mb-3">{c.scene}</p>
-                  <Link href="/diagnosis" className="w-full py-2 text-xs font-semibold text-center border border-white/10 rounded-lg text-white/60 hover:bg-white/5 hover:border-white/20 transition-colors">我也要做一张</Link>
-                </div>
-                <div className="px-3 md:px-4 pb-3"><p className="text-xs font-semibold text-amber-400">{c.from}</p></div>
-              </div>
-            ))}
-          </div>
-          <div className="text-center mt-8 md:mt-10">
-            <Link href="/diagnosis" className="inline-flex items-center gap-2 px-5 md:px-6 py-2.5 md:py-3 border border-white/20 rounded-xl text-white/50 text-sm font-medium hover:bg-white/5 hover:border-white/30 transition-colors">
-              上传我的图，看看能做什么 →
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Case Wall */}
+      <CaseWall />
 
       {/* Pricing */}
       <section className="py-12 md:py-20 px-4 md:px-6 bg-gray-900 border-t border-white/5">
@@ -267,7 +229,7 @@ export default function HomePage() {
           <p className="text-white/40 text-center mb-8 md:mb-12 text-sm md:text-base">先做一版给你看，满意再付款；不满意全额退款</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
             {[
-              { tier: "体验", price: "¥29", unit: "/张", desc: "1张图，换背景或基础精修", best: false, cta: "上传一张试试" },
+              { tier: "体验", price: "¥29", unit: "/张", desc: "1张图，换背景或基础精修", best: false, cta: "免费试做1张" },
               { tier: "标准", price: "¥99", unit: "/5张", desc: "5张同规格图，批量制作", best: true, cta: "开始制作" },
               { tier: "定制", price: "¥299", unit: "/套", desc: "完整方案，含模特+场景+精修", best: false, cta: "获取定制方案" },
             ].map((plan) => (
@@ -290,9 +252,15 @@ export default function HomePage() {
       {/* CTA */}
       <section className="py-12 md:py-20 px-4 md:px-6 bg-gray-950 border-t border-white/5">
         <div className="max-w-2xl mx-auto text-center space-y-4 md:space-y-5">
-          <h2 className="text-2xl md:text-4xl font-bold text-white tracking-tight">想试试？先做个诊断</h2>
-          <p className="text-white/40 text-base md:text-lg">6道题告诉你怎么出图最划算</p>
-          <Link href="/diagnosis" className="inline-flex items-center gap-2 px-8 md:px-10 py-3.5 md:py-4 bg-white text-gray-900 rounded-xl font-semibold hover:bg-gray-100 transition-colors text-base md:text-lg">立即开始</Link>
+          <h2 className="text-2xl md:text-4xl font-bold text-white tracking-tight">想试试？先免费做1张</h2>
+          <p className="text-white/40 text-base md:text-lg">上传产品图，AI帮你出专业效果图</p>
+          <Link href="/diagnosis" className="inline-flex items-center gap-2 px-8 md:px-10 py-3.5 md:py-4 bg-white text-gray-900 rounded-xl font-semibold hover:bg-gray-100 transition-colors text-base md:text-lg">
+            免费试做1张
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
+          <p className="text-white/30 text-xs">不满意不收费 · 48小时内出结果</p>
         </div>
       </section>
 

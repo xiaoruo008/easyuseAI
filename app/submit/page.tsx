@@ -113,9 +113,9 @@ function SubmitContent() {
         <div className="max-w-md w-full bg-white rounded-2xl shadow-sm border p-6 md:p-8 text-center space-y-4">
           <div className="text-5xl">✅</div>
           <h1 className="text-2xl font-bold text-gray-900">收到了！</h1>
-          <p className="text-gray-500 leading-relaxed">
-            48小时内顾问会微信联系你，记得通过哦
-          </p>
+        <p className="text-gray-500 leading-relaxed">
+          顾问会微信联系你，发图后10分钟内出初稿
+        </p>
           <div className="bg-gray-50 rounded-xl p-4 space-y-2">
             <p className="text-gray-400 text-sm">加微信：z425659107（免费试做1张，10分钟给你）</p>
             <p className="text-indigo-600 font-semibold text-lg">z425659107</p>
@@ -150,8 +150,8 @@ function SubmitContent() {
       </header>
 
       <main className="max-w-xl mx-auto px-4 md:px-6 py-8 md:py-10">
-        <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-1.5 md:mb-2">留下联系方式，我们帮你做一版图</h1>
-        <p className="text-gray-500 text-sm mb-6 md:mb-8">48小时内顾问会微信联系你</p>
+        <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-1.5 md:mb-2">留下联系方式，免费帮你做1张</h1>
+        <p className="text-gray-500 text-sm mb-6 md:mb-8">顾问微信联系你，发图后10分钟内出初稿</p>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border p-5 md:p-6 space-y-4 md:space-y-5">
           <div>
@@ -211,7 +211,7 @@ function SubmitContent() {
               上传资料（选填）
             </label>
             <div className="mb-2 p-3 bg-amber-50 border border-amber-100 rounded-lg text-xs text-amber-700 leading-relaxed">
-              💡 小提示：上传一张<strong>随手拍产品图</strong>+一张<strong>你喜欢的参考图</strong>，我们会按这个方向免费试做1张<br />
+              💡 小提示：上传<strong>随手拍产品图</strong>，我们免费试做1张<br />
               如果你对风格统一和品牌感要求高，我们会优先采用更高质量的出图链路
             </div>
 

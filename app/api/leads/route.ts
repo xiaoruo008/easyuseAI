@@ -7,7 +7,36 @@ export async function GET() {
   return NextResponse.json(leads);
 }
 
+/**
+ * 指数退避重试辅助函数
+ * @param fn 要执行的异步函数
+ * @param maxRetries 最大重试次数
+ * @param baseDelayMs 基础延迟（毫秒）
+ */
+async function withExponentialBackoff<T>(
+  fn: () => Promise<T>,
+  maxRetries = 3,
+  baseDelayMs = 1000
+): Promise<{ result?: T; error?: string; attempts: number }> {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const result = await fn();
+      return { result, attempts: attempt };
+    } catch (err) {
+      lastError = err;
+      console.warn(`[leads] ⏳ 重试 ${attempt}/${maxRetries} 失败: ${(err as Error).message}`);
+      if (attempt < maxRetries) {
+        const delay = baseDelayMs * Math.pow(2, attempt - 1);
+        await new Promise((r) => setTimeout(r, delay));
+      }
+    }
+  }
+  return { error: (lastError as Error)?.message ?? "unknown", attempts: maxRetries };
+}
+
 export async function POST(req: NextRequest) {
+  const startTime = Date.now();
   try {
     const body = await req.json();
     const { name, wechat, category, platform, resultType, productImage, referenceImage, remark, diagnosisSessionId } = body;
@@ -59,7 +88,62 @@ export async function POST(req: NextRequest) {
       diagnosisSessionId: diagnosisSessionId ?? null,
     });
 
-    // 飞书通知
+    console.log(`[leads] ✅ 新线索创建成功`, {
+      leadId: lead.id,
+      name,
+      businessType: category ?? resultType,
+      diagnosisSessionId,
+      routeProvider: routeDecision.provider,
+      priorityLevel: routeDecision.priorityLevel,
+      durationMs: Date.now() - startTime,
+    });
+
+    // 【新增】触发 n8n 出图流程（指数退避重试）
+    const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL;
+    if (n8nWebhookUrl) {
+      const notifyPayload = {
+        name,
+        contact: wechat,
+        businessType: category ?? resultType ?? null,
+        serviceType: resultType ?? null,
+        note: remark ?? null,
+        diagnosisSessionId: diagnosisSessionId ?? null,
+        productImageUrl: productImage ?? null,
+        referenceImageUrl: referenceImage ?? null,
+        // 传递路由决策信息供 n8n 使用
+        routeProvider: routeDecision.provider,
+        priorityLevel: routeDecision.priorityLevel,
+      };
+
+      const n8nResult = await withExponentialBackoff(
+        async () => {
+          const res = await fetch(n8nWebhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(notifyPayload),
+          });
+          if (!res.ok) {
+            throw new Error(`n8n webhook HTTP ${res.status}`);
+          }
+          return res.json();
+        },
+        3,  // maxRetries
+        1000  // baseDelayMs
+      );
+
+      if (n8nResult.error) {
+        console.error(`[leads] ❌ n8n 触发失败（已重试 ${n8nResult.attempts} 次）:`, n8nResult.error);
+      } else {
+        console.log(`[leads] ✅ n8n 出图流程已触发（尝试 ${n8nResult.attempts} 次）`, {
+          leadId: lead.id,
+          diagnosisSessionId,
+        });
+      }
+    } else {
+      console.warn(`[leads] ⚠️ N8N_WEBHOOK_URL 未配置，跳过出图触发`);
+    }
+
+    // 飞书通知（原有逻辑，保持不变）
     const webhookUrl = process.env.FEISHU_WEBHOOK_URL;
     if (webhookUrl) {
       const card = {
@@ -108,7 +192,8 @@ export async function POST(req: NextRequest) {
       priorityLevel: routeDecision.priorityLevel,
       routeReasons: routeDecision.reasons,
     }, { status: 201 });
-  } catch {
+  } catch (err) {
+    console.error(`[leads] ❌ 创建线索异常:`, err);
     return NextResponse.json({ error: "创建线索失败" }, { status: 500 });
   }
 }

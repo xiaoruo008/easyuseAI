@@ -52,9 +52,9 @@ const TEMPLATE_TYPE_MAP: Record<string, ImageTaskType> = {
   bg_white: "product_photo",
   enhance: "product_photo",
   fashion_model: "model_photo",
-  lifestyle: "product_photo",
+  lifestyle: "lifestyle",              // 【修复】lifestyle → lifestyle（语义对齐）
   lifestyle_scene: "lifestyle",         // lifestyle/fashion_lifestyle 动作 → 正确使用生活场景前缀
-  fashion_lifestyle: "lifestyle",        // 时尚生活图 → 生活场景语义
+  fashion_lifestyle: "lifestyle",      // 时尚生活图 → 生活场景语义
 };
 
 export async function generateImageFromOptions(opts: GenerateImageOptions): Promise<ImageTaskOutput> {
@@ -66,7 +66,18 @@ export async function generateImageFromOptions(opts: GenerateImageOptions): Prom
     referenceImageUrl: opts.originalImageUrl,
     aspectRatio: opts.aspectRatio,
     style: opts.style,
+    // 【修复】透传 diagnosisType 用于爆款前缀注入
+    diagnosisType: opts.diagnosisType,
   });
+
+  // 【新增】图片 URL 校验：检查返回的 URL 是否有效
+  const imageUrlValid = output.imageUrl && 
+    (output.imageUrl.startsWith("http") || 
+     output.imageUrl.startsWith("/") || 
+     output.imageUrl.startsWith("data:"));
+  if (!imageUrlValid) {
+    console.warn(`[generateImageFromOptions] ⚠️ 图片 URL 格式异常: ${output.imageUrl}`);
+  }
 
   // MiniMax / 真实 URL：直接返回
   if (!output.imageUrl.startsWith("data:")) {
@@ -91,8 +102,10 @@ export async function generateImageFromOptions(opts: GenerateImageOptions): Prom
     fs.writeFileSync(filePath, Buffer.from(base64Data, "base64"));
 
     const savedUrl = `/uploads/${filename}`;
+    console.log(`[generateImageFromOptions] ✅ base64 图片已保存: ${savedUrl}`);
     return { ...output, imageUrl: savedUrl, thumbnailUrl: savedUrl };
-  } catch {
+  } catch (err) {
+    console.error(`[generateImageFromOptions] ❌ base64 保存失败:`, err);
     return output;
   }
 }
