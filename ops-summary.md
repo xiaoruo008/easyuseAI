@@ -1,5 +1,58 @@
 # Ops Summary
 
+## Round 376 — 2026-04-17 08:59:00
+
+**结果**: ✅ 全部通过
+
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 3/3 pages (首页, Diagnosis, Result) ✓
+- 连续通过: 16 次
+- 累计 stable: 61 次
+- 通知: 无新通知 (已于第374轮发过"网站基本稳定"通知)
+
+---
+
+## Round 375 — 2026-04-17 08:26:00
+
+**结果**: ✅ 全部通过
+
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 3/3 pages (首页, Diagnosis, Result) ✓
+- 连续通过: 15 次
+- 累计 stable: 60 次
+- 通知: ✅ 已发"网站基本稳定"通知（连续 ≥2 次通过）
+
+---
+
+## Round 374 — 2026-04-17 07:51:00
+
+**结果**: ✅ 全部通过
+
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 3/3 pages (首页, Diagnosis, Result) ✓
+- 连续通过: 12 次
+- 累计 stable: 57 次
+- 通知: 无新通知 (11次后已发稳定通知)
+
+## Round 371 — 2026-04-17 06:12:00
+
+**结果**: ✅ 全部通过
+
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit)
+- Mobile: 3/3 pages (首页, Diagnosis, Result)
+- 连续通过: 11 次
+- 累计 stable: 56 次
+
+---
+
 ## Round 365 — 2026-04-17 03:19:00
 
 **结果**: ✅ 全部通过
@@ -120,3 +173,63 @@
 - 连续通过: 8 次
 - 累计 stable: 53 次
 - 通知: 网站基本稳定 ✓ (8 consecutive passes — stable notification)
+
+## Round 369 — 2026-04-17 05:38:00 (inferred from ops-status.json)
+
+**结果**: ✅ 全部通过
+
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps ✓
+- Mobile: 3/3 pages ✓
+- 连续通过: 9 次
+- 累计 stable: 54 次
+- 通知: 网站基本稳定 ✓ (9 consecutive passes — stable notification)
+
+## Round 370 — 2026-04-17 06:08:00
+
+**结果**: ✅ 全部通过
+
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 3/3 pages (首页, Diagnosis, Result) ✓
+- 连续通过: 10 次
+- 累计 stable: 55 次
+- 通知: 网站基本稳定 ✓ (10 consecutive passes — stable notification)
+
+## Round 374 — 2026-04-17 07:51:00
+
+**结果**: ✅ 全部通过
+
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 3/3 pages (首页, Diagnosis, Result) ✓
+- 连续通过: 14 次
+- 累计 stable: 59 次
+- 通知: 网站基本稳定 ✓ (14 consecutive passes)
+
+---
+
+## Round 373 — 2026-04-17 07:17:00
+
+**结果**: ✅ 全部通过
+
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 3/3 pages (首页, Diagnosis, Result) ✓
+- 连续通过: 13 次
+- 累计 stable: 58 次
+
+## Round 377 — 2026-04-17 09:33:00
+
+**结果**: ✅ 全部通过
+
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 3/3 pages (首页, Diagnosis, Result) ✓
+- 连续通过: 17 次
+- 累计 stable: 62 次

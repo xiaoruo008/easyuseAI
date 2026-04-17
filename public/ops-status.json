@@ -1,7 +1,7 @@
 {
-  "round": 368,
-  "stable_count": 53,
-  "last_check": "2026-04-17T05:00:00.000000+00:00",
+  "round": 377,
+  "stable_count": 62,
+  "last_check": "2026-04-17T09:33:00.000000+00:00",
   "last_result": "pass",
   "checks": {
     "http": "localhost:3000: 200 OK ✓",
@@ -9,11 +9,12 @@
     "flow": "5/5 ✓",
     "mobile": "3/3 ✓"
   },
-  "consecutive_stable": 8,
+  "consecutive_stable": 17,
   "notify_stable": true,
   "notes": {
     "health": "All checks passed — http 200, console 0 errors, flow 5/5, mobile 3/3",
     "failure_stage": null,
-    "action_needed": null
+    "action_needed": null,
+    "stable_notification_sent": true
   }
 }
