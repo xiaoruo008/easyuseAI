@@ -1,6 +1,13 @@
 {
-  "name": "图片生成工作流 (Webhook → MiniMax → 飞书通知)",
+  "name": "图片生成工作流 (Webhook → MiniMax/Gemini → 飞书通知)",
   "nodes": [
+    {
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1.2,
+      "position": [-250, 500],
+      "parameters": {}
+    },
     {
       "name": "Webhook 接收",
       "type": "n8n-nodes-base.webhook",
@@ -61,10 +68,40 @@
       "inputs": ["{{ $node['Webhook 接收'].outputId }}"]
     },
     {
+      "name": "校验 prompt 非空",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [500, 300],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "prompt-exists",
+              "leftValue": "={{ $json.prompt }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "isNotEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "inputs": ["{{ $node['提取参数'].outputId }}"],
+      "outputs": ["{{ $node['Switch Provider分流'].id }}", "{{ $node['Respond 参数错误'].id }}"]
+    },
+    {
       "name": "Switch Provider分流",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 4.1,
-      "position": [500, 300],
+      "position": [750, 300],
       "parameters": {
         "dataType": "string",
         "value1": "={{ $json.selectedProvider }}",
@@ -83,14 +120,14 @@
         "fallbackOutput": 2,
         "options": {}
       },
-      "inputs": ["{{ $node['提取参数'].outputId }}"],
+      "inputs": ["{{ $node['校验 prompt 非空'].outputData['output'] }}"],
       "outputs": ["{{ $node['MiniMax 生图'].id }}", "{{ $node['Gemini 生图'].id }}", "{{ $node['Respond 降级'].id }}"]
     },
     {
       "name": "MiniMax 生图",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [750, 150],
+      "position": [1000, 150],
       "parameters": {
         "url": "https://api.minimaxi.com/v1/image_generation",
         "method": "POST",
@@ -133,18 +170,20 @@
           ]
         },
         "options": {
-          "timeout": 60000
+          "timeout": 60000,
+          "retryOnLimit": true
         }
       },
-      "inputs": ["{{ $node['Switch Provider分流'].outputData['output'] }}"]
+      "inputs": ["{{ $node['Switch Provider分流'].outputData['output'] }}"],
+      "onError": "fireError"
     },
     {
       "name": "Gemini 生图",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [750, 300],
+      "position": [1000, 300],
       "parameters": {
-        "url": "https://api.minimaxi.com/v1/image_generation",
+        "url": "={{ $env.GEMINI_IMAGE_BASE_URL }}/{{ $env.GEMINI_IMAGE_MODEL }}:generateContent?key={{ $env.GEMINI_API_KEY }}",
         "method": "POST",
         "sendHeaders": true,
         "headerParameters": {
@@ -152,10 +191,6 @@
             {
               "name": "Content-Type",
               "value": "application/json"
-            },
-            {
-              "name": "Authorization",
-              "value": "Bearer {{ $env.GEMINI_API_KEY }}"
             }
           ]
         },
@@ -163,38 +198,28 @@
         "bodyParameters": {
           "parameters": [
             {
-              "name": "model",
-              "value": "image-01"
+              "name": "contents",
+              "value": "={{ { parts: [{ text: $json.prompt }] } }}"
             },
             {
-              "name": "prompt",
-              "value": "={{ $json.prompt }}"
-            },
-            {
-              "name": "aspect_ratio",
-              "value": "={{ $json.aspectRatio }}"
-            },
-            {
-              "name": "response_format",
-              "value": "url"
-            },
-            {
-              "name": "n",
-              "value": 1
+              "name": "generationConfig",
+              "value": "={{ { responseModalities: ['TEXT', 'IMAGE'] } }}"
             }
           ]
         },
         "options": {
-          "timeout": 60000
+          "timeout": 60000,
+          "retryOnLimit": true
         }
       },
-      "inputs": ["{{ $node['Switch Provider分流'].outputData['output'] }}"]
+      "inputs": ["{{ $node['Switch Provider分流'].outputData['output'] }}"],
+      "onError": "fireError"
     },
     {
       "name": "提取图片URL",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [1000, 225],
+      "position": [1250, 225],
       "parameters": {
         "mode": "manual",
         "assignments": {
@@ -221,7 +246,7 @@
       "name": "飞书通知",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1250, 225],
+      "position": [1500, 225],
       "parameters": {
         "url": "={{ $env.FEISHU_WEBHOOK_URL }}",
         "method": "POST",
@@ -246,7 +271,7 @@
       "name": "Respond 成功",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [1500, 225],
+      "position": [1750, 225],
       "parameters": {
         "respondWith": "json",
         "responseBody": "={\n  \"success\": true,\n  \"imageUrl\": \"{{ $json.imageUrl }}\",\n  \"provider\": \"{{ $json.provider }}\",\n  \"generatedAt\": \"{{ $now }}\"\n}"
@@ -257,7 +282,7 @@
       "name": "Respond 降级",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [750, 450],
+      "position": [1000, 450],
       "parameters": {
         "respondWith": "json",
         "responseBody": "={\n  \"success\": false,\n  \"error\": \"Unsupported provider or generation failed\",\n  \"provider\": \"{{ $('提取参数').json.selectedProvider }}\"\n}",
@@ -266,9 +291,98 @@
         }
       },
       "inputs": ["{{ $node['Switch Provider分流'].outputData['fallback'] }}"]
+    },
+    {
+      "name": "Respond 参数错误",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [750, 450],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": false,\n  \"error\": \"Missing required parameter: prompt is empty\",\n  \"code\": \"MISSING_PROMPT\"\n}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "inputs": ["{{ $node['校验 prompt 非空'].outputData['output1'] }}"]
+    },
+    {
+      "name": "记录错误日志",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [0, 500],
+      "parameters": {
+        "mode": "manual",
+        "assignments": {
+          "items": [
+            {
+              "id": "errorMessage",
+              "name": "errorMessage",
+              "type": "string",
+              "value": "={{ $json.error.message }}"
+            },
+            {
+              "id": "errorStack",
+              "name": "errorStack",
+              "type": "string",
+              "value": "={{ $json.error.stack }}"
+            },
+            {
+              "id": "nodeName",
+              "name": "nodeName",
+              "type": "string",
+              "value": "={{ $json.error.node }}"
+            },
+            {
+              "id": "timestamp",
+              "name": "timestamp",
+              "type": "string",
+              "value": "={{ $now }}"
+            },
+            {
+              "id": "workflowId",
+              "name": "workflowId",
+              "type": "string",
+              "value": "={{ $workflow.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "inputs": ["{{ $node['Error Trigger'].outputId }}"]
+    },
+    {
+      "name": "飞书错误通知",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [250, 500],
+      "parameters": {
+        "url": "={{ $env.FEISHU_WEBHOOK_URL }}",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "msg_type",
+              "value": "interactive"
+            },
+            {
+              "name": "content",
+              "value": "={\n  \"card\": {\n    \"header\": {\n      \"title\": {\n        \"tag\": \"plain_text\",\n        \"content\": \"🚨 图片生成工作流错误\"\n      },\n      \"template\": \"red\"\n    },\n    \"elements\": [\n      {\n        \"tag\": \"div\",\n        \"text\": {\n          \"tag\": \"lark_md\",\n          \"content\": \"**错误节点:** {{ $json.nodeName }}\\n**错误信息:** {{ $json.errorMessage }}\\n**时间:** {{ $json.timestamp }}\\n**工作流ID:** {{ $json.workflowId }}\"\n        }\n      },\n      {\n        \"tag\": \"div\",\n        \"text\": {\n          \"tag\": \"lark_md\",\n          \"content\": \"**堆栈:**\\n```\\n{{ $json.errorStack }}\\n```\"\n        }\n      }\n    ]\n  }\n}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "inputs": ["{{ $node['记录错误日志'].outputId }}"]
     }
   ],
   "connections": {
+    "Error Trigger": {
+      "main": [
+        [{ "node": "记录错误日志", "type": "main", "index": 0 }]
+      ]
+    },
     "Webhook 接收": {
       "main": [
         [{ "node": "提取参数", "type": "main", "index": 0 }]
@@ -276,7 +390,13 @@
     },
     "提取参数": {
       "main": [
-        [{ "node": "Switch Provider分流", "type": "main", "index": 0 }]
+        [{ "node": "校验 prompt 非空", "type": "main", "index": 0 }]
+      ]
+    },
+    "校验 prompt 非空": {
+      "main": [
+        [{ "node": "Switch Provider分流", "type": "main", "index": 0 }],
+        [{ "node": "Respond 参数错误", "type": "main", "index": 0 }]
       ]
     },
     "Switch Provider分流": {
@@ -284,16 +404,25 @@
         [{ "node": "MiniMax 生图", "type": "main", "index": 0 }],
         [{ "node": "Gemini 生图", "type": "main", "index": 0 }],
         [{ "node": "Respond 降级", "type": "main", "index": 0 }]
+      ],
+      "error": [
+        [{ "node": "记录错误日志", "type": "main", "index": 0 }]
       ]
     },
     "MiniMax 生图": {
       "main": [
         [{ "node": "提取图片URL", "type": "main", "index": 0 }]
+      ],
+      "error": [
+        [{ "node": "记录错误日志", "type": "main", "index": 0 }]
       ]
     },
     "Gemini 生图": {
       "main": [
         [{ "node": "提取图片URL", "type": "main", "index": 0 }]
+      ],
+      "error": [
+        [{ "node": "记录错误日志", "type": "main", "index": 0 }]
       ]
     },
     "提取图片URL": {
@@ -304,6 +433,31 @@
     "飞书通知": {
       "main": [
         [{ "node": "Respond 成功", "type": "main", "index": 0 }]
+      ]
+    },
+    "Respond 成功": {
+      "main": [
+        []
+      ]
+    },
+    "Respond 降级": {
+      "main": [
+        []
+      ]
+    },
+    "Respond 参数错误": {
+      "main": [
+        []
+      ]
+    },
+    "记录错误日志": {
+      "main": [
+        [{ "node": "飞书错误通知", "type": "main", "index": 0 }]
+      ]
+    },
+    "飞书错误通知": {
+      "main": [
+        []
       ]
     }
   },
