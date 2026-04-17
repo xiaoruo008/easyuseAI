@@ -1,3 +1,47 @@
+## Round 385 — 2026-04-17 15:13:00
+
+**结果**: ✅ 全部通过
+
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 3/3 pages (首页, Diagnosis, Result) ✓
+- 连续通过: 25 次
+- 累计 stable: 70 次
+- 通知: 无新通知 (已于第374轮发过"网站基本稳定"通知)
+
+---
+
+## Round 383 — 2026-04-17 13:12:00
+
+**结果**: ✅ 全部通过
+
+- HTTP: 200 OK (port 3005; port 3000 .next cache corrupted — ENOENT)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 3/3 pages (首页, Diagnosis, Result) ✓
+- 连续通过: 23 次
+- 累计 stable: 68 次
+- 通知: 无新通知 (已于第374轮发过"网站基本稳定"通知)
+
+**备注**: 端口 3000 的 .next 缓存损坏（.next/server/pages/ 目录为空），导致返回 500 ENOENT 错误。改用端口 3005 进行检查。
+
+---
+
+## Round 381 — 2026-04-17 03:57:22
+
+**结果**: ✅ 全部通过
+
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 3/3 pages (首页, Diagnosis, Result) ✓
+- 连续通过: 21 次
+- 累计 stable: 66 次
+- 通知: 无新通知 (已于第374轮发过"网站基本稳定"通知)
+
+---
+
 # Ops Summary
 ## Round 380 — 2026-04-17 03:23:16
 
@@ -119,7 +163,7 @@
 
 ---
 
----
+
 
 ## Round 360 — 2026-04-17 00:19:00
 
@@ -193,7 +237,7 @@
 
 - HTTP: 200 OK (localhost:3000)
 - Console: 0 errors ✓
-- Flow: 5/5 steps ✓
+- Flow: 5/5 ✓
 - Mobile: 3/3 pages ✓
 - 连续通过: 9 次
 - 累计 stable: 54 次
@@ -246,3 +290,11 @@
 - Mobile: 3/3 pages (首页, Diagnosis, Result) ✓
 - 连续通过: 17 次
 - 累计 stable: 62 次
+
+## Round 386 — 2026-04-17 08:49 UTC
+**Result: ✅ PASS**
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors
+- Flow: 5/5
+- Mobile: 3/3
+- Consecutive stable: 26
