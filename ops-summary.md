@@ -333,3 +333,11 @@
 - 连续通过: 31 次
 - 累计 stable: 76 次
 - 通知: 无新通知 (已于第374轮发过"网站基本稳定"通知)
+
+## Round 392 — 2026-04-17 13:53:35 UTC
+**Result: ✅ PASS**
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 3/3 pages (首页 → Diagnosis → Result) ✓
+- consecutive_stable: 32
