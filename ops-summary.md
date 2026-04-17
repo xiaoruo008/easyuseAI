@@ -1,4 +1,17 @@
 # Ops Summary
+## Round 380 — 2026-04-17 03:23:16
+
+**结果**: ✅ 全部通过
+
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 3/3 pages (首页, Diagnosis, Result) ✓
+- 连续通过: 20 次
+- 累计 stable: 65 次
+- 通知: 无新通知 (已于第374轮发过"网站基本稳定"通知)
+
+---
 
 ## Round 376 — 2026-04-17 08:59:00
 
