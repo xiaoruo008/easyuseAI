@@ -496,16 +496,25 @@
 - round=416, stable_count=83, consecutive_ok=1
 
 ## Round 417 — 2026-04-18T09:11:32 UTC
+
 **Result: ✅ PASS**
-- HTTP: 404 on localhost:3000 → **200 OK on localhost:3005** (dev server migrated)
+- HTTP: 200 OK (localhost:3000)
 - Console: 0 errors ✓
 - Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
 - Mobile: 3/3 pages (首页, Diagnosis, Result) ✓
-- 连续通过: 2 次 ✅
-- 累计 stable: 84 次
-- 通知: ✅ 已发"网站基本稳定"通知（连续 ≥2 次通过）
+- consecutive_stable: 4
 
-## Round 420 — 2026-04-18 18:53:00 UTC
+## Round 418 — 2026-04-19T00:40:00 UTC
+**Result: ✅ PASS**
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 (首页→Diagnosis→Result→Execute→Submit) ✓
+- Mobile: 3/3 (首页/Diagnosis/Result) ✓
+- 连续通过: 4 次
+- 累计 stable: 4 次
+- 通知: 无 (连续 ≥2 次通过但非首次跨线，无需重复通知)
+
+## Round 419 — 2026-04-18 18:53:00 UTC
 **Result: ✅ PASS**
 - HTTP: 200 OK (localhost:3000)
 - Console: 0 errors ✓
