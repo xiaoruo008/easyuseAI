@@ -487,3 +487,10 @@
 - 失败阶段: mobile
 - 操作建议: 检查 Diagnosis 和 Result 页面在移动端视图的服务端错误 (500)。与 Round 398-414 相同的失败模式。
 - 通知: 已发送失败通知
+
+[2026-04-18 15:48:46] ✅ PASS
+- HTTP 200
+- console: PASS (exit 0)
+- flow: PASS (exit 0)
+- mobile/home: PASS (exit 0)
+- round=416, stable_count=83, consecutive_ok=1
