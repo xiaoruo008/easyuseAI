@@ -385,6 +385,33 @@
 
 ---
 
+### Round 405 — 2026-04-18T08:11:00Z ❌ FAIL
+- ✅ Server: localhost:3000 返回 200 OK ✓
+- ✅ Console: ✓ 无报错，无失败请求
+- ✅ Flow: 5/5 steps pass (首页→diagnosis→result→execute→submit)
+- ❌ Mobile: **Diagnosis + Result 页面返回 500 Internal Server Error**（mobile viewport，iPhone 14 Pro）
+- 结论: **Mobile 阶段失败**，HTTP/Console/Flow 均正常，Diagnosis/Result 后端在 mobile UA 下报 500
+- 连续稳定: 0/2（重置）
+- 可能原因: Diagnosis/Result 接口对 mobile User-Agent 返回 500，与 rounds 397-404 同问题
+- 注意: 之前 round 394 全通过（含 mobile 3/3），round 395-404 全部因 mobile 500 失败
+
+最后更新: 2026-04-18T08:11:00Z
+
+---
+
+### Round 404 — 2026-04-18T07:40:00Z ❌ FAIL
+- ✅ Server: localhost:3000 返回 200 OK ✓
+- ✅ Console: ✓ 无报错，无失败请求
+- ✅ Flow: 5/5 steps pass (首页→diagnosis→result→execute→submit)
+- ❌ Mobile: **Diagnosis + Result 页面返回 500 Internal Server Error**（mobile viewport）
+- 结论: **Mobile 阶段失败**，HTTP/Console/Flow 均正常，Diagnosis/Result 后端在 mobile UA 下报 500
+- 连续稳定: 0/2（重置）
+- 可能原因: Diagnosis/Result 接口对 mobile User-Agent 返回 500，需检查服务端 mobile 兼容逻辑
+
+最后更新: 2026-04-18T07:40:00Z
+
+---
+
 ### Round 399 — 2026-04-18T03:47:00Z ❌ FAIL
 - ✅ Server: localhost:3000 返回 200 OK ✓
 - ✅ Console: ✓ 无报错，无失败请求

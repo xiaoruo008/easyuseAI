@@ -64,3 +64,17 @@
 2026-04-18T06:32:23+08:00 | easyuseAI 夜间检查失败 | Round 402: Mobile 检查失败\n\n- HTTP: 200 OK\n- Console: 0 errors ✓\n- Flow: 5/5 ✓\n- Mobile: Diagnosis(500) + Result(500) ✗\n\n失败模式与 Round 398-401 相同，需检查移动端 Diagnosis/Result 服务端错误。
 2026-04-18T07:06:23+08:00 | ❌ 健康检查失败 [Round 403] | **检查时间:** 2026-04-18 07:03 UTC\n**失败阶段:** Mobile\n\n**详情:**\n- HTTP: ✅ 200\n- Console: ✅ 0 errors\n- Flow: ✅ 5/5\n- Mobile: ❌ Diagnosis 500, Result 500\n\n**备注:** Mobile视图中 Diagnosis/Result 页面返回500，与第398-402轮相同问题。stable_count 重置为0。
 2026-04-18T07:41:29+08:00 | easyuseAI 健康检查失败 (Round 404) | Mobile 检查失败：Diagnosis 页面和 Result 页面在移动端视图中返回 500 错误。Desktop flow 和 Console 均通过。此问题自 Round 398 起持续存在（共 7 轮），需排查移动端服务端渲染问题。
+2026-04-18T08:15:49+08:00 | easyuseAI 夜间健康检查失败 [Round 405] | **失败阶段**: Mobile Check\n**详情**: Diagnosis + Result 页面在 mobile viewport (iPhone 14 Pro) 下返回 500 Internal Server Error\n\n✅ HTTP: localhost:3000 返回 200 OK\n✅ Console: 0 errors\n✅ Flow: 5/5 steps pass\n❌ Mobile: Diagnosis 500, Result 500\n\n**连续稳定**: 0/2（重置）\n**stable_count**: 81（不变）\n\n**历史**: rounds 397-404 均因相同 mobile 500 问题失败，与 round 394 全通过（mobile 3/3）形成对比。Diagnosis/Result 接口对 mobile User-Agent 返回 500，需排查服务端 mobile 兼容逻辑。
+2026-04-18T08:55:07+08:00 | ❌ easyuseAI 夜间健康检查失败 [Round 406] | **失败阶段**: Mobile Check
+
+**详情**: Diagnosis + Result 页面在 mobile viewport (iPhone 14 Pro) 下返回 500 Internal Server Error
+
+✅ HTTP: localhost:3000 返回 200 OK
+✅ Console: 0 errors
+✅ Flow: 5/5 steps pass
+❌ Mobile: Diagnosis 500, Result 500
+
+**连续稳定**: 0/2（重置）
+**stable_count**: 82（不变）
+
+**历史**: rounds 398-406 均因相同 mobile 500 问题失败（共9轮）。Diagnosis/Result 接口对 mobile User-Agent 返回 500，需排查服务端 mobile 兼容逻辑。

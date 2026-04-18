@@ -435,3 +435,17 @@
 | Flow | ✅ 5/5 |
 | Mobile | ❌ FAIL — Diagnosis 500, Result 500 |
 **Notes:** Mobile viewport — Diagnosis and Result pages return 500. Same as rounds 398-403. Stable count resets to 0.
+
+## Round 406 — 2026-04-18 08:51:00 UTC
+**Result: ❌ FAIL**
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 0/3 pages — **Diagnosis (500), Result (500)** ✗
+- 连续通过: 0 次 (已重置)
+- 累计 stable: 82 次
+- 失败阶段: mobile
+- 操作建议: 检查 Diagnosis 和 Result 页面在移动端视图的服务端错误 (500)
+- 通知: 已发送失败通知 (rounds 398-405 同问题持续，round 406 失败通知)
+
+---
