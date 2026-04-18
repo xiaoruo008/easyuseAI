@@ -530,3 +530,12 @@
 - ❌ Mobile: Diagnosis (500), Result (500)
 
 **Notes:** Mobile viewport — Diagnosis/Result pages return HTTP 500. Consistent with rounds 398-417. Root cause not yet identified. Last mobile pass was round 394.
+
+## Round 419 — 2026-04-19 02:02 UTC
+**Result: FAIL (flow)**
+- ✅ HTTP: 200 OK
+- ✅ Console: 0 errors
+- ❌ Flow: 4/5 — Submit 页面内容为空
+- ✅ Mobile: 3/3 通过
+
+**Notes:** Flow 流程失败，Submit 页面为空。Mobile viewport 恢复正常（上次 mobile pass 为 round 394）。连续稳定计数重置为 0。
