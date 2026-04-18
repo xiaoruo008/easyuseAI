@@ -78,3 +78,4 @@
 **stable_count**: 82（不变）
 
 **历史**: rounds 398-406 均因相同 mobile 500 问题失败（共9轮）。Diagnosis/Result 接口对 mobile User-Agent 返回 500，需排查服务端 mobile 兼容逻辑。
+2026-04-18T10:05:50+08:00 | easyuseAI 夜间检查失败 [Round 408] | Mobile viewport 检查失败\n\n- ✅ HTTP: localhost:3000 返回 200 OK\n- ✅ Console: 0 errors\n- ✅ Flow: 5/5 steps pass\n- ❌ Mobile: Diagnosis (500) + Result (500)\n\n连续稳定: 0/2 (已重置)\nstable_count: 82

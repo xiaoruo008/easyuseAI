@@ -1,3 +1,14 @@
+### Round 408 — 2026-04-18T10:00:00Z ❌ FAIL
+- ✅ Server: localhost:3000 返回 200 OK
+- ✅ Console: ✓ 无报错，无失败请求
+- ✅ Flow: 5/5 steps pass (首页→diagnosis→result→execute→submit)
+- ❌ Mobile: Diagnosis (500) + Result (500) pages failed on mobile viewport
+- 结论: **Mobile viewport 失败**，PC flow 和 console 均正常
+- 连续稳定: 0/2（已重置）
+
+最后更新: 2026-04-18T10:00:00Z
+
+---
 ### Round 394 — 2026-04-17T15:47:00Z ✅ PASS
 - ✅ Server: localhost:3000 返回 200 OK
 - ✅ Console: ✓ 无报错，无失败请求
