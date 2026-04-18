@@ -479,3 +479,12 @@
 - **Result**: FAIL
 - **Consecutive stable**: 0 (unchanged)
 - **Issue**: Ongoing mobile Diagnosis/Result 500 error — root cause not yet identified. Last mobile pass was round 394.
+
+## Round 414 — 2026-04-18 14:32 UTC
+**Result: FAIL (mobile)**
+- ✅ HTTP: 200 OK
+- ✅ Console: 0 errors
+- ✅ Flow: 5/5 passed
+- ❌ Mobile: Diagnosis (500), Result (500)
+
+**Notes:** Mobile viewport — Diagnosis/Result pages return HTTP 500. Consistent with rounds 398-413.

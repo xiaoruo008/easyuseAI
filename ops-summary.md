@@ -475,3 +475,15 @@
 - 失败阶段: mobile
 - 操作建议: 检查 Diagnosis 和 Result 页面在移动端视图的服务端错误 (500)
 - 通知: 已发送失败通知
+
+## Round 415 — 2026-04-18T07:09:49 UTC
+**Result: ❌ FAIL**
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 0/3 pages — **Diagnosis (500), Result (500)** ✗
+- 连续通过: 0 次 (已重置)
+- 累计 stable: 82 次
+- 失败阶段: mobile
+- 操作建议: 检查 Diagnosis 和 Result 页面在移动端视图的服务端错误 (500)。与 Round 398-414 相同的失败模式。
+- 通知: 已发送失败通知
