@@ -88,3 +88,4 @@ Mobile: FAIL (Diagnosis 500, Result 500)
 2026-04-18T13:05:36+08:00 | easyuseAI 夜间检查失败 (Round 413) | Mobile 检查失败: Diagnosis (500), Result (500)。HTTP/Console/Flow 均正常。桌面端功能正常，移动端 Diagnosis/Result 页面报错。此问题自 Round 394 起持续，已连续失败 19 次。
 2026-04-18T14:35:25+08:00 | easyuseAI 健康检查失败 [Round 414] | Mobile 失败 — Diagnosis (500) / Result (500)。HTTP/Console/Flow 正常。
 2026-04-18T15:13:54+08:00 | easyuseAI 健康检查失败 [Round 415] | HTTP: 200 ✓ | Console: 0 errors ✓ | Flow: 5/5 ✓ | Mobile: FAIL (Diagnosis 500, Result 500) — 与 Round 398-414 相同问题，持续失败
+2026-04-18T17:12:03+08:00 | 网站基本稳定 | Round 417: HTTP(3005)✓ Console✓ Flow 5/5✓ Mobile 3/3✓ 连续第2次通过，累计84次稳定

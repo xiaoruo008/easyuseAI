@@ -106,6 +106,9 @@ function ExecuteContent() {
 
     setWorking(true);
     try {
+      // 从 sessionStorage 读取 leads 流程路由的 selectedProvider
+      const storedProvider = typeof window !== "undefined" ? sessionStorage.getItem("selectedProvider") : null;
+
       const body: Record<string, string | undefined> = {
         action: actionId,
         type: diagnosisResult.type,
@@ -114,6 +117,7 @@ function ExecuteContent() {
         userPersona: diagnosisResult.persona,
         workflowKey,
         diagnosisType: mapResultTypeToTrendingDiagnosisType(diagnosisResult.type),
+        selectedProvider: storedProvider ?? undefined,
       };
       if (isImageTask) {
         body.prompt = prompt || undefined;

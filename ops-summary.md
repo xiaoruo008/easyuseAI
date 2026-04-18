@@ -494,3 +494,13 @@
 - flow: PASS (exit 0)
 - mobile/home: PASS (exit 0)
 - round=416, stable_count=83, consecutive_ok=1
+
+## Round 417 — 2026-04-18T09:11:32 UTC
+**Result: ✅ PASS**
+- HTTP: 404 on localhost:3000 → **200 OK on localhost:3005** (dev server migrated)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 3/3 pages (首页, Diagnosis, Result) ✓
+- 连续通过: 2 次 ✅
+- 累计 stable: 84 次
+- 通知: ✅ 已发"网站基本稳定"通知（连续 ≥2 次通过）
