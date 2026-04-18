@@ -504,3 +504,11 @@
 - 连续通过: 2 次 ✅
 - 累计 stable: 84 次
 - 通知: ✅ 已发"网站基本稳定"通知（连续 ≥2 次通过）
+
+## Round 420 — 2026-04-18 18:53:00 UTC
+**Result: ✅ PASS**
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 3/3 pages (首页 / Diagnosis / Result) ✓
+- Consecutive stable: 2 → 发送"网站基本稳定"通知

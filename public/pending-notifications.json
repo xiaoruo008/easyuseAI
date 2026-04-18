@@ -89,3 +89,6 @@ Mobile: FAIL (Diagnosis 500, Result 500)
 2026-04-18T14:35:25+08:00 | easyuseAI 健康检查失败 [Round 414] | Mobile 失败 — Diagnosis (500) / Result (500)。HTTP/Console/Flow 正常。
 2026-04-18T15:13:54+08:00 | easyuseAI 健康检查失败 [Round 415] | HTTP: 200 ✓ | Console: 0 errors ✓ | Flow: 5/5 ✓ | Mobile: FAIL (Diagnosis 500, Result 500) — 与 Round 398-414 相同问题，持续失败
 2026-04-18T17:12:03+08:00 | 网站基本稳定 | Round 417: HTTP(3005)✓ Console✓ Flow 5/5✓ Mobile 3/3✓ 连续第2次通过，累计84次稳定
+2026-04-18T17:46:52+08:00 | easyuseAI 夜间检查失败 (Round 418) | ✅ HTTP: 200 | ✅ Console: 0 errors | ✅ Flow: 5/5 | ❌ Mobile: Diagnosis(500) + Result(500) | 连续稳定: 0/2 | 累计稳定: 84次 | mobile UA 下 Diagnosis/Result 持续 500 错误 (自 Round 394 起未修复)
+2026-04-18T18:22:55+08:00 | 网站基本稳定 | ✅ easyuseAI 夜间健康检查：连续2次全部检查通过（HTTP/Console/Flow/Mobile均正常）。Round 419 (2026-04-18 18:19)
+2026-04-18T18:57:25+08:00 | ✅ 网站基本稳定 | easyuseAI 连续2次全部检查通过（Round 420）\n- HTTP: 200 OK\n- Console: 0 errors\n- Flow: 5/5 通过\n- Mobile: 3/3 通过

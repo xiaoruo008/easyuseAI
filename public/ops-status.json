@@ -1,21 +1,21 @@
 {
-  "round": 417,
-  "stable_count": 84,
-  "last_check": "2026-04-18T09:11:32.000000+00:00",
+  "round": 420,
+  "stable_count": 85,
+  "last_check": "2026-04-18T10:57:13Z",
   "last_result": "pass",
   "checks": {
-    "http": "localhost:3000: 404 → localhost:3005: 200 OK (dev server migrated to 3005)",
-    "console": "0 errors ✓",
-    "flow": "5/5 ✓ (首页 → Diagnosis → Result → Execute → Submit)",
-    "mobile": "3/3 ✓ (首页, Diagnosis, Result)"
+    "http": "localhost:3000: 200 OK",
+    "console": "0 errors",
+    "flow": "5/5 (首页→Diagnosis→Result→Execute→Submit)",
+    "mobile": "3/3 (首页/Diagnosis/Result)"
   },
-  "consecutive_stable": 1,
+  "consecutive_stable": 2,
   "notify_stable": true,
   "notes": {
-    "health": "✅ All checks passed. Dev server responding on port 3005 (port 3000 returns 404).",
-    "failure_stage": null,
-    "action_needed": null,
-    "stable_notification_sent": true
+    "health": "全部检查通过",
+    "stable_message": "网站基本稳定 — 连续2次全部检查通过"
   },
-  "consecutive_ok": 2
+  "consecutive_ok": 2,
+  "status": "pass",
+  "stable_notification_sent": true
 }
