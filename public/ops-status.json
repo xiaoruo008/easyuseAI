@@ -1,21 +1,19 @@
 {
-  "round": 422,
-  "stable_count": 87,
-  "last_check": "2026-04-18T20:51:00Z",
+  "round": 2,
+  "stable_count": 2,
+  "last_check": "2026-04-18T15:29:00Z",
   "last_result": "pass",
+  "consecutive_stable": 2,
+  "consecutive_ok": 2,
+  "status": "pass",
   "checks": {
     "http": "localhost:3000: 200 OK",
     "console": "0 errors",
     "flow": "5/5 (首页→Diagnosis→Result→Execute→Submit)",
     "mobile": "3/3 (首页/Diagnosis/Result)"
   },
-  "consecutive_stable": 4,
-  "notify_stable": true,
   "notes": {
     "health": "全部检查通过",
-    "stable_message": "网站基本稳定 — 连续2次全部检查通过已于第374轮发送"
-  },
-  "consecutive_ok": 4,
-  "status": "pass",
-  "stable_notification_sent": true
+    "stable_message": "连续2次全部通过，网站基本稳定"
+  }
 }
