@@ -79,3 +79,10 @@
 
 **历史**: rounds 398-406 均因相同 mobile 500 问题失败（共9轮）。Diagnosis/Result 接口对 mobile User-Agent 返回 500，需排查服务端 mobile 兼容逻辑。
 2026-04-18T10:05:50+08:00 | easyuseAI 夜间检查失败 [Round 408] | Mobile viewport 检查失败\n\n- ✅ HTTP: localhost:3000 返回 200 OK\n- ✅ Console: 0 errors\n- ✅ Flow: 5/5 steps pass\n- ❌ Mobile: Diagnosis (500) + Result (500)\n\n连续稳定: 0/2 (已重置)\nstable_count: 82
+2026-04-18T10:42:36+08:00 | ❌ easyuseAI 健康检查失败 [Round 409] | HTTP: 200 OK
+Console: 0 errors
+Flow: 5/5 ✓
+Mobile: FAIL (Diagnosis 500, Result 500)
+失败阶段: mobile
+2026-04-18T11:17:01+08:00 | ❌ Health Check FAIL (Round 410) - Mobile 500 | Server: 200 ✓ | Console: 0 errors ✓ | Flow: 5/5 ✓ | Mobile: Diagnosis+Result 500 ❌
+2026-04-18T13:05:36+08:00 | easyuseAI 夜间检查失败 (Round 413) | Mobile 检查失败: Diagnosis (500), Result (500)。HTTP/Console/Flow 均正常。桌面端功能正常，移动端 Diagnosis/Result 页面报错。此问题自 Round 394 起持续，已连续失败 19 次。

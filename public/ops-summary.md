@@ -1,3 +1,16 @@
+### Round 412 — 2026-04-18T12:22:00Z ❌ FAIL
+- ✅ Server: localhost:3000 返回 200 OK
+- ✅ Console: ✓ 无报错，无失败请求
+- ✅ Flow: 5/5 steps pass (首页→diagnosis→result→execute→submit)
+- ❌ Mobile: **Diagnosis + Result 页面返回 500 Internal Server Error**（mobile viewport）
+- 结论: **Mobile 阶段失败**，HTTP/Console/Flow 均正常，Diagnosis/Result 后端在 mobile UA 下报 500
+- 连续稳定: 0/2（已重置）
+- 可能原因: Diagnosis/Result 接口对 mobile User-Agent 返回 500，与 rounds 394-411 同问题，需排查服务端 mobile 兼容逻辑
+
+最后更新: 2026-04-18T12:22:00Z
+
+---
+
 ### Round 408 — 2026-04-18T10:00:00Z ❌ FAIL
 - ✅ Server: localhost:3000 返回 200 OK
 - ✅ Console: ✓ 无报错，无失败请求
@@ -6,9 +19,20 @@
 - 结论: **Mobile viewport 失败**，PC flow 和 console 均正常
 - 连续稳定: 0/2（已重置）
 
-最后更新: 2026-04-18T10:00:00Z
+最后更新: 2026-04-18T11:13:00Z
 
 ---
+
+### Round 410 — 2026-04-18T11:13:00Z ❌ FAIL
+- ✅ Server: localhost:3000 返回 200 OK
+- ✅ Console: ✓ 无报错，无失败请求
+- ✅ Flow: 5/5 steps pass (首页→diagnosis→result→execute→submit)
+- ❌ Mobile: **Diagnosis + Result 页面返回 500 Internal Server Error**（mobile viewport）
+- 结论: **Mobile 阶段失败**，HTTP/Console/Flow 均正常，Diagnosis/Result 后端在 mobile UA 下报 500
+- 连续稳定: 0/2（已重置）
+- 可能原因: Diagnosis/Result 接口对 mobile User-Agent 返回 500，与 rounds 394-409 同问题，需排查服务端 mobile 兼容逻辑
+
+最后更新: 2026-04-18T10:00:00Z
 ### Round 394 — 2026-04-17T15:47:00Z ✅ PASS
 - ✅ Server: localhost:3000 返回 200 OK
 - ✅ Console: ✓ 无报错，无失败请求
@@ -433,3 +457,25 @@
 - 可能原因: Diagnosis/Result 接口对 mobile User-Agent 返回 500，需检查服务端 mobile 兼容逻辑
 
 最后更新: 2026-04-18T03:47:00Z
+
+---
+
+### Round 411 — 2026-04-18T11:47:00Z ❌ FAIL
+- ✅ Server: localhost:3000 返回 200 OK
+- ✅ Console: ✓ 无报错，无失败请求
+- ✅ Flow: 5/5 steps pass (首页→diagnosis→result→execute→submit)
+- ❌ Mobile: **Diagnosis + Result 页面返回 500 Internal Server Error**（mobile viewport）
+- 结论: **Mobile 阶段失败**，HTTP/Console/Flow 均正常，Diagnosis/Result 后端在 mobile UA 下持续报 500
+- 连续稳定: 0/2（已重置）
+- 备注: 与 rounds 398-410 同问题，Diagnosis/Result mobile 500 问题仍未修复
+
+最后更新: 2026-04-18T11:47:00Z
+
+## Round 413 — 2026-04-18 13:02 UTC
+- **HTTP**: 200 OK ✓
+- **Console**: 0 errors ✓
+- **Flow**: 5/5 ✓
+- **Mobile**: FAIL — Diagnosis (500), Result (500) on iPhone 14 Pro viewport
+- **Result**: FAIL
+- **Consecutive stable**: 0 (unchanged)
+- **Issue**: Ongoing mobile Diagnosis/Result 500 error — root cause not yet identified. Last mobile pass was round 394.

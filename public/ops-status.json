@@ -1,7 +1,7 @@
 {
-  "round": 408,
+  "round": 413,
   "stable_count": 82,
-  "last_check": "2026-04-18T10:00:00.000000+00:00",
+  "last_check": "2026-04-18T13:02:00.000000+00:00",
   "last_result": "fail",
   "checks": {
     "http": "localhost:3000: 200 OK",
@@ -12,9 +12,9 @@
   "consecutive_stable": 0,
   "notify_stable": false,
   "notes": {
-    "health": "Mobile failed — Diagnosis/Result pages returned 500 on mobile viewport. Consistent with rounds 398-407.",
+    "health": "Mobile failed — Diagnosis/Result pages return 500 on mobile viewport. Consistent with rounds 398-413.",
     "failure_stage": "mobile",
-    "action_needed": "Check Diagnosis and Result server-side errors for mobile viewport",
+    "action_needed": "Diagnosis/Result server-side error on mobile User-Agent — same root cause since round 394 (last mobile pass)",
     "stable_notification_sent": false
   }
 }
