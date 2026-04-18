@@ -14,6 +14,27 @@ export type { ImageTaskType } from "./types";
 const IMAGE_PROVIDER = process.env.IMAGE_PROVIDER ?? "mock";
 
 export function getImageProvider(): ImageProvider {
+  return getImageProviderForRequest(undefined);
+}
+
+/**
+ * 根据请求级 provider 覆盖返回对应 provider。
+ * selectedProvider 来自 leads 流程的路由决策（routeGenerationModel）。
+ * 未提供 selectedProvider 时回退到 IMAGE_PROVIDER 环境变量。
+ */
+export function getImageProviderForRequest(selectedProvider?: "minimax" | "nanobanana"): ImageProvider {
+  // 优先使用 leads 流程确定的 provider
+  if (selectedProvider) {
+    const envValue = PROVIDER_MAP[selectedProvider];
+    if (envValue === "minimax-cn" && process.env.MINIMAX_API_KEY) {
+      return new MiniMaxCNProvider();
+    }
+    if (envValue === "gemini-nanobanana" && process.env.GEMINI_API_KEY) {
+      return new GeminiNanobananaProvider();
+    }
+    // selectedProvider 指定但 key 未配置，降级到环境变量
+  }
+  // 回退到环境变量
   if (IMAGE_PROVIDER === "gemini-nanobanana" && process.env.GEMINI_API_KEY) {
     return new GeminiNanobananaProvider();
   }
@@ -41,7 +62,15 @@ export interface GenerateImageOptions {
   style?: "minimal" | "luxury" | "commercial";
   /** 诊断类型，用于注入爆款前缀（可选） */
   diagnosisType?: "traffic" | "customer" | "efficiency" | "unclear";
+  /** Provider 路由覆盖：优先使用 leads 流程确定的 provider（可选） */
+  selectedProvider?: "minimax" | "nanobanana";
 }
+
+// provider name映射（route-decision → IMAGE_PROVIDER值）
+const PROVIDER_MAP: Record<string, string> = {
+  minimax: "minimax-cn",
+  nanobanana: "gemini-nanobanana",
+};
 
 // templateId → ImageTaskType 映射
 // 决定 MiniMax CN TYPE_PROMPT_PREFIX 的类型前缀（语义对齐很重要）
@@ -59,7 +88,8 @@ const TEMPLATE_TYPE_MAP: Record<string, ImageTaskType> = {
 
 export async function generateImageFromOptions(opts: GenerateImageOptions): Promise<ImageTaskOutput> {
   const type = TEMPLATE_TYPE_MAP[opts.templateId] ?? "product_photo";
-  const provider = getImageProvider();
+  // selectedProvider 覆盖：优先使用 leads 流程路由决策
+  const provider = getImageProviderForRequest(opts.selectedProvider);
   const output = await provider.generate({
     type,
     prompt: opts.userRefinement ?? "",

@@ -120,8 +120,9 @@ async function generateImageWithRetry(opts: {
   category?: string;
   style?: "minimal" | "luxury" | "commercial";
   diagnosisType?: "traffic" | "customer" | "efficiency" | "unclear";
+  selectedProvider?: "minimax" | "nanobanana";
 }): Promise<{ output: ImageTaskOutput; errorMessage: string | null }> {
-  const { templateId, originalImageUrl, userRefinement, aspectRatio, style, diagnosisType } = opts;
+  const { templateId, originalImageUrl, userRefinement, aspectRatio, style, diagnosisType, selectedProvider } = opts;
 
   // 第1次：正常生成
   try {
@@ -133,6 +134,7 @@ async function generateImageWithRetry(opts: {
       aspectRatio: (aspectRatio as "1:1" | "3:4" | "16:9") ?? "1:1",
       style,
       diagnosisType,
+      selectedProvider,
     });
     return { output, errorMessage: null };
   } catch (err) {
@@ -150,6 +152,7 @@ async function generateImageWithRetry(opts: {
       aspectRatio: (aspectRatio as "1:1" | "3:4" | "16:9") ?? "1:1",
       style,
       diagnosisType,
+      selectedProvider,
     });
     return { output, errorMessage: "prompt_v2" };
   } catch (err) {
@@ -166,6 +169,7 @@ async function generateImageWithRetry(opts: {
       aspectRatio: "1:1",
       style,
       diagnosisType,
+      selectedProvider,
     });
     return { output, errorMessage: "stable_fallback" };
   } catch (err) {
@@ -227,6 +231,8 @@ export async function POST(req: NextRequest) {
     userPainPoint,
     userPersona,
     diagnosisType,
+    // Provider 路由（来自 leads 流程的路由决策）
+    selectedProvider,
   } = body as {
     sessionId?: string;
     action: string;
@@ -248,6 +254,7 @@ export async function POST(req: NextRequest) {
     userPainPoint?: string;
     userPersona?: string;
     diagnosisType?: string;
+    selectedProvider?: "minimax" | "nanobanana";
   };
 
   const isImageAction = IMAGE_ACTIONS.has(action);
@@ -353,6 +360,7 @@ export async function POST(req: NextRequest) {
       category: cat,
       style: (style as "minimal" | "luxury" | "commercial") ?? undefined,
       diagnosisType: (diagnosisType as "traffic" | "customer" | "efficiency" | "unclear") ?? undefined,
+      selectedProvider,
     });
 
     // ③ 写回 Task
@@ -382,6 +390,7 @@ export async function POST(req: NextRequest) {
       templateKey,
       templateId,
       workflowLabel,
+      selectedProvider,
       result: {
         imageUrl: output.imageUrl,
         thumbnailUrl: output.thumbnailUrl,
