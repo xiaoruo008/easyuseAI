@@ -512,3 +512,13 @@
 - Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
 - Mobile: 3/3 pages (首页 / Diagnosis / Result) ✓
 - Consecutive stable: 2 → 发送"网站基本稳定"通知
+
+## Round 421 — 2026-04-18 12:19:40 UTC
+**Result: ✅ PASS**
+- HTTP: 200 OK (localhost:3000)
+- Console: 0 errors ✓
+- Flow: 5/5 steps (首页 → Diagnosis → Result → Execute → Submit) ✓
+- Mobile: 3/3 pages (首页, Diagnosis, Result) ✓
+- 连续通过: 3 次
+- 累计 stable: 86 次
+- 通知: 无需发送（稳定通知已于第374轮发送）
