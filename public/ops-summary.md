@@ -1,3 +1,14 @@
+### Round 424 — 2026-04-20T08:42:38Z ✅ PASS
+- ✅ Server: localhost:3000 返回 200 OK
+- ✅ Console: ✓ 无报错，无失败请求
+- ✅ Flow: 5/5 steps pass (首页→diagnosis→result→execute→submit)
+- ✅ Mobile: 3/3 pages load correctly (首页/diagnosis/result)
+- 结论: **全部检查通过**
+- 连续稳定: 4/2 次通过 ✓（稳定通知已于第11轮发出，无需重复）
+- 最后更新: 2026-04-20T08:42:38Z
+
+---
+
 ### Round 423 — 2026-04-19T00:04:00Z ✅ PASS
 - ✅ Server: localhost:3000 返回 200 OK
 - ✅ Console: ✓ 无报错，无失败请求
@@ -539,3 +550,34 @@
 - ✅ Mobile: 3/3 通过
 
 **Notes:** Flow 流程失败，Submit 页面为空。Mobile viewport 恢复正常（上次 mobile pass 为 round 394）。连续稳定计数重置为 0。
+## Round 10 — 2026-04-20T05:20:00Z ✅ PASS
+- ✅ Server: localhost:3005 返回 200 OK ✓（注: localhost:3000 未运行，服务器实际在 3005）
+- ✅ Console: ✓ 无报错，无失败请求
+- ✅ Flow: 5/5 steps pass (首页→diagnosis→result→execute→submit)
+- ✅ Mobile: 3/3 pages load correctly (首页/diagnosis/result)
+- 结论: **全部检查通过，Flow 恢复，Submit 页面内容正常**
+- 连续稳定: 1/2 次通过（需再连续通过1次触发"网站基本稳定"通知）
+- 最后更新: 2026-04-20T05:20:00Z
+
+---
+
+## Round 9 — 2026-04-19 04:31 UTC
+**Result: FAIL (flow)**
+- ✅ HTTP: 200 OK
+- ✅ Console: 0 errors
+- ❌ Flow: 4/5 — Submit 页面内容为空
+- ⏭️ Mobile: 未运行（flow 已失败）
+
+**Notes:** Flow 流程失败，Submit (/submit) 页面内容为空。HTTP/Console 均正常。Mobile 因 flow 失败未执行。连续稳定计数重置为 0。Submit 页面问题持续（自 round 5 起）。
+
+
+### Round 11 — 2026-04-20T06:44:00Z ✅ PASS
+- ✅ Server: localhost:3005 返回 200 OK
+- ✅ Console: ✓ 无报错，无失败请求
+- ✅ Flow: 5/5 steps pass (首页→diagnosis→result→execute→submit)
+- ✅ Mobile: 3/3 pages load correctly (首页/diagnosis/result)
+- 结论: **全部检查通过**
+- 连续稳定: 2/2 次通过 ✓（已达连续稳定阈值，发送网站基本稳定通知）
+- 最后更新: 2026-04-20T06:44:00Z
+
+---

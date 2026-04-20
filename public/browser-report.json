@@ -1,47 +1,45 @@
 {
-  "timestamp": "2026-04-18T18:39:23.731Z",
-  "baseUrl": "http://localhost:3000",
+  "timestamp": "2026-04-20T09:16:24.874Z",
+  "baseUrl": "http://localhost:3005",
   "summary": {
     "total": 5,
-    "passed": 4,
-    "failed": 1
+    "passed": 5,
+    "failed": 0
   },
   "steps": [
     {
       "name": "首页",
-      "url": "http://localhost:3000",
+      "url": "http://localhost:3005",
       "passed": true,
       "errors": [],
       "screenshot": "flow-首页.png"
     },
     {
       "name": "Diagnosis",
-      "url": "http://localhost:3000/diagnosis",
+      "url": "http://localhost:3005/diagnosis",
       "passed": true,
       "errors": [],
       "screenshot": "flow-diagnosis.png"
     },
     {
       "name": "Result",
-      "url": "http://localhost:3000/result",
+      "url": "http://localhost:3005/result",
       "passed": true,
       "errors": [],
       "screenshot": "flow-result.png"
     },
     {
       "name": "Execute",
-      "url": "http://localhost:3000/execute",
+      "url": "http://localhost:3005/execute",
       "passed": true,
       "errors": [],
       "screenshot": "flow-execute.png"
     },
     {
       "name": "Submit",
-      "url": "http://localhost:3000/submit",
-      "passed": false,
-      "errors": [
-        "页面内容为空"
-      ],
+      "url": "http://localhost:3005/submit",
+      "passed": true,
+      "errors": [],
       "screenshot": "flow-submit.png"
     }
   ]
