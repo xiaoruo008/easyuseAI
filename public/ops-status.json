@@ -1,9 +1,9 @@
 {
-  "round": 97,
-  "stable_count": 4,
-  "last_check": "2026-04-26T18:00:00.000Z",
+  "round": 99,
+  "stable_count": 6,
+  "last_check": "2026-04-26T19:01:00.000Z",
   "last_result": "pass",
-  "consecutive_stable": 4,
+  "consecutive_stable": 6,
   "status": "pass",
   "notify_stable": false,
   "checks": {
@@ -12,7 +12,7 @@
     "flow": "5/5 steps passed",
     "mobile": "3/3 steps passed"
   },
-  "this_round_fix": "R97: WeShop R97对比分析。所有健康检查全量通过（HTTP 200/Console 0/Flow 5/5/Mobile 3/3）。代码级差距已全部清零（R82-R97持续确认）。剩余A/B/C级差距均为业务决策或重大工程投入，无可操作代码项。",
+  "this_round_fix": "R98: WeShop R98对比分析。所有健康检查全量通过（HTTP 200/Console 0/Flow 5/5/Mobile 3/3）。代码级差距已全部清零（R82-R98持续确认）。剩余A/B/C级差距均为业务决策或重大工程投入，无可操作代码项。",
   "incident": null,
   "weshop_comparison": {
     "key_findings": [
@@ -31,7 +31,7 @@
     "priority_gaps": [
       "A级: NYSE背书（需用户提供关联公司证明，业务决策）",
       "A级: GPT Image 2接入（WeShop已上线，需业务决策+工程）",
-      "A级: 视频生成能力接入（需业务决策+工程，WeShop有Sora2/Kling等视频）",
+      "A级: 视频生成能力接入（需业务决策+工程，WeShop有Sora2/Kling等7个视频模型）",
       "B级: 模型数扩充至8+（需内容+工程，参考WeShop 16模型列表）",
       "B级: 语言切换器（需i18n工程投入）",
       "B级: 注册点数从当前提升（需后端配合）",
@@ -56,7 +56,7 @@
       "✅ R79: Hero CTA tooltip（注册即得40点）",
       "✅ R80: Models区域假播放图标→眼睛图标",
       "✅ R89: Hero CTA文字 '20张'→'40点'，与tooltip对齐",
-      "✅ R82-R97: 代码级差距清零，健康检查持续全量通过"
+      "✅ R82-R98: 代码级差距清零，健康检查持续全量通过"
     ]
   }
 }
