@@ -434,7 +434,7 @@ export default function ResultPage() {
               </li>
             </ul>
             <p className="text-amber-600 text-sm font-medium mb-4">
-              ⚡ 想立即体验？点下方"立即在线生成"，30秒出图，不用加微信不用留联系方式
+              ⚡ 想立即体验？点下方「立即在线生成」，30秒出图，不用加微信不用留联系方式
             </p>
             {countdown > 0 && (
               <div className="mb-4 flex items-center justify-center gap-1.5 bg-amber-100 border border-amber-200 rounded-lg px-3 py-2 text-amber-700 text-sm font-medium">
