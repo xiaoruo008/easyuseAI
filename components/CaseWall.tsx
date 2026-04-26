@@ -62,12 +62,70 @@ const CASES: CaseItem[] = [
     afterLabel: "生活场景",
     tag: "氛围感",
   },
+  // 补充更多案例以提升内容丰富度
+  {
+    id: "white-2",
+    style: "white_bg",
+    title: "模特白底图",
+    beforeUrl: "/images/cases/suit-model.jpg",
+    afterUrl: "/images/cases/suit-white.jpg",
+    beforeLabel: "模特图",
+    afterLabel: "电商白底",
+    tag: "换背景",
+  },
+  {
+    id: "model-2",
+    style: "model",
+    title: "场景模特图",
+    beforeUrl: "/images/cases/suit-before.jpg",
+    afterUrl: "/images/cases/suit-model.jpg",
+    beforeLabel: "随手拍",
+    afterLabel: "模特上身",
+    tag: "高转化",
+  },
+  {
+    id: "ins-3",
+    style: "ins",
+    title: "品牌氛围图",
+    beforeUrl: "/images/cases/suit-before.jpg",
+    afterUrl: "/images/cases/suit-brand.jpg",
+    beforeLabel: "随手拍",
+    afterLabel: "品牌场景",
+    tag: "种草神器",
+  },
 ];
 
 const STYLE_TABS: { key: CaseStyle; label: string; desc: string }[] = [
   { key: "white_bg", label: "电商白底", desc: "换背景 · 去瑕疵 · 提亮" },
   { key: "model", label: "模特上身", desc: "真实感强 · 信任度高" },
   { key: "ins", label: "ins风", desc: "品牌调性 · 种草必备" },
+];
+
+const FEATURES = [
+  {
+    emoji: "👗",
+    title: "AI虚拟模特",
+    desc: "服装穿在虚拟模特身上，支持多肤色/体型",
+    tag: "Virtual Try-On",
+  },
+  {
+    emoji: "✨",
+    title: "商品白底图",
+    desc: "一键去除背景，生成标准电商白底图",
+    tag: "Background Remove",
+  },
+  {
+    emoji: "🏠",
+    title: "场景生成",
+    desc: "将商品放入生活场景，提升种草感",
+    tag: "Scene Generation",
+  },
+  {
+    emoji: "🔮",
+    title: "AI精修",
+    desc: "智能增强光影、质感、清晰度",
+    tag: "Photo Enhancement",
+  },
 ];
 
 export default function CaseWall() {
@@ -78,14 +136,45 @@ export default function CaseWall() {
   return (
     <section className="py-12 md:py-20 px-4 md:px-6 bg-gray-950 border-t border-white/5">
       <div className="max-w-5xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8 md:mb-10">
-          <h2 className="text-lg sm:text-2xl lg:text-3xl font-bold text-white tracking-tight mb-2">
-            看看别人做成什么样
-          </h2>
-          <p className="text-white/40 text-sm">
-            随手拍 → 专业图，AI帮你完成
-          </p>
+        {/* Core Features Section */}
+        <div className="mb-12 md:mb-16">
+          <div className="text-center mb-8">
+            <h2 className="text-lg sm:text-2xl lg:text-3xl font-bold text-white tracking-tight mb-2">
+              平台核心功能
+            </h2>
+            <p className="text-white/40 text-sm">
+              AI驱动，一键生成专业电商图
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+            {FEATURES.map((f) => (
+              <div
+                key={f.title}
+                className="bg-gradient-to-b from-amber-500/10 to-transparent rounded-2xl p-4 md:p-5 border border-amber-500/20 hover:border-amber-500/40 hover:from-amber-500/15 transition-all group cursor-default"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <span className="text-2xl md:text-3xl">{f.emoji}</span>
+                  <span className="text-[9px] md:text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 font-medium">
+                    {f.tag}
+                  </span>
+                </div>
+                <h3 className="text-sm md:text-base font-semibold text-white mb-1 group-hover:text-amber-300 transition-colors">
+                  {f.title}
+                </h3>
+                <p className="text-white/40 text-[11px] md:text-xs leading-relaxed">
+                  {f.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="flex items-center gap-3 mb-8 md:mb-10">
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <span className="text-white/20 text-xs">看看别人做成什么样</span>
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         </div>
 
         {/* Style Tabs */}
@@ -117,18 +206,18 @@ export default function CaseWall() {
           ))}
         </div>
 
-        {/* CTA */}
+        {/* CTA - Secondary, subtle */}
         <div className="text-center mt-8 md:mt-10">
+          <p className="text-white/30 text-sm mb-4">想亲自试试效果？</p>
           <Link
             href="/diagnosis"
-            className="inline-flex items-center justify-center gap-2 px-8 md:px-10 py-3.5 md:py-4 bg-white text-gray-900 rounded-xl font-bold hover:bg-gray-100 transition-all text-base shadow-lg shadow-white/10"
+            className="inline-flex items-center justify-center gap-2 px-6 md:px-8 py-3 bg-white/10 border border-white/20 text-white/80 rounded-xl font-medium hover:bg-white/15 hover:text-white transition-all text-sm"
           >
-            免费试做1张
+            查看更多案例
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </Link>
-          <p className="text-white/30 text-xs mt-3">不满意不收费 · 48小时内出结果</p>
         </div>
       </div>
     </section>

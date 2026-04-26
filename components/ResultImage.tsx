@@ -20,7 +20,7 @@ export default function ResultImage({
   const [hasError, setHasError] = useState(false);
 
   return (
-    <div className={`relative bg-gray-100 ${className}`}>
+    <div className={`relative bg-gray-50 aspect-[3/4] ${className}`}>
       {/* Loading 占位 */}
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center">
@@ -50,7 +50,7 @@ export default function ResultImage({
       <Image
         {...props}
         alt={alt}
-        className={`object-contain p-2 md:p-3 transition-opacity duration-300 ${
+        className={`object-contain transition-opacity duration-300 ${
           isLoading ? "opacity-0" : "opacity-100"
         } ${hasError ? "opacity-0" : "opacity-100"}`}
         onLoad={() => setIsLoading(false)}

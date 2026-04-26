@@ -25,15 +25,33 @@ export default function UploadPage() {
   const [platform, setPlatform] = useState<string>("");
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleImageChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(e.target.files || []);
       if (files.length > 3) {
-        alert("最多上传3张图片");
+        setError("最多上传3张图片");
         return;
       }
+      setError(null);
       setImages(files);
+      // 上传到服务器获取 URL
+      const urls: string[] = [];
+      for (const file of files) {
+        try {
+          const fd = new FormData();
+          fd.append("file", file);
+          const r = await fetch("/api/upload", { method: "POST", body: fd });
+          if (r.ok) {
+            const data = await r.json();
+            urls.push(data.url);
+          }
+        } catch { /* ignore upload error, fallback to blob */ }
+      }
+      if (urls.length > 0) {
+        sessionStorage.setItem("original_image_url", urls[0]);
+      }
       setPreviews(files.map((f) => URL.createObjectURL(f)));
     },
     []
@@ -47,6 +65,8 @@ export default function UploadPage() {
 
   const handleSubmit = useCallback(async () => {
     setSubmitting(true);
+    // 获取已上传的图片 URL
+    const imageUrl = sessionStorage.getItem("original_image_url");
     localStorage.setItem(
       "upload_form",
       JSON.stringify({
@@ -54,6 +74,7 @@ export default function UploadPage() {
         selected_styles: selectedStyles,
         platform,
         notes,
+        image_url: imageUrl,
       })
     );
     window.location.href = "/submit";
@@ -105,6 +126,7 @@ export default function UploadPage() {
               </div>
             </label>
           </div>
+          {error && <p className="text-xs text-red-500 mt-2">{error}</p>}
           {previews.length > 0 && (
             <div className="flex gap-3 flex-wrap">
               {previews.map((src, i) => (

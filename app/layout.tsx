@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "easyuse.ai — AI需求诊断",
-  description: "3分钟诊断，找到最适合你的AI工作流",
+  title: "AI Product Image Generator – Upload Photos, Get E-commerce-Ready Images | easyuse.ai",
+  description: "Upload product photos and get professional e-commerce images — white backgrounds, model photos, scene shots. No prompts needed, results in minutes.",
 };
 
 export default function RootLayout({

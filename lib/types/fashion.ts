@@ -99,9 +99,9 @@ export const FASHION_TEMPLATE_ROUTES: TemplateRoute[] = [
     key: "suit_set_model",
     templateId: "fashion_model",
     useReference: true,
-    preferGemini: true,
+    preferGemini: false,
     moderationRiskLevel: "low",
-    desc: "套装模特图（Gemini，高质量）",
+    desc: "套装模特图",
   },
   {
     key: "suit_set_lifestyle",

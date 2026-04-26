@@ -118,7 +118,7 @@ export const WORKFLOW_MAP: Record<string, WorkflowConfig> = {
   },
   domestic_menswear_suit_set_model: {
     label: "国内男装套装 · 模特图",
-    providerPriority: ["gemini-nanobanana", "minimax-cn", "mock"],
+    providerPriority: ["minimax-cn", "gemini-nanobanana", "mock"],
     promptVersion: "v1-suit-model",
     outputRatio: "3:4",
     fallbackStrategy: "switch_provider",
@@ -224,7 +224,7 @@ export const WORKFLOW_MAP: Record<string, WorkflowConfig> = {
   },
   cross_border_menswear_suit_set_model: {
     label: "跨境男装套装 · 模特图",
-    providerPriority: ["gemini-nanobanana", "minimax-cn", "mock"],
+    providerPriority: ["minimax-cn", "gemini-nanobanana", "mock"],
     promptVersion: "v1-xb-suit-model",
     outputRatio: "3:4",
     fallbackStrategy: "switch_provider",

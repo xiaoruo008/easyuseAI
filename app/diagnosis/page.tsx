@@ -11,18 +11,20 @@ export default function DiagnosisPage() {
   const [answers, setAnswers] = useState<Record<number, AnswerValue>>({});
   const [selected, setSelected] = useState<AnswerValue | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const question = DIAGNOSIS_QUESTIONS[currentStep - 1];
 
   const handleSelect = useCallback(
-    (value: AnswerValue) => {
+    async (value: AnswerValue) => {
       if (loading) return;
       setSelected(value);
+      setError(null);
       const newAnswers = { ...answers, [currentStep]: value };
       setAnswers(newAnswers);
 
       setLoading(true);
-      setTimeout(() => {
+      setTimeout(async () => {
         if (currentStep < TOTAL_STEPS) {
           setCurrentStep((s) => s + 1);
           setSelected(null);
@@ -38,7 +40,32 @@ export default function DiagnosisPage() {
               result_type: result.type,
             })
           );
-          window.location.href = "/result";
+          // 最后一题：创建 session → 保存答案 → 跳转 result
+          try {
+            // 1. 创建 session
+            const createRes = await fetch("/api/diagnosis/session", { method: "POST" });
+            if (!createRes.ok) throw new Error("创建会话失败");
+            const { id: sessionId } = await createRes.json();
+            if (!sessionId) throw new Error("会话ID无效");
+
+            // 2. 保存答案
+            await fetch(`/api/diagnosis/session/${sessionId}`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                answers: newAnswers,
+                resultType: result.type,
+                completed: true,
+              }),
+            });
+
+            // 3. 成功跳转
+            window.location.href = `/result?session=${sessionId}`;
+          } catch (err) {
+            // 失败：显示提示，不跳转
+            setLoading(false);
+            setError("提交失败，请稍后重试");
+          }
         }
         setLoading(false);
       }, 300);
@@ -104,6 +131,10 @@ export default function DiagnosisPage() {
 
             {loading && (
               <p className="text-center text-sm text-gray-400">保存中...</p>
+            )}
+
+            {error && (
+              <p className="text-sm text-red-500 text-center mt-4">{error}</p>
             )}
           </div>
         </div>

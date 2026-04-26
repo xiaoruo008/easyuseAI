@@ -8,6 +8,7 @@ import { routeFromAction, getRetryPrompt, WORKFLOW_TO_TEMPLATE_KEY_MAP, findRout
 import { deriveFashionFieldsFromDiagnosis } from "@/lib/diagnosis-workflow-map";
 import { WORKFLOW_MAP, buildWorkflowKey } from "@/lib/workflow";
 import type { ResultType } from "@/lib/diagnosis";
+import { buildGarmentDescription, mapChoiceToTemplateKey } from "@/lib/image/user-choices";
 
 // ── 静态文案结果 ─────────────────────────────────
 const MOCK_TEXT_RESULTS: Record<string, { title: string; items: string[] }> = {
@@ -233,6 +234,10 @@ export async function POST(req: NextRequest) {
     diagnosisType,
     // Provider 路由（来自 leads 流程的路由决策）
     selectedProvider,
+    // Choice 模式（自动拼 prompt）
+    choiceMode,
+    extraFeatures,
+    scene,
   } = body as {
     sessionId?: string;
     action: string;
@@ -255,7 +260,36 @@ export async function POST(req: NextRequest) {
     userPersona?: string;
     diagnosisType?: string;
     selectedProvider?: "minimax" | "nanobanana";
+    choiceMode?: boolean;
+    extraFeatures?: string;
+    scene?: string;
   };
+
+  // === Choice 模式：自动拼 prompt ===
+  let autoPrompt: string | undefined;
+  let autoWorkflowKey: string | undefined;
+  const useChoiceMode = choiceMode === true;
+
+  if (useChoiceMode && category && gender && scene) {
+    try {
+      autoPrompt = buildGarmentDescription({
+        gender: gender as "menswear" | "womenswear" | "unisex",
+        category: category as import("@/lib/image/user-choices").ProductCategory,
+        extraFeatures,
+      });
+      autoWorkflowKey = mapChoiceToTemplateKey({
+        market: (market ?? "domestic") as "domestic" | "cross_border",
+        gender: gender as "menswear" | "womenswear" | "unisex",
+        category: category as import("@/lib/image/user-choices").ProductCategory,
+        scene: scene as import("@/lib/image/user-choices").SceneType,
+      });
+    } catch (e) {
+      console.warn("[choiceMode] auto prompt build failed, fallback:", e);
+    }
+  }
+
+  const effectivePrompt = useChoiceMode && autoPrompt ? autoPrompt : prompt;
+  const effectiveWorkflowKey = useChoiceMode && autoWorkflowKey ? autoWorkflowKey : workflowKey;
 
   const isImageAction = IMAGE_ACTIONS.has(action);
   const taskType = ACTION_TASKTYPE[action] ?? "内容生成";
@@ -286,9 +320,10 @@ export async function POST(req: NextRequest) {
     const resolvedTargetImage = targetImage ?? derivedFields.targetImage;
     
     // 优先使用 workflowKey 翻译（Result API → Execute API）
+    // Choice 模式下使用自动生成的 effectiveWorkflowKey
     let route = null;
-    if (workflowKey && WORKFLOW_TO_TEMPLATE_KEY_MAP[workflowKey]) {
-      const templateKey = WORKFLOW_TO_TEMPLATE_KEY_MAP[workflowKey];
+    if (effectiveWorkflowKey && WORKFLOW_TO_TEMPLATE_KEY_MAP[effectiveWorkflowKey]) {
+      const templateKey = WORKFLOW_TO_TEMPLATE_KEY_MAP[effectiveWorkflowKey];
       route = findRoute(templateKey) ?? null;
     }
     
@@ -323,7 +358,7 @@ export async function POST(req: NextRequest) {
           leadId: resolvedLeadId,
           taskType,
           status: "doing",
-          inputData: { action, templateId, userPrompt: prompt, referenceImageUrl, aspectRatio, style },
+          inputData: { action, templateId, userPrompt: effectivePrompt, referenceImageUrl, aspectRatio, style },
           outputData: null,
           market: resolvedMarket,
           gender: resolvedGender,
@@ -344,7 +379,7 @@ export async function POST(req: NextRequest) {
     if (userBusinessType) ctxParts.push(`业务类型：${userBusinessType}`);
     if (style) ctxParts.push(`风格：${style}`);
     const diagnosisContext = ctxParts.length > 0 ? `${ctxParts.join("，")}。` : "";
-    const enrichedPrompt = `${diagnosisContext}${prompt ?? ""}`.trim();
+    const enrichedPrompt = `${diagnosisContext}${effectivePrompt ?? ""}`.trim();
 
     // 构建最终 prompt：图案指导 + 诊断上下文 + 用户输入
     const finalPrompt = basePatternPrompt

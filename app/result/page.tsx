@@ -199,54 +199,54 @@ function CaseCard({ item }: { item: CaseStudyItem }) {
   const [afterError, setAfterError] = useState(false);
 
   return (
-    <div className="rounded-xl overflow-hidden bg-gray-100 aspect-[3/4]">
-      {/* 图片容器 — 统一比例，强制裁剪 */}
-      <div className="relative w-full h-full">
-        {/* Before 图 */}
-        <div className="absolute inset-0 left-0 w-1/2">
-          {!beforeError ? (
-            <Image
-              src={item.beforeImage}
-              alt={item.beforeLabel}
-              fill
-              className="object-cover"
-              onError={() => setBeforeError(true)}
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-              <p className="text-xs text-gray-400">原图</p>
-            </div>
-          )}
-          <span className="absolute top-1.5 left-1.5 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded">
-            Before
-          </span>
-        </div>
+    <div className="rounded-xl overflow-hidden bg-white border border-gray-100 shadow-sm">
+      {/* Before 图 */}
+      <div className="relative w-full aspect-[3/4] bg-gray-50">
+        {!beforeError ? (
+          <Image
+            src={item.beforeImage}
+            alt={item.beforeLabel}
+            fill
+            className="object-cover"
+            onError={() => setBeforeError(true)}
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+            <p className="text-xs text-gray-400">原图</p>
+          </div>
+        )}
+        <span className="absolute top-2 left-2 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded">
+          Before · {item.beforeLabel}
+        </span>
+      </div>
 
-        {/* After 图 */}
-        <div className="absolute inset-0 right-0 w-1/2">
-          {!afterError ? (
-            <Image
-              src={item.afterImage}
-              alt={item.afterLabel}
-              fill
-              className="object-cover"
-              onError={() => setAfterError(true)}
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-              <p className="text-xs text-gray-400">效果图</p>
-            </div>
-          )}
-          <span className="absolute top-1.5 right-1.5 bg-amber-500 text-white text-[10px] px-1.5 py-0.5 rounded">
-            After
-          </span>
-        </div>
+      {/* 分隔线 */}
+      <div className="h-px bg-gradient-to-r from-transparent via-amber-300 to-transparent" />
+
+      {/* After 图 */}
+      <div className="relative w-full aspect-[3/4] bg-gray-50">
+        {!afterError ? (
+          <Image
+            src={item.afterImage}
+            alt={item.afterLabel}
+            fill
+            className="object-cover"
+            onError={() => setAfterError(true)}
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+            <p className="text-xs text-gray-400">效果图</p>
+          </div>
+        )}
+        <span className="absolute top-2 right-2 bg-amber-500 text-white text-[10px] px-2 py-0.5 rounded font-medium">
+          After · {item.afterLabel}
+        </span>
       </div>
 
       {/* 标题 */}
-      <div className="p-2.5 bg-white">
-        <p className="text-xs font-medium text-gray-800">{item.title}</p>
-        <p className="text-[11px] text-gray-400 mt-0.5">{item.subtitle}</p>
+      <div className="p-3 bg-white">
+        <p className="text-sm font-semibold text-gray-900">{item.title}</p>
+        <p className="text-xs text-gray-400 mt-0.5">{item.subtitle}</p>
       </div>
     </div>
   );
@@ -273,8 +273,22 @@ function TimelineStep({ step, title, desc, icon }: { step: number; title: string
 export default function ResultPage() {
   const [resultType, setResultType] = useState<ResultType | null>(null);
   const [loading, setLoading] = useState(true);
-  // 倒计时（3分钟，制造紧迫感）
-  const [countdown, setCountdown] = useState(3 * 60);
+  // 倒计时（3分钟，制造紧迫感）— 使用 sessionStorage 持久化截止时间戳，刷新不重置
+  const [countdown, setCountdown] = useState<number>(3 * 60);
+
+  // 在 useEffect 中初始化倒计时（避免 SSR 访问 sessionStorage）
+  useEffect(() => {
+    const stored = sessionStorage.getItem("countdown_deadline");
+    if (!stored) {
+      const deadline = Date.now() + 3 * 60 * 1000;
+      sessionStorage.setItem("countdown_deadline", String(deadline));
+      setCountdown(3 * 60);
+    } else {
+      const deadline = parseInt(stored, 10);
+      const remaining = Math.max(0, Math.floor((deadline - Date.now()) / 1000));
+      setCountdown(remaining);
+    }
+  }, []);
 
   useEffect(() => {
     try {
@@ -292,12 +306,21 @@ export default function ResultPage() {
     }
   }, []);
 
-  // 倒计时逻辑
+  // 倒计时逻辑：每秒从 sessionStorage 读取截止时间，计算剩余秒数
   useEffect(() => {
     if (countdown <= 0) return;
-    const timer = setInterval(() => setCountdown((c) => c - 1), 1000);
-    return () => clearInterval(timer);
-  }, [countdown]);
+    const interval = setInterval(() => {
+      const stored = sessionStorage.getItem("countdown_deadline");
+      if (!stored) {
+        setCountdown(0);
+        return;
+      }
+      const deadline = parseInt(stored, 10);
+      const remaining = Math.max(0, Math.floor((deadline - Date.now()) / 1000));
+      setCountdown(remaining);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   // 格式化倒计时 MM:SS
   const mm = String(Math.floor(countdown / 60)).padStart(2, "0");
@@ -408,6 +431,9 @@ export default function ResultPage() {
                 <span>我们免费帮你试做 1 张</span>
               </li>
             </ul>
+            <p className="text-amber-600 text-sm font-medium mb-4">
+              ⚡ 想立即体验？点下方"立即在线生成"，30秒出图，不用加微信不用留联系方式
+            </p>
             {countdown > 0 && (
               <div className="mb-4 flex items-center justify-center gap-1.5 bg-amber-100 border border-amber-200 rounded-lg px-3 py-2 text-amber-700 text-sm font-medium">
                 <span>⏰ 限时免费，还剩</span>
@@ -415,19 +441,35 @@ export default function ResultPage() {
               </div>
             )}
             <div className="flex flex-col gap-2.5">
-              <Link
-                href={sessionId ? `/submit?session=${sessionId}&action=${resultType}` : `/submit?action=${resultType}`}
-                className="block w-full py-3.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold text-center transition-colors shadow-lg shadow-amber-500/20"
+              <button
+                onClick={() => {
+                  const sid = new URLSearchParams(window.location.search).get("session") ?? "";
+                  window.location.href = sid
+                    ? `/execute?session=${sid}&action=product_photo&workflowKey=product_photo`
+                    : `/execute?action=product_photo&workflowKey=product_photo`;
+                }}
+                className="block w-full py-3.5 bg-gradient-to-r from-gray-900 to-gray-700 hover:from-gray-800 hover:to-gray-600 text-white rounded-xl font-bold text-center transition-colors shadow-lg shadow-gray-900/30"
               >
-                免费试做1张
-              </Link>
+                ⚡ 立即在线生成（30秒出图）
+              </button>
+              <button
+                onClick={() => {
+                  const sid = new URLSearchParams(window.location.search).get("session") ?? "";
+                  window.location.href = sid
+                    ? `/submit?session=${sid}&action=${resultType}`
+                    : `/submit?action=${resultType}`;
+                }}
+                className="block w-full py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold text-center transition-colors shadow-lg shadow-amber-500/20"
+              >
+                让顾问帮我做
+              </button>
               <a
                 href="https://u.wechat.com/EasyUseAI"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block w-full py-3 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium text-center transition-colors border border-gray-200"
               >
-                加微信：z425659107（免费试做1张，10分钟给你）
+                加微信
               </a>
             </div>
           </div>
@@ -458,12 +500,15 @@ export default function ResultPage() {
 
         {/* ── 主CTA ──────────────────────────────── */}
         <section className="space-y-2.5 md:space-y-3">
-          <Link
-            href={sessionId ? `/submit?session=${sessionId}` : "/submit"}
+          <button
+            onClick={() => {
+              const sid = new URLSearchParams(window.location.search).get("session") ?? "";
+              window.location.href = sid ? `/submit?session=${sid}` : "/submit";
+            }}
             className="block w-full py-4 bg-gray-900 text-white rounded-2xl font-bold text-base md:text-lg hover:bg-gray-800 transition-colors shadow-lg shadow-gray-900/10 text-center"
           >
             提交需求
-          </Link>
+          </button>
           <p className="text-center text-xs text-gray-400">顾问微信联系，48小时内出图</p>
         </section>
 
@@ -487,6 +532,9 @@ export default function ResultPage() {
           <div className="flex items-center justify-center gap-6 pt-1">
             <Link href="/diagnosis" className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
               重新诊断 →
+            </Link>
+            <Link href="/history" className="text-xs text-indigo-600 hover:text-indigo-700 transition-colors">
+              查看历史记录 →
             </Link>
           </div>
         </section>

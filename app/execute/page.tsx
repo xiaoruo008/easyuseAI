@@ -1,15 +1,32 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { Suspense, useEffect, useState, useRef } from "react";
+import { Suspense, useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { DiagnosisResult } from "@/lib/diagnosis";
 import { mapResultTypeToTrendingDiagnosisType } from "@/lib/diagnosis";
+import { 
+  CATEGORY_LABELS, SCENE_LABELS, 
+  recommendSceneFromAction, recommendCategoryFromContext, buildGarmentDescription,
+  type ProductCategory, type SceneType, type Gender
+} from "@/lib/image/user-choices";
+import { 
+  MAIN_WHITE_TEMPLATES, 
+  MODEL_PHOTO_TEMPLATES, 
+  LIFESTYLE_TEMPLATES,
+  HERO_BRANDED_TEMPLATES 
+} from "@/lib/image/prompt-templates";
+import type { Market, Category as ApiCategory } from "@/lib/types/fashion";
 
 interface ResultData {
   session: { id: string; completed: boolean };
   result: DiagnosisResult | undefined;
+  fields?: {
+    market?: Market;
+    gender?: Gender;
+    category?: ApiCategory;
+  };
 }
 
 type TextResult = { title: string; items: string[] };
@@ -42,11 +59,37 @@ function ExecuteContent() {
   const [textResult, setTextResult] = useState<TextResult | null>(null);
   const [imageResult, setImageResult] = useState<ImageResult | null>(null);
   const [uploadedFile, setUploadedFile] = useState<string | null>(null);
+  const [originalImageUrl, setOriginalImageUrl] = useState<string | null>(null);
   const [prompt, setPrompt] = useState("");
   const [style, setStyle] = useState("commercial");
   const [aspectRatio, setAspectRatio] = useState("1:1");
+  const [category, setCategory] = useState<ProductCategory>("dress");
+  const [scene, setScene] = useState<SceneType>("white_hero");
+  const [extraFeatures, setExtraFeatures] = useState("");
   const [copied, setCopied] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // 保存到生成历史（直接从 sessionStorage 读取，避免异步 state 延迟问题）
+  const saveToHistory = useCallback((generatedImageUrl: string) => {
+    try {
+      const HISTORY_KEY = "generation_history";
+      const MAX_HISTORY = 20;
+      // 直接从 sessionStorage 读取，避免 useEffect 异步延迟
+      const storedOriginalUrl = typeof window !== "undefined" 
+        ? sessionStorage.getItem("original_image_url") || "" 
+        : "";
+      const record = {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        originalImageUrl: storedOriginalUrl,
+        generatedImageUrl,
+        createdAt: new Date().toISOString(),
+      };
+      const existing = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+      const updated = [record, ...existing].slice(0, MAX_HISTORY);
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
+    } catch { /* ignore storage error */ }
+  }, []);
 
   const FREE_MAX = 2;
   const [freeLimitReached, setFreeLimitReached] = useState(() => {
@@ -68,9 +111,84 @@ function ExecuteContent() {
       : `/api/diagnosis/session/${sessionId}/result`;
     fetch(resultUrl)
       .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
-      .then((d) => { setData(d); setLoading(false); })
+      .then((d) => { 
+        setData(d); 
+        // 选择模式初始化
+        if (d?.fields) {
+          const g = d.fields.gender as Gender | undefined;
+          const cat = d.fields.category as ProductCategory | undefined;
+          if (cat) setCategory(cat);
+          else setCategory(recommendCategoryFromContext({ gender: g }));
+          
+          // 从 URL action 推荐场景
+          const actionParam = typeof window !== "undefined" 
+            ? new URLSearchParams(window.location.search).get("action") 
+            : null;
+          if (actionParam) setScene(recommendSceneFromAction(actionParam));
+        }
+        setLoading(false); 
+        // 从 sessionStorage 读取原图 URL
+        const stored = sessionStorage.getItem("original_image_url");
+        if (stored) setOriginalImageUrl(stored);
+      })
       .catch(() => { setError("加载失败"); setLoading(false); });
   }, [sessionId, actionId]);
+
+  // 根据选择模式参数生成默认 prompt
+  const generateDefaultPrompt = ({
+    gender,
+    category: cat,
+    scene: s,
+    market,
+    extraFeatures: extra,
+  }: {
+    gender: Gender;
+    category: ProductCategory;
+    scene: SceneType;
+    market: Market;
+    extraFeatures: string;
+  }): string => {
+    const garmentDesc = buildGarmentDescription({ gender, category: cat, extraFeatures: extra });
+    const extraScene = extra ? `, ${extra}` : "";
+    switch (s) {
+      case "white_hero":
+        return MAIN_WHITE_TEMPLATES.resolve(garmentDesc).prompt;
+      case "model_studio":
+        return MODEL_PHOTO_TEMPLATES.resolve(garmentDesc).prompt;
+      case "lifestyle":
+        return LIFESTYLE_TEMPLATES.resolve(garmentDesc, "cozy coffee shop").prompt;
+      case "brand_hero":
+        return HERO_BRANDED_TEMPLATES.resolve(garmentDesc).prompt;
+      default:
+        return MAIN_WHITE_TEMPLATES.resolve(garmentDesc).prompt;
+    }
+  };
+
+  // 当选择参数变化时，自动更新 prompt
+  useEffect(() => {
+    if (!data?.fields) return;
+    const genderVal = (data.fields.gender as Gender) || "womenswear";
+    const marketVal = data.fields.market || "domestic";
+    const newPrompt = generateDefaultPrompt({
+      gender: genderVal,
+      category,
+      scene,
+      market: marketVal,
+      extraFeatures,
+    });
+    setPrompt(newPrompt);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [category, scene, extraFeatures, data?.fields]);
+
+  // 组件卸载或 sessionId 变化时清除轮询 timer
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, [sessionId]);
 
   if (loading) {
     return (
@@ -85,10 +203,38 @@ function ExecuteContent() {
 
   if (error || !data?.result) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="text-center space-y-4">
-          <p className="text-gray-500">{error ?? "未找到结果"}</p>
-          <Link href="/diagnosis" className="px-6 py-3 bg-gray-900 text-white rounded-xl inline-block">重新开始</Link>
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <div className="text-center space-y-6 max-w-sm mx-auto px-4">
+          {/* Error Icon */}
+          <div className="relative mx-auto w-20 h-20">
+            <div className="absolute inset-0 rounded-full bg-red-500/10 animate-pulse" />
+            <div className="absolute inset-2 rounded-full bg-red-500/20" />
+            <div className="relative w-full h-full rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center">
+              <svg className="w-8 h-8 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+              </svg>
+            </div>
+          </div>
+
+          {/* Error Title */}
+          <div className="space-y-2">
+            <h2 className="text-white text-xl font-semibold">出错了</h2>
+            <p className="text-gray-400 text-sm leading-relaxed">{error ?? "未找到结果，请稍后重试"}</p>
+          </div>
+
+          {/* Action Button */}
+          <Link
+            href="/diagnosis"
+            className="group inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-900 rounded-xl font-semibold text-sm hover:bg-gray-100 transition-all duration-200 shadow-lg shadow-white/10 hover:shadow-white/20 hover:-translate-y-0.5"
+          >
+            <svg className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+            </svg>
+            重新开始
+          </Link>
+
+          {/* Subtle hint */}
+          <p className="text-gray-600 text-xs">点击上方按钮返回诊断页面</p>
         </div>
       </div>
     );
@@ -105,11 +251,12 @@ function ExecuteContent() {
     }
 
     setWorking(true);
+    setError(null);
     try {
       // 从 sessionStorage 读取 leads 流程路由的 selectedProvider
       const storedProvider = typeof window !== "undefined" ? sessionStorage.getItem("selectedProvider") : null;
 
-      const body: Record<string, string | undefined> = {
+      const body: Record<string, unknown> = {
         action: actionId,
         type: diagnosisResult.type,
         sessionId,
@@ -118,12 +265,15 @@ function ExecuteContent() {
         workflowKey,
         diagnosisType: mapResultTypeToTrendingDiagnosisType(diagnosisResult.type),
         selectedProvider: storedProvider ?? undefined,
+        // 选择模式字段：
+        prompt,
+        category,
+        scene,
+        extraFeatures: extraFeatures || undefined,
+        gender: (data?.fields?.gender as Gender) || "womenswear",
+        market: data?.fields?.market || "domestic",
+        aspectRatio: scene === "white_hero" ? "1:1" : "3:4",
       };
-      if (isImageTask) {
-        body.prompt = prompt || undefined;
-        body.style = style;
-        body.aspectRatio = aspectRatio;
-      }
 
       const res = await fetch("/api/execute/generate", {
         method: "POST",
@@ -133,16 +283,77 @@ function ExecuteContent() {
       if (!res.ok) throw new Error();
       const d = await res.json();
 
-      if (d.taskCategory === "image") {
-        setImageResult({ ...d.result, source: d.source ?? "mock", workflowLabel: d.workflowLabel ?? undefined });
-      } else {
-        setTextResult(d.result);
+      const taskId = d.taskId as string | null;
+
+      if (!taskId) {
+        // 没有 taskId（同步返回），直接使用结果
+        if (d.taskCategory === "image") {
+          setImageResult({ ...d.result, source: d.source ?? "mock", workflowLabel: d.workflowLabel ?? undefined });
+          saveToHistory(d.result.imageUrl);
+        } else {
+          setTextResult(d.result);
+        }
+        // 标记免费试用已使用（累加计数）
+        const prev = parseInt(localStorage.getItem("trial_count") ?? "0", 10);
+        const next = prev + 1;
+        localStorage.setItem("trial_count", String(next));
+        if (next >= FREE_MAX) setFreeLimitReached(true);
+        setWorking(false);
+        return;
       }
+
       // 标记免费试用已使用（累加计数）
       const prev = parseInt(localStorage.getItem("trial_count") ?? "0", 10);
       const next = prev + 1;
       localStorage.setItem("trial_count", String(next));
       if (next >= FREE_MAX) setFreeLimitReached(true);
+
+      // 启动轮询（每 3 秒一次，最多 60 秒）
+      let elapsed = 0;
+      timerRef.current = setInterval(async () => {
+        elapsed += 3000;
+        try {
+          const pollRes = await fetch(`/api/tasks/${taskId}`);
+          if (!pollRes.ok) return;
+          const task = await pollRes.json();
+
+          if (task.status === "done") {
+            clearInterval(timerRef.current!);
+            timerRef.current = null;
+            setWorking(false);
+            if (d.taskCategory === "image" && task.outputData) {
+              setImageResult({ ...task.outputData, source: task.outputData.source ?? "ai", workflowLabel: d.workflowLabel ?? undefined });
+              saveToHistory(task.outputData.imageUrl);
+            } else if (task.outputData) {
+              setTextResult(task.outputData);
+            }
+          } else if (task.status === "failed") {
+            clearInterval(timerRef.current!);
+            timerRef.current = null;
+            setWorking(false);
+            setError(task.errorMessage ?? "生成失败，请稍后重试。");
+          } else if (elapsed >= 60000) {
+            // 超时
+            clearInterval(timerRef.current!);
+            timerRef.current = null;
+            setWorking(false);
+            setError("生成超时（超过60秒），请稍后重试或联系顾问协助。");
+          }
+        } catch {
+          // 轮询请求出错，继续等待下一次
+        }
+      }, 3000);
+
+      // 同时设置 60 秒硬超时保险
+      setTimeout(() => {
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+          setWorking(false);
+          setError("生成超时（超过60秒），请稍后重试或联系顾问协助。");
+        }
+      }, 60000);
+
     } catch (err) {
       const message = err instanceof Error ? err.message : "";
       // 网络波动安抚型错误提示
@@ -153,8 +364,6 @@ function ExecuteContent() {
       } else {
         setError("制作时遇到点小问题，可能是网络波动或 AI 服务暂时繁忙。建议：1) 稍等 1 分钟再试；2) 检查网络连接；3) 如果多次失败，请联系顾问协助。");
       }
-    } finally {
-      setWorking(false);
     }
   };
 
@@ -164,6 +373,24 @@ function ExecuteContent() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
+  };
+
+  const handleDownload = async () => {
+    if (!imageResult) return;
+    try {
+      const response = await fetch(imageResult.imageUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `easyuse-product-${Date.now()}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch {
+      window.open(imageResult.imageUrl, "_blank");
+    }
   };
 
   return (
@@ -255,70 +482,103 @@ function ExecuteContent() {
           </div>
         )}
 
-        {/* 图片任务：输入 */}
+        {/* 图片任务：选择式生成 */}
         {isImageTask && !hasResult && (
           <>
-            <div className="rounded-xl border border-gray-200 p-4 md:p-5 space-y-3">
-              <h3 className="text-sm font-semibold text-gray-700">你想要什么样的图？</h3>
-              <textarea
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                placeholder={
-                  actionId === "product_photo" ? "例如：放在纯白背景里，光线柔和，专业电商风" :
-                  actionId === "background_swap" ? "例如：把背景换成现代简约的咖啡馆场景" :
-                  "描述你想要的图片效果"
-                }
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg text-sm resize-none h-20 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent placeholder:text-gray-300"
+            {/* 当前任务预览卡片 */}
+            <div className="rounded-xl bg-gradient-to-br from-gray-900 to-gray-700 p-5 text-white">
+              <p className="text-xs text-white/60 mb-1">为你定制</p>
+              <p className="font-bold text-lg">
+                {CATEGORY_LABELS[category].zh} × {SCENE_LABELS[scene].zh}
+              </p>
+              <p className="text-xs text-white/50 mt-1">{SCENE_LABELS[scene].desc}</p>
+            </div>
+
+            {/* 步骤1：选品类 */}
+            <div className="rounded-xl border border-gray-200 p-4 space-y-3">
+              <h3 className="text-sm font-semibold text-gray-700">① 选择产品类型</h3>
+              <div className="grid grid-cols-4 gap-2">
+                {(Object.keys(CATEGORY_LABELS) as ProductCategory[]).map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setCategory(cat)}
+                    className={`py-2.5 px-1 text-xs rounded-lg border transition-colors flex flex-col items-center gap-1 ${
+                      category === cat
+                        ? "bg-gray-900 text-white border-gray-900"
+                        : "bg-white text-gray-600 border-gray-200 hover:border-gray-400"
+                    }`}
+                  >
+                    <span className="text-base">{CATEGORY_LABELS[cat].emoji}</span>
+                    <span>{CATEGORY_LABELS[cat].zh}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 步骤2：选场景 */}
+            <div className="rounded-xl border border-gray-200 p-4 space-y-3">
+              <h3 className="text-sm font-semibold text-gray-700">② 选择出图场景</h3>
+              <div className="grid grid-cols-2 gap-2">
+                {(Object.keys(SCENE_LABELS) as SceneType[]).map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setScene(s)}
+                    className={`py-3 px-3 text-left rounded-lg border transition-colors ${
+                      scene === s
+                        ? "bg-gray-900 text-white border-gray-900"
+                        : "bg-white text-gray-600 border-gray-200 hover:border-gray-400"
+                    }`}
+                  >
+                    <div className="text-sm font-medium flex items-center gap-1.5">
+                      <span>{SCENE_LABELS[s].emoji}</span>
+                      <span>{SCENE_LABELS[s].zh}</span>
+                    </div>
+                    <p className={`text-xs mt-0.5 ${scene === s ? "text-white/60" : "text-gray-400"}`}>
+                      {SCENE_LABELS[s].desc}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 步骤3：补充描述（选填） */}
+            <div className="rounded-xl border border-gray-200 p-4 space-y-2">
+              <h3 className="text-sm font-semibold text-gray-700">③ 补充特征（选填）</h3>
+              <p className="text-xs text-gray-400">比如颜色、材质、款式细节，不填也可以</p>
+              <input
+                type="text"
+                value={extraFeatures}
+                onChange={(e) => setExtraFeatures(e.target.value)}
+                placeholder="例如：黑色羊毛，修身款"
+                className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent placeholder:text-gray-300"
               />
             </div>
 
-            {/* 风格 + 比例 — 移动端改为纵向堆叠 */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="rounded-xl border border-gray-200 p-4 md:p-5 space-y-2.5">
-                <h3 className="text-sm font-semibold text-gray-700">风格</h3>
-                <div className="flex gap-1.5 md:gap-2">
-                  {STYLE_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.value}
-                      onClick={() => setStyle(opt.value)}
-                      className={`flex-1 py-2.5 text-xs md:text-sm font-medium rounded-lg border transition-colors whitespace-nowrap ${
-                        style === opt.value
-                          ? "bg-gray-900 text-white border-gray-900"
-                          : "bg-white text-gray-500 border-gray-200 hover:border-gray-400"
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
+            {/* 步骤4：Prompt 预览与编辑 */}
+            <div className="rounded-xl border border-gray-200 p-4 space-y-2">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-gray-700">④ 生成的 Prompt</h3>
+                <span className="text-xs text-gray-400">可直接修改</span>
               </div>
-              <div className="rounded-xl border border-gray-200 p-4 md:p-5 space-y-2.5">
-                <h3 className="text-sm font-semibold text-gray-700">比例</h3>
-                <div className="flex gap-1.5 md:gap-2">
-                  {RATIO_OPTIONS.map((opt) => (
-                    <button
-                      key={opt.value}
-                      onClick={() => setAspectRatio(opt.value)}
-                      className={`flex-1 py-2.5 text-xs md:text-sm font-medium rounded-lg border transition-colors ${
-                        aspectRatio === opt.value
-                          ? "bg-gray-900 text-white border-gray-900"
-                          : "bg-white text-gray-500 border-gray-200 hover:border-gray-400"
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <textarea
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                rows={4}
+                className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent resize-none placeholder:text-gray-300"
+                placeholder="系统将根据你的选择自动生成 prompt..."
+              />
+              <p className="text-xs text-gray-400">系统根据品类和场景自动匹配最佳模板，直接点击生成即可出图</p>
             </div>
 
-            <div className="rounded-xl border border-gray-200 p-4 md:p-5">
-              <h3 className="text-sm font-semibold text-gray-700 mb-2 md:mb-3">有产品原图吗？（可选）</h3>
-              <p className="text-xs text-gray-400 mb-3 hidden md:block">上传原图可以让效果更接近真实产品（目前 v1 暂不支持上传，AI 将根据你的描述生成）</p>
-              <div className="bg-gray-50 rounded-lg px-4 py-3 text-xs text-gray-400">
-                v1 · 图片上传功能即将上线，目前请详细描述你想要的效果
-              </div>
-            </div>
+            {/* 生成按钮 */}
+            <button
+              onClick={handleCreate}
+              disabled={working || freeLimitReached}
+              className="w-full py-4 bg-gradient-to-r from-gray-900 to-gray-700 hover:from-gray-800 text-white rounded-xl font-bold text-base shadow-lg disabled:opacity-50 transition-all"
+            >
+              {working ? "AI 正在生成中..." : "⚡ 开始生成（约30秒）"}
+            </button>
+            <p className="text-center text-xs text-gray-400">不用手写提示词，系统自动匹配最佳模板</p>
           </>
         )}
 
@@ -346,7 +606,7 @@ function ExecuteContent() {
           </div>
         )}
 
-        {/* 图片结果 */}
+        {/* 图片结果 - Before/After 对比 */}
         {imageResult && (
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-gray-900">
@@ -357,49 +617,117 @@ function ExecuteContent() {
                 {imageResult.workflowLabel ? `${imageResult.workflowLabel} · 你的图做好了` : "你的图做好了"}
               </h3>
             </div>
-            <div className="rounded-xl border border-gray-200 overflow-hidden">
-              <div className="relative bg-gray-50 max-h-80 md:max-h-96" style={{ aspectRatio: "1/1" }}>
+            {/* Before/After 对比区 */}
+            <div className="grid grid-cols-2 gap-2 rounded-xl border border-gray-200 overflow-hidden">
+              {/* Before - 原图 */}
+              <div className="relative bg-gray-100 aspect-[3/4]">
+                {originalImageUrl ? (
+                  <Image
+                    src={originalImageUrl}
+                    alt="原图"
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center p-2">
+                    <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center mb-2">
+                      <svg className="w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <p className="text-xs text-gray-400 text-center">原图</p>
+                  </div>
+                )}
+                {/* 标签 */}
+                <div className="absolute top-2 left-2 px-2 py-1 bg-black/60 rounded-md">
+                  <span className="text-xs text-white font-medium">Before</span>
+                </div>
+              </div>
+              {/* After - AI生成图 */}
+              <div className="relative bg-gray-50 aspect-[3/4]">
                 <Image
                   src={imageResult.imageUrl}
-                  alt="制作结果"
+                  alt="AI制作结果"
                   fill
-                  className="object-contain"
-                  unoptimized
+                  className="object-cover"
                 />
-              </div>
-              <div className="p-3 md:p-4 border-t border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                <p className="text-xs text-gray-400">
-                  {imageResult.source === "mock"
-                    ? "当前为示例效果 · 付费后生成实际产品图"
-                    : "AI生成效果 · 可直接使用"}
-                </p>
-                <div className="flex items-center gap-2 w-full sm:w-auto">
-                  <button
-                    onClick={copyLink}
-                    className="flex-1 sm:flex-none text-xs px-3 py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors flex items-center justify-center gap-1"
-                  >
-                    {copied ? (
-                      <>
-                        <svg className="w-3 h-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                        已复制
-                      </>
-                    ) : (
-                      <>
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                        复制链接
-                      </>
-                    )}
-                  </button>
-                  <a
-                    href={imageResult.imageUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 sm:flex-none text-xs px-3 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center gap-1"
-                  >
-                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                    下载
-                  </a>
+                {/* 标签 */}
+                <div className="absolute top-2 right-2 px-2 py-1 bg-indigo-600 rounded-md">
+                  <span className="text-xs text-white font-medium">After</span>
                 </div>
+              </div>
+            </div>
+            {/* 底部说明文字 */}
+            <p className="text-xs text-gray-400 text-center">原图 → AI优化后，可直接用于电商Listing</p>
+            {/* 历史记录入口 */}
+            <div className="text-center">
+              <button
+                onClick={() => router.push("/history")}
+                className="text-xs text-gray-400 hover:text-gray-600 underline"
+              >
+                查看历史记录
+              </button>
+            </div>
+            {/* 按钮组 */}
+            <div className="p-3 md:p-4 border border-gray-200 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+              <p className="text-xs text-gray-400">
+                {imageResult.source === "mock"
+                  ? "当前为示例效果 · 付费后生成实际产品图"
+                  : "AI生成效果 · 可直接使用"}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-2.5">
+                {/* 下载原图 - 主按钮 */}
+                <button
+                  onClick={handleDownload}
+                  className="flex-1 sm:flex-none px-4 py-2.5 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 font-semibold text-sm shadow-md"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  下载原图
+                </button>
+                {/* 复制图片链接 */}
+                <button
+                  onClick={copyLink}
+                  className="flex-1 sm:flex-none px-4 py-2.5 border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 text-sm"
+                >
+                  {copied ? (
+                    <>
+                      <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      已复制
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      复制链接
+                    </>
+                  )}
+                </button>
+                {/* 再生成一张 */}
+                <button
+                  onClick={handleCreate}
+                  disabled={working}
+                  className="flex-1 sm:flex-none px-4 py-2.5 border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 text-sm disabled:opacity-50"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  再生成一张
+                </button>
+                {/* 用于 Listing - 商业语义 */}
+                <button
+                  onClick={() => router.push(`/submit?session=${sessionId}`)}
+                  className="flex-1 sm:flex-none px-4 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 text-sm font-semibold"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
+                  用于 Listing
+                </button>
               </div>
             </div>
           </div>
