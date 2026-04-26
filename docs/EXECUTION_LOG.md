@@ -1,7 +1,21 @@
 # EXECUTION LOG
-更新时间：2026-04-15 20:20 UTC+8
+更新时间：2026-04-26 09:50 UTC+8
 
 ## 今日执行记录
+
+---
+
+### 2026-04-26 09:45 UTC+8
+**操作：** Qwen Code 完全接入 Hermes MCP 调度系统
+**修改文件：** /root/hermes-mcp-task-server/src/index.js
+**接入内容：**
+- 新增 `run_qwen_task` MCP 工具（类比 `run_claude_task`）
+- 新增 `handleRunQwenTask()` 函数，用 `qwen -p` 调用
+- 输出格式统一：`{success, exit_code, stdout, stderr, agent: "qwen"}`
+- `handleGetNextTask()` 增加 `agent='qwen'` 路由分支：自动执行 + 写 hermes_results
+- task 表用 `agent` 字段控制调度：qwen → Qwen，browser → browser，default → Claude
+**验证：** Qwen 响应 `QWEN_OK` ✅，MCP 工具注册成功 ✅，结构统一 ✅
+**状态：** ✅ 完成
 
 ---
 

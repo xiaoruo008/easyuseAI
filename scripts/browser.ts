@@ -208,13 +208,13 @@ async function cmdDiagnosisFlow() {
     await page.waitForTimeout(1000);
     await page.screenshot({ path: path.join(SCREENSHOTS_DIR, 'diag-q1.png'), fullPage: true });
 
-    // 答题 1-4: 选择第一个选项，Q5 之后直接等待跳转到 result
-    for (let q = 1; q <= 5; q++) {
+    // 答题 1-8: 选择第一个选项，Q8 之后等待跳转到 result
+    for (let q = 1; q <= 8; q++) {
       const btns = await page.$$('button');
       if (btns.length > 0) {
         await btns[0].click();
-        // Q5 之后不等计时器，直接等 URL 变化
-        if (q < 5) {
+        // Q8 之后不等计时器，直接等 URL 变化（Q8会触发API调用+redirect）
+        if (q < 8) {
           await page.waitForTimeout(1500);
           await page.screenshot({ path: path.join(SCREENSHOTS_DIR, `diag-q${q+1}.png`), fullPage: true });
         }
@@ -239,8 +239,8 @@ async function cmdDiagnosisFlow() {
       console.log('✗ 答题后未跳转到 result');
     }
 
-    // Step 7: 点击 CTA 按钮（如"限量0元领取"），验证跳转到 /submit
-    const ctaTextPatterns = ['限量0元领取', '限量0元', '立即领取', '免费试用', '获取方案'];
+    // Step 7: 点击 CTA 按钮，验证跳转到 /submit 或 /execute
+    const ctaTextPatterns = ['立即在线生成', '让顾问帮我做', '加微信', '免费试做', '提交需求'];
     let ctaClicked = false;
     try {
       const allBtns = await page.$$('button');

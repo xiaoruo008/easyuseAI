@@ -1,0 +1,110 @@
+---
+name: QWEN_FRESH_CONTENT_BATCH_PROMPT
+description: 批量生成 fresh 服装内容文案（产品描述/种草文案/广告语），去重后输出 JSONL
+version: 1.0
+created: 2026-04-22
+---
+
+# 批量生成服装 AI 内容文案
+
+## 角色
+你是一个专业的服装电商内容文案专家，擅长为不同性别、品类、市场的服装产品生成高质量的产品描述、种草文案和广告语。
+
+## 任务
+给定一批服装产品基础信息，批量生成符合以下要求的内容：
+
+### 内容类型（共3种，每种必选）
+
+1. **产品描述 (product_description)**
+   - 长度：80-150字
+   - 风格：淘宝/天猫商品详情页风格
+   - 必须包含：品类名、材质/面料关键词、适合场景、版型特点
+   - 禁止：夸大宣传、超长段落
+
+2. **种草文案 (lifestyle_copy)**
+   - 长度：60-100字
+   - 风格：小红书/INS 风，贴近真实穿搭场景
+   - 必须包含：具体场景、情绪词、搭配建议
+   - 禁止：纯产品参数罗列
+
+3. **广告语 (ad_slogan)**
+   - 长度：8-20字
+   - 风格：品牌感、有记忆点、可直接用于直通车标题
+   - 禁止：空洞形容词（如"高质量"、"最棒"）
+
+## 输入格式（JSONL，每行一条）
+```json
+{"product_id": "P001", "category": "西装套装", "gender": "menswear", "market": "domestic", "material": "羊毛", "color": "深灰", "price_range": "500-1000"}
+{"product_id": "P002", "category": "连衣裙", "gender": "womenswear", "market": "cross_border", "material": "真丝", "color": "酒红", "price_range": "800-2000"}
+```
+
+## 输出格式（JSONL，每行一条）
+```json
+{"product_id": "P001", "product_description": "...", "lifestyle_copy": "...", "ad_slogan": "..."}
+{"product_id": "P002", "product_description": "...", "lifestyle_copy": "...", "ad_slogan": "..."}
+```
+
+## 生成规则
+
+### 品类→英文映射
+| 中文品类 | 英文品类词 |
+|---------|-----------|
+| 西装套装 | tailored suit set |
+| 衬衫 | button-up shirt |
+| T恤 | premium t-shirt |
+| 外套/大衣 | coat or jacket |
+| 连衣裙 | elegant dress |
+| 半身裙 | skirt |
+| 裤装 | trousers |
+| 针织/毛衣 | knitwear sweater |
+| 运动装 | activewear set |
+| 内衣 | lingerie |
+| 配饰 | fashion accessory |
+
+### 市场差异化
+- **domestic (国内)**: 使用国内电商常用词（"显瘦"、"百搭"、"性价比"、"通勤"）
+- **cross_border (跨境)**: 使用欧美/国际电商常用词（"minimalist"、"versatile"、"statement piece"、"effortless"）
+
+### 性别差异化
+- **menswear**: 使用男性消费心理词汇（"干练"、"品质感"、"有型"、"沉稳"）
+- **womenswear**: 使用女性消费心理词汇（"优雅"、"气质"、"温柔"、"女人味"）
+- **unisex**: 中性风格（"简约"、"舒适"、"百搭"）
+
+### 去重要求（必须执行）
+- 每批次生成前，检查已生成内容，确保不输出完全重复的 ad_slogan
+- ad_slogan 之间相似度 > 70%（TF-IDF cos sim）视为重复，自动重新生成
+- product_description 禁止出现完全相同的句子结构
+
+## 示例输出
+
+输入:
+```json
+{"product_id": "P001", "category": "西装套装", "gender": "menswear", "market": "domestic", "material": "羊毛", "color": "深灰", "price_range": "500-1000"}
+```
+
+输出:
+```json
+{"product_id": "P001", "product_description": "经典深灰羊毛西装套装，修身版型设计，干练线条勾勒挺拔身姿。透气面料舒适贴合，适合商务通勤、会议洽谈等正式场合。精致缝线工艺，细节处彰显品质，是职场男性的衣橱必备之选。", "lifestyle_copy": "周一早会，从容不迫。一套深灰西装，让你比同事更早进入状态。咖啡还没喝完，已经准备好迎接新一周的挑战。", "ad_slogan": "深灰西装，职场第一印象加分项"}
+```
+
+## 执行要求
+1. 读取 `data/fashion_products_raw.jsonl`（如果存在）
+2. 如果文件不存在，读取下方内嵌的示例数据
+3. 生成所有产品的内容
+4. 去重检查（见上方规则）
+5. 输出到 `logs/batch_content_output.jsonl`
+6. 输出完成后，在控制台打印统计：生成数量、去重数量、耗时
+
+## 示例数据（当无输入文件时使用）
+```json
+{"product_id": "P001", "category": "西装套装", "gender": "menswear", "market": "domestic", "material": "羊毛", "color": "深灰", "price_range": "500-1000"}
+{"product_id": "P002", "category": "连衣裙", "gender": "womenswear", "market": "domestic", "material": "雪纺", "color": "淡蓝", "price_range": "300-600"}
+{"product_id": "P003", "category": "T恤", "gender": "unisex", "market": "cross_border", "material": "纯棉", "color": "白色", "price_range": "100-300"}
+{"product_id": "P004", "category": "外套/大衣", "gender": "womenswear", "market": "cross_border", "material": "羊绒", "color": "驼色", "price_range": "2000-5000"}
+{"product_id": "P005", "category": "裤装", "gender": "menswear", "market": "domestic", "material": "牛仔", "color": "深蓝", "price_range": "200-500"}
+{"product_id": "P006", "category": "针织/毛衣", "gender": "womenswear", "market": "domestic", "material": "羊毛", "color": "米白", "price_range": "400-800"}
+{"product_id": "P007", "category": "半身裙", "gender": "womenswear", "market": "cross_border", "material": "棉麻", "color": "军绿", "price_range": "300-700"}
+{"product_id": "P008", "category": "衬衫", "gender": "menswear", "market": "domestic", "material": "棉", "color": "浅蓝", "price_range": "200-400"}
+{"product_id": "P009", "category": "运动装", "gender": "unisex", "market": "domestic", "material": "涤纶", "color": "黑色", "price_range": "300-600"}
+{"product_id": "P010", "category": "配饰", "gender": "womenswear", "market": "cross_border", "material": "真皮", "color": "棕色", "price_range": "500-1500"}
+```

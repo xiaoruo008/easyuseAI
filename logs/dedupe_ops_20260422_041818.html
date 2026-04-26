@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>内容去重报告 — 2026-04-22 04:18</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
+  h1 { color: #1a1a1a; border-bottom: 3px solid #333; padding-bottom: 10px; }
+  h2 { color: #333; margin-top: 30px; border-left: 4px solid #333; padding-left: 10px; }
+  .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; }
+  .card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .card .num { font-size: 2em; font-weight: bold; color: #1a1a1a; }
+  .card .label { color: #666; font-size: 0.85em; margin-top: 5px; }
+  table { width: 100%; border-collapse: collapse; margin: 15px 0; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  th { background: #333; color: white; padding: 12px; text-align: left; }
+  td { padding: 10px 12px; border-bottom: 1px solid #eee; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover { background: #fafafa; }
+  .sim { font-weight: bold; color: #e67e22; }
+  .ok { color: #27ae60; font-weight: bold; }
+  footer { margin-top: 40px; color: #999; font-size: 0.8em; text-align: center; }
+</style>
+</head>
+<body>
+<h1>📋 内容去重检查报告</h1>
+<p>生成时间: 2026-04-22T04:18:18.794154 &nbsp;|&nbsp; 相似度阈值: 0.7</p>
+
+<h2>📊 统计摘要</h2>
+<div class="summary">
+  <div class="card">
+    <div class="num">20</div>
+    <div class="label">总记录数</div>
+  </div>
+  <div class="card">
+    <div class="num">4</div>
+    <div class="label">精确重复组</div>
+  </div>
+  <div class="card">
+    <div class="num">4</div>
+    <div class="label">模糊重复对</div>
+  </div>
+  <div class="card">
+    <div class="num">40.0%</div>
+    <div class="label">重复率</div>
+  </div>
+  <div class="card">
+    <div class="num">8</div>
+    <div class="label">唯一记录</div>
+  </div>
+</div>
+
+<h2>⚠️ 精确重复 4 组</h2>
+<table><tr><th>重复内容预览</th><th>涉及记录</th></tr><tr><td>"# CLAUDE REPORT
+[DEPRECATED - 历史记录归档]
+更新时间：2026-04-12 14:24 ..." (2条重复)</td><td>CLAUDE_REPORT.md:CLAUDE_REPORT, CLAUDE_REPORT.md:CLAUDE_REPORT</td></tr>
+<tr><td>"# HERMES LOG
+[DEPRECATED - 历史记录归档]
+更新时间：2026-04-14 02:38 UTC..." (2条重复)</td><td>HERMES_LOG.md:HERMES_LOG, HERMES_LOG.md:HERMES_LOG</td></tr>
+<tr><td>"# METRICS
+[DEPRECATED - 已整合到 docs/SYSTEM_PROGRESS.md]
+更新时间：2..." (2条重复)</td><td>METRICS.md:METRICS, METRICS.md:METRICS</td></tr>
+<tr><td>"# SITE STATUS
+[DEPRECATED - 已整合到 docs/SYSTEM_PROGRESS.md]
+更新..." (2条重复)</td><td>SITE_STATUS.md:SITE_STATUS, SITE_STATUS.md:SITE_STATUS</td></tr>
+</table>
+
+<h2>🔶 模糊重复（相似度 ≥ 0.7）共 4 对</h2>
+<table><tr><th>记录A</th><th>记录B</th><th>相似度</th><th>检测方法</th><th>A内容预览</th></tr><tr><td>CLAUDE_REPORT.md:CLAUDE_REPORT</td><td>CLAUDE_REPORT.md:CLAUDE_REPORT</td><td class="sim">1.00</td><td>cosine</td><td># CLAUDE REPORT [DEPRECATED - 历史记录归档] 更新时间：2026-04...</td></tr>
+<tr><td>HERMES_LOG.md:HERMES_LOG</td><td>HERMES_LOG.md:HERMES_LOG</td><td class="sim">1.00</td><td>cosine</td><td># HERMES LOG [DEPRECATED - 历史记录归档] 更新时间：2026-04-14...</td></tr>
+<tr><td>METRICS.md:METRICS</td><td>METRICS.md:METRICS</td><td class="sim">1.00</td><td>jaccard+cosine</td><td># METRICS [DEPRECATED - 已整合到 docs/SYSTEM_PROGRESS....</td></tr>
+<tr><td>SITE_STATUS.md:SITE_STATUS</td><td>SITE_STATUS.md:SITE_STATUS</td><td class="sim">1.00</td><td>jaccard+cosine</td><td># SITE STATUS [DEPRECATED - 已整合到 docs/SYSTEM_PROGR...</td></tr>
+</table>
+
+<h2>🔤 高频词 TOP 15</h2>
+<table>
+  <tr><th>词语</th><th>出现次数</th><th>占比</th></tr>
+  <tr><td>用</td><td>233</td><td>1.1%</td></tr><tr><td>的</td><td>215</td><td>1.0%</td></tr><tr><td>图</td><td>189</td><td>0.9%</td></tr><tr><td>api</td><td>187</td><td>0.9%</td></tr><tr><td>成</td><td>185</td><td>0.8%</td></tr><tr><td>新</td><td>125</td><td>0.6%</td></tr><tr><td>案</td><td>116</td><td>0.5%</td></tr><tr><td>文</td><td>115</td><td>0.5%</td></tr><tr><td>改</td><td>111</td><td>0.5%</td></tr><tr><td>生</td><td>111</td><td>0.5%</td></tr><tr><td>果</td><td>104</td><td>0.5%</td></tr><tr><td>ts</td><td>104</td><td>0.5%</td></tr><tr><td>结</td><td>100</td><td>0.5%</td></tr><tr><td>上</td><td>100</td><td>0.5%</td></tr><tr><td>修</td><td>99</td><td>0.4%</td></tr>
+</table>
+
+<h2>📈 高频 N-gram TOP 15</h2>
+<table>
+  <tr><th>类型</th><th>N-gram</th><th>出现次数</th></tr>
+  <tr><td>1-gram</td><td>新 时 间</td><td>11</td></tr><tr><td>1-gram</td><td>更 新 时</td><td>11</td></tr><tr><td>1-gram</td><td>更 新 时 间</td><td>11</td></tr><tr><td>3-gram</td><td>api execute generate</td><td>10</td></tr><tr><td>1-gram</td><td>片 生 成</td><td>10</td></tr><tr><td>1-gram</td><td>图 片 生</td><td>10</td></tr><tr><td>1-gram</td><td>图 片 生 成</td><td>10</td></tr><tr><td>3-gram</td><td>api diagnosis session</td><td>9</td></tr><tr><td>4-gram</td><td>flow 5 5</td><td>8</td></tr><tr><td>1-gram</td><td>结 果 页</td><td>6</td></tr><tr><td>1-gram</td><td>下 一 步</td><td>6</td></tr><tr><td>7-gram</td><td>browser flow 5</td><td>6</td></tr><tr><td>1-gram</td><td>无 报 错</td><td>6</td></tr><tr><td>7-gram</td><td>minimax oss url</td><td>6</td></tr><tr><td>1-gram</td><td>返 回 真</td><td>6</td></tr>
+</table>
+
+<footer>
+  由 dedupe_check_preview.py 生成 &nbsp;|&nbsp; logs/dedupe_*.json
+</footer>
+</body>
+</html>

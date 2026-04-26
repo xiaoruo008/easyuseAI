@@ -1,0 +1,93 @@
+{
+  "session": "suitworld_batch_1776936405876",
+  "timestamp": "2026-04-23T09-26-45",
+  "params": {
+    "action": "model_photo",
+    "category": "suit_set",
+    "scene": "model_studio",
+    "gender": "menswear",
+    "market": "cross_border",
+    "choiceMode": true,
+    "aspectRatio": "3:4"
+  },
+  "summary": {
+    "total": 3,
+    "success": 3,
+    "failed": 0,
+    "providerDrift": false,
+    "providers": [
+      "minimax-cn"
+    ],
+    "models": [
+      "image-01"
+    ],
+    "avgLatencyMs": 19487
+  },
+  "images": [
+    {
+      "index": 0,
+      "url": "https://hailuo-image-algeng-data.oss-cn-wulanchabu.aliyuncs.com/image_inference_output/talkie/prod/img/2026-04-23/ce3819b6-139d-4304-b5eb-bdb425d1149a_aigc.jpeg?Expires=1777022832&OSSAccessKeyId=LTAI5tB2SwrRwAtD23etQUbC&Signature=hIpOXYGMDKOuTsyouzYTR7BiS2Y=",
+      "quality": "ok",
+      "reject_reason": "",
+      "fabric": "ok",
+      "tailoring": "ok",
+      "structure": "ok",
+      "trousers": "ok",
+      "style": "ok",
+      "provider": "minimax-cn",
+      "model": "image-01",
+      "latencyMs": 22904,
+      "generatedAt": "2026-04-23T09:27:15.411Z",
+      "composition": null,
+      "detail": null,
+      "tiktok_ad_feel": null,
+      "_score": 100,
+      "_reasons": []
+    },
+    {
+      "index": 1,
+      "url": "https://hailuo-image-algeng-data.oss-cn-wulanchabu.aliyuncs.com/image_inference_output/talkie/prod/img/2026-04-23/83eac757-1850-48d0-9fe3-faef7d876fce_aigc.jpeg?Expires=1777022850&OSSAccessKeyId=LTAI5tB2SwrRwAtD23etQUbC&Signature=hzeOoR/8nR/v4TgKnMtXC5MUpyc=",
+      "quality": "ok",
+      "reject_reason": "",
+      "fabric": "ok",
+      "tailoring": "ok",
+      "structure": "ok",
+      "trousers": "ok",
+      "style": "ok",
+      "provider": "minimax-cn",
+      "model": "image-01",
+      "latencyMs": 17722,
+      "generatedAt": "2026-04-23T09:27:33.135Z",
+      "composition": null,
+      "detail": null,
+      "tiktok_ad_feel": null,
+      "_score": 100,
+      "_reasons": []
+    },
+    {
+      "index": 2,
+      "url": "https://hailuo-image-algeng-data.oss-cn-wulanchabu.aliyuncs.com/image_inference_output/talkie/prod/img/2026-04-23/9e79c581-b9fb-423f-a899-e78b21194223_aigc.jpeg?Expires=1777022868&OSSAccessKeyId=LTAI5tB2SwrRwAtD23etQUbC&Signature=qSwvDV3EQMZgfhmykLquuLuz9i8=",
+      "quality": "ok",
+      "reject_reason": "",
+      "fabric": "ok",
+      "tailoring": "ok",
+      "structure": "ok",
+      "trousers": "ok",
+      "style": "ok",
+      "provider": "minimax-cn",
+      "model": "image-01",
+      "latencyMs": 17836,
+      "generatedAt": "2026-04-23T09:27:50.971Z",
+      "composition": null,
+      "detail": null,
+      "tiktok_ad_feel": null,
+      "_score": 100,
+      "_reasons": []
+    }
+  ],
+  "consistency": "high",
+  "best_image_score": 100,
+  "best_image_reasons": [],
+  "needs_human_review": false,
+  "notes": ""
+}

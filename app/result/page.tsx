@@ -328,6 +328,8 @@ export default function ResultPage() {
 
   // Get sessionId from URL for CTA link
   const [sessionId, setSessionId] = useState<string>("");
+  // 微信弹窗状态
+  const [showWechatModal, setShowWechatModal] = useState(false);
   // 读取路由决策（高优先级用户显示特殊提示）
   const [routeDecision, setRouteDecision] = useState<{
     selectedProvider: string;
@@ -452,7 +454,7 @@ export default function ResultPage() {
               >
                 ⚡ 立即在线生成（30秒出图）
               </button>
-              <div className="flex items-center justify-center gap-4 text-xs text-gray-400">
+              <div className="flex items-center justify-center gap-4 text-sm text-gray-500">
                 <button
                   onClick={() => {
                     const sid = new URLSearchParams(window.location.search).get("session") ?? "";
@@ -460,19 +462,20 @@ export default function ResultPage() {
                       ? `/submit?session=${sid}&action=${resultType}`
                       : `/submit?action=${resultType}`;
                   }}
-                  className="hover:text-amber-600 transition-colors"
+                  className="flex items-center gap-1 hover:text-amber-600 transition-colors underline decoration-gray-300 hover:decoration-amber-400"
                 >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
                   让顾问帮我做
                 </button>
                 <span>·</span>
-                <a
-                  href="https://u.wechat.com/EasyUseAI"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-amber-600 transition-colors"
+                <button
+                  onClick={() => setShowWechatModal(true)}
+                  className="hover:text-amber-600 transition-colors underline decoration-gray-300 hover:decoration-amber-400"
                 >
                   加微信咨询
-                </a>
+                </button>
               </div>
             </div>
           </div>
@@ -503,8 +506,8 @@ export default function ResultPage() {
 
         {/* ── 底部链接 ─────────────────────────────── */}
         <section className="space-y-2.5 md:space-y-3">
-          <div className="rounded-xl bg-gray-50 border border-gray-200 p-4 text-center space-y-2">
-            <p className="text-gray-500 font-medium text-sm">有问题？<a href="https://u.wechat.com/EasyUseAI" target="_blank" rel="noopener noreferrer" className="text-amber-600 hover:text-amber-700 transition-colors">加微信咨询</a></p>
+          <div className="rounded-xl bg-gray-100 border border-gray-300 p-4 text-center space-y-2">
+            <p className="text-gray-500 font-medium text-sm">有问题？<button onClick={() => setShowWechatModal(true)} className="text-amber-600 hover:text-amber-700 transition-colors">加微信咨询</button></p>
             <p className="text-gray-400 text-xs">微信：z425659107 <button onClick={() => navigator.clipboard.writeText("z425659107")} className="text-amber-600 hover:text-amber-700 transition-colors ml-1">复制</button></p>
           </div>
 
@@ -519,6 +522,43 @@ export default function ResultPage() {
         </section>
 
       </main>
+
+      {/* 微信咨询弹窗 */}
+      {showWechatModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setShowWechatModal(false)} />
+          <div className="relative bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
+            <button
+              onClick={() => setShowWechatModal(false)}
+              className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <div className="text-center space-y-4">
+              <div className="w-12 h-12 mx-auto bg-amber-100 rounded-full flex items-center justify-center">
+                <svg className="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.013 8.013 0 01-5.98-2.575M21 12c0-4.418-3.582-8-8-8" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-bold text-gray-900">添加客服微信</h3>
+              <p className="text-gray-500 text-sm">长按复制微信号，搜索添加</p>
+              <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                <p className="text-2xl font-mono font-bold text-gray-900 tracking-wider">z425659107</p>
+              </div>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText("z425659107");
+                }}
+                className="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-xl font-bold text-center transition-colors shadow-lg"
+              >
+                复制微信号
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

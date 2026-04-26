@@ -11,7 +11,23 @@
 
 ## 任务分配规则
 
-### 最小任务格式（必须遵守）
+### Agent 能力定位
+
+| Agent | 能力 | 调度规则 |
+|-------|------|---------|
+| Claude Code | 代码/前端/bug修复/安装部署 | UI/前端/Next.js → Claude |
+| Qwen Code | Prompt/分析/结构化/文案 | Prompt/分析/结构化 → Qwen |
+| Browser | Playwright 自动化 | type=browser → Browser |
+| Default | Fallback | 不确定 → Claude |
+
+### 调度接口（task 表字段）
+
+```
+task.agent = 'qwen' | 'claude' | 'browser'
+task.type  = 'analysis' | 'code' | 'browser'
+```
+
+Hermes 读取 task → 自动选择对应 agent → 自动写 hermes_results
 
 ```
 task_id: xxx

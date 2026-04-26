@@ -1,0 +1,421 @@
+{
+  "timestamp": "2026-04-22T04:18:18.794154",
+  "threshold": 0.7,
+  "summary": {
+    "total_records": 20,
+    "total_files_checked": 16,
+    "exact_duplicate_groups": 4,
+    "exact_duplicate_records": 8,
+    "fuzzy_duplicate_pairs": 4,
+    "unique_records": 8,
+    "dedup_rate": 0.4
+  },
+  "exact_duplicates": {
+    "\"# CLAUDE REPORT\n[DEPRECATED - 历史记录归档]\n更新时间：2026-04-12 14:24 ...\" (2条重复)": [
+      "CLAUDE_REPORT.md:CLAUDE_REPORT",
+      "CLAUDE_REPORT.md:CLAUDE_REPORT"
+    ],
+    "\"# HERMES LOG\n[DEPRECATED - 历史记录归档]\n更新时间：2026-04-14 02:38 UTC...\" (2条重复)": [
+      "HERMES_LOG.md:HERMES_LOG",
+      "HERMES_LOG.md:HERMES_LOG"
+    ],
+    "\"# METRICS\n[DEPRECATED - 已整合到 docs/SYSTEM_PROGRESS.md]\n更新时间：2...\" (2条重复)": [
+      "METRICS.md:METRICS",
+      "METRICS.md:METRICS"
+    ],
+    "\"# SITE STATUS\n[DEPRECATED - 已整合到 docs/SYSTEM_PROGRESS.md]\n更新...\" (2条重复)": [
+      "SITE_STATUS.md:SITE_STATUS",
+      "SITE_STATUS.md:SITE_STATUS"
+    ]
+  },
+  "fuzzy_duplicates": [
+    {
+      "record_a": "CLAUDE_REPORT.md:CLAUDE_REPORT",
+      "record_b": "CLAUDE_REPORT.md:CLAUDE_REPORT",
+      "similarity": 1.0,
+      "text_a_preview": "# CLAUDE REPORT [DEPRECATED - 历史记录归档] 更新时间：2026-04-12 14:24 UTC+8  时间：2026-04-12T06:25:00.000Z 轮次：3（",
+      "text_b_preview": "# CLAUDE REPORT [DEPRECATED - 历史记录归档] 更新时间：2026-04-12 14:24 UTC+8  时间：2026-04-12T06:25:00.000Z 轮次：3（",
+      "method": "cosine"
+    },
+    {
+      "record_a": "HERMES_LOG.md:HERMES_LOG",
+      "record_b": "HERMES_LOG.md:HERMES_LOG",
+      "similarity": 1.0,
+      "text_a_preview": "# HERMES LOG [DEPRECATED - 历史记录归档] 更新时间：2026-04-14 02:38 UTC+8 初始化完成  ## 21:12 — 第2轮检查  **发现：** - 线上",
+      "text_b_preview": "# HERMES LOG [DEPRECATED - 历史记录归档] 更新时间：2026-04-14 02:38 UTC+8 初始化完成  ## 21:12 — 第2轮检查  **发现：** - 线上",
+      "method": "cosine"
+    },
+    {
+      "record_a": "METRICS.md:METRICS",
+      "record_b": "METRICS.md:METRICS",
+      "similarity": 1.0,
+      "text_a_preview": "# METRICS [DEPRECATED - 已整合到 docs/SYSTEM_PROGRESS.md] 更新时间：2026-04-13 19:42 UTC+8  | 指标 | 当前值 | 备注 |",
+      "text_b_preview": "# METRICS [DEPRECATED - 已整合到 docs/SYSTEM_PROGRESS.md] 更新时间：2026-04-13 19:42 UTC+8  | 指标 | 当前值 | 备注 |",
+      "method": "jaccard+cosine"
+    },
+    {
+      "record_a": "SITE_STATUS.md:SITE_STATUS",
+      "record_b": "SITE_STATUS.md:SITE_STATUS",
+      "similarity": 1.0,
+      "text_a_preview": "# SITE STATUS [DEPRECATED - 已整合到 docs/SYSTEM_PROGRESS.md] 更新时间：2026-04-13 19:42 UTC+8  ## 线上状态 ✅ | 检",
+      "text_b_preview": "# SITE STATUS [DEPRECATED - 已整合到 docs/SYSTEM_PROGRESS.md] 更新时间：2026-04-13 19:42 UTC+8  ## 线上状态 ✅ | 检",
+      "method": "jaccard+cosine"
+    }
+  ],
+  "top_tokens": [
+    {
+      "word": "用",
+      "count": 233,
+      "ratio": 0.0106
+    },
+    {
+      "word": "的",
+      "count": 215,
+      "ratio": 0.0098
+    },
+    {
+      "word": "图",
+      "count": 189,
+      "ratio": 0.0086
+    },
+    {
+      "word": "api",
+      "count": 187,
+      "ratio": 0.0085
+    },
+    {
+      "word": "成",
+      "count": 185,
+      "ratio": 0.0084
+    },
+    {
+      "word": "新",
+      "count": 125,
+      "ratio": 0.0057
+    },
+    {
+      "word": "案",
+      "count": 116,
+      "ratio": 0.0053
+    },
+    {
+      "word": "文",
+      "count": 115,
+      "ratio": 0.0052
+    },
+    {
+      "word": "改",
+      "count": 111,
+      "ratio": 0.0051
+    },
+    {
+      "word": "生",
+      "count": 111,
+      "ratio": 0.0051
+    },
+    {
+      "word": "果",
+      "count": 104,
+      "ratio": 0.0047
+    },
+    {
+      "word": "ts",
+      "count": 104,
+      "ratio": 0.0047
+    },
+    {
+      "word": "结",
+      "count": 100,
+      "ratio": 0.0046
+    },
+    {
+      "word": "上",
+      "count": 100,
+      "ratio": 0.0046
+    },
+    {
+      "word": "修",
+      "count": 99,
+      "ratio": 0.0045
+    },
+    {
+      "word": "类",
+      "count": 98,
+      "ratio": 0.0045
+    },
+    {
+      "word": "前",
+      "count": 97,
+      "ratio": 0.0044
+    },
+    {
+      "word": "tts",
+      "count": 97,
+      "ratio": 0.0044
+    },
+    {
+      "word": "1",
+      "count": 95,
+      "ratio": 0.0043
+    },
+    {
+      "word": "可",
+      "count": 94,
+      "ratio": 0.0043
+    },
+    {
+      "word": "方",
+      "count": 93,
+      "ratio": 0.0042
+    },
+    {
+      "word": "3",
+      "count": 93,
+      "ratio": 0.0042
+    },
+    {
+      "word": "时",
+      "count": 91,
+      "ratio": 0.0041
+    },
+    {
+      "word": "不",
+      "count": 91,
+      "ratio": 0.0041
+    },
+    {
+      "word": "product",
+      "count": 91,
+      "ratio": 0.0041
+    },
+    {
+      "word": "题",
+      "count": 91,
+      "ratio": 0.0041
+    },
+    {
+      "word": "需",
+      "count": 90,
+      "ratio": 0.0041
+    },
+    {
+      "word": "prompt",
+      "count": 90,
+      "ratio": 0.0041
+    },
+    {
+      "word": "化",
+      "count": 89,
+      "ratio": 0.004
+    },
+    {
+      "word": "务",
+      "count": 89,
+      "ratio": 0.004
+    }
+  ],
+  "top_ngrams": [
+    {
+      "ngram": "新 时 间",
+      "count": 11,
+      "n": 1
+    },
+    {
+      "ngram": "更 新 时",
+      "count": 11,
+      "n": 1
+    },
+    {
+      "ngram": "更 新 时 间",
+      "count": 11,
+      "n": 1
+    },
+    {
+      "ngram": "api execute generate",
+      "count": 10,
+      "n": 3
+    },
+    {
+      "ngram": "片 生 成",
+      "count": 10,
+      "n": 1
+    },
+    {
+      "ngram": "图 片 生",
+      "count": 10,
+      "n": 1
+    },
+    {
+      "ngram": "图 片 生 成",
+      "count": 10,
+      "n": 1
+    },
+    {
+      "ngram": "api diagnosis session",
+      "count": 9,
+      "n": 3
+    },
+    {
+      "ngram": "flow 5 5",
+      "count": 8,
+      "n": 4
+    },
+    {
+      "ngram": "结 果 页",
+      "count": 6,
+      "n": 1
+    },
+    {
+      "ngram": "下 一 步",
+      "count": 6,
+      "n": 1
+    },
+    {
+      "ngram": "browser flow 5",
+      "count": 6,
+      "n": 7
+    },
+    {
+      "ngram": "无 报 错",
+      "count": 6,
+      "n": 1
+    },
+    {
+      "ngram": "minimax oss url",
+      "count": 6,
+      "n": 7
+    },
+    {
+      "ngram": "返 回 真",
+      "count": 6,
+      "n": 1
+    },
+    {
+      "ngram": "回 真 实",
+      "count": 6,
+      "n": 1
+    },
+    {
+      "ngram": "browser flow 5 5",
+      "count": 6,
+      "n": 7
+    },
+    {
+      "ngram": "返 回 真 实",
+      "count": 6,
+      "n": 1
+    },
+    {
+      "ngram": "已 修 复",
+      "count": 6,
+      "n": 1
+    },
+    {
+      "ngram": "5 browser mobile",
+      "count": 6,
+      "n": 1
+    }
+  ],
+  "records": [
+    {
+      "id": "A_PLAN_IMPLEMENTATION.md:A_PLAN_IMPLEMENTATION",
+      "text_len": 10597,
+      "text_preview": "# 方案：最小改动实现 TRENDING_PROMPT_PREFIX（爆款前缀层）  ## 一、当前 prompt 构建顺序  ``` 用户 prompt 输入"
+    },
+    {
+      "id": "A_PLAN_TEST_CASES.md:A_PLAN_TEST_CASES",
+      "text_len": 8245,
+      "text_preview": "# 方案A对比测试案例  > 基于 `lib/image/providers/minimax-cn.ts` (TRENDING_PROMPT_PREFIX) ×"
+    },
+    {
+      "id": "A_PLAN_TRENDING_PROMPTS.md:A_PLAN_TRENDING_PROMPTS",
+      "text_len": 3559,
+      "text_preview": "# MiniMax 爆款 Prompt 前缀 — 按 Diagnosis Type  > 用途：作为 MiniMax 图片生成的 prompt 前缀，接在风格前"
+    },
+    {
+      "id": "CLAUDE_REPORT.md:CLAUDE_REPORT",
+      "text_len": 1115,
+      "text_preview": "# CLAUDE REPORT [DEPRECATED - 历史记录归档] 更新时间：2026-04-12 14:24 UTC+8  时间：2026-04-12"
+    },
+    {
+      "id": "CURRENT_TASK.md:CURRENT_TASK",
+      "text_len": 18806,
+      "text_preview": "# CURRENT_TASK 更新时间：2026-04-17 03:50 UTC+8 状态：✅ 进行中（第349轮完成）  ---  ## 第三四九轮（2026"
+    },
+    {
+      "id": "DECISIONS.md:DECISIONS",
+      "text_len": 372,
+      "text_preview": "# DECISIONS [DEPRECATED - 历史记录归档] 更新时间：2026-04-16  ## 16:50 — 恢复本地 dev 环境  **判断依"
+    },
+    {
+      "id": "HERMES_LOG.md:HERMES_LOG",
+      "text_len": 3932,
+      "text_preview": "# HERMES LOG [DEPRECATED - 历史记录归档] 更新时间：2026-04-14 02:38 UTC+8 初始化完成  ## 21:12 —"
+    },
+    {
+      "id": "HERMES_REPORT.md:HERMES_REPORT",
+      "text_len": 1350,
+      "text_preview": "# HERMES REPORT 更新时间：2026-04-17T02:35:00Z 调度轮次：28  ## 系统健康检查  | 检查项 | 结果 | |----"
+    },
+    {
+      "id": "METRICS.md:METRICS",
+      "text_len": 657,
+      "text_preview": "# METRICS [DEPRECATED - 已整合到 docs/SYSTEM_PROGRESS.md] 更新时间：2026-04-13 19:42 UTC+"
+    },
+    {
+      "id": "n8n-workflow-image-generate.json:root",
+      "text_len": 41,
+      "text_preview": "图片生成工作流 (Webhook → MiniMax/Gemini → 飞书通知)"
+    },
+    {
+      "id": "NEW_WEBSITE_COPY.md:NEW_WEBSITE_COPY",
+      "text_len": 2310,
+      "text_preview": "# 文案内容  ## 首页  ### Hero区 - 大标题：电商产品图，上传就能出 - 副标题：不用学AI，不用懂设计，上传你的产品，选好风格，48小时内拿图"
+    },
+    {
+      "id": "P6.2_PERSONA_USAGE_AUDIT.md:P6.2_PERSONA_USAGE_AUDIT",
+      "text_len": 3478,
+      "text_preview": "# P6.2 用户画像 Prompt 链路审计  ## 1. aiPersona 生成链路  ### 完整路径  ``` 用户提交五道题     ↓ GET /"
+    },
+    {
+      "id": "QWEN_FRESH_CONTENT_BATCH_PROMPT.md:QWEN_FRESH_CONTENT_BATCH_PROMPT",
+      "text_len": 4047,
+      "text_preview": "--- name: QWEN_FRESH_CONTENT_BATCH_PROMPT description: 批量生成 fresh 服装内容文案（产品描述/种草"
+    },
+    {
+      "id": "REFACTOR_ANALYSIS.md:REFACTOR_ANALYSIS",
+      "text_len": 9622,
+      "text_preview": "# 重构实施分析  ## 背景 网站从\"内容引流工具\"（内容/traffic/customer/efficiency/unclear 5题）转型为\"AI电商作图"
+    },
+    {
+      "id": "SITE_STATUS.md:SITE_STATUS",
+      "text_len": 1141,
+      "text_preview": "# SITE STATUS [DEPRECATED - 已整合到 docs/SYSTEM_PROGRESS.md] 更新时间：2026-04-13 19:42 "
+    },
+    {
+      "id": "SYSTEM_GOAL.md:SYSTEM_GOAL",
+      "text_len": 2051,
+      "text_preview": "# 资源利用模式 (RESOURCE_UTILIZATION)  ## 目标 每5小时消耗至少25% MiniMax token，同时保证系统稳定。  ## 职"
+    },
+    {
+      "id": "CLAUDE_REPORT.md:CLAUDE_REPORT",
+      "text_len": 1115,
+      "text_preview": "# CLAUDE REPORT [DEPRECATED - 历史记录归档] 更新时间：2026-04-12 14:24 UTC+8  时间：2026-04-12"
+    },
+    {
+      "id": "HERMES_LOG.md:HERMES_LOG",
+      "text_len": 3932,
+      "text_preview": "# HERMES LOG [DEPRECATED - 历史记录归档] 更新时间：2026-04-14 02:38 UTC+8 初始化完成  ## 21:12 —"
+    },
+    {
+      "id": "METRICS.md:METRICS",
+      "text_len": 657,
+      "text_preview": "# METRICS [DEPRECATED - 已整合到 docs/SYSTEM_PROGRESS.md] 更新时间：2026-04-13 19:42 UTC+"
+    },
+    {
+      "id": "SITE_STATUS.md:SITE_STATUS",
+      "text_len": 1141,
+      "text_preview": "# SITE STATUS [DEPRECATED - 已整合到 docs/SYSTEM_PROGRESS.md] 更新时间：2026-04-13 19:42 "
+    }
+  ]
+}
