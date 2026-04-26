@@ -452,25 +452,28 @@ export default function ResultPage() {
               >
                 ⚡ 立即在线生成（30秒出图）
               </button>
-              <button
-                onClick={() => {
-                  const sid = new URLSearchParams(window.location.search).get("session") ?? "";
-                  window.location.href = sid
-                    ? `/submit?session=${sid}&action=${resultType}`
-                    : `/submit?action=${resultType}`;
-                }}
-                className="block w-full py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold text-center transition-colors shadow-lg shadow-amber-500/20"
-              >
-                让顾问帮我做
-              </button>
-              <a
-                href="https://u.wechat.com/EasyUseAI"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full py-3 bg-white hover:bg-gray-50 text-gray-700 rounded-xl font-medium text-center transition-colors border border-gray-200"
-              >
-                加微信
-              </a>
+              <div className="flex items-center justify-center gap-4 text-xs text-gray-400">
+                <button
+                  onClick={() => {
+                    const sid = new URLSearchParams(window.location.search).get("session") ?? "";
+                    window.location.href = sid
+                      ? `/submit?session=${sid}&action=${resultType}`
+                      : `/submit?action=${resultType}`;
+                  }}
+                  className="hover:text-amber-600 transition-colors"
+                >
+                  让顾问帮我做
+                </button>
+                <span>·</span>
+                <a
+                  href="https://u.wechat.com/EasyUseAI"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-amber-600 transition-colors"
+                >
+                  加微信咨询
+                </a>
+              </div>
             </div>
           </div>
         </section>
@@ -498,35 +501,11 @@ export default function ResultPage() {
           </div>
         </section>
 
-        {/* ── 主CTA ──────────────────────────────── */}
-        <section className="space-y-2.5 md:space-y-3">
-          <button
-            onClick={() => {
-              const sid = new URLSearchParams(window.location.search).get("session") ?? "";
-              window.location.href = sid ? `/submit?session=${sid}` : "/submit";
-            }}
-            className="block w-full py-4 bg-gray-900 text-white rounded-2xl font-bold text-base md:text-lg hover:bg-gray-800 transition-colors shadow-lg shadow-gray-900/10 text-center"
-          >
-            提交需求
-          </button>
-          <p className="text-center text-xs text-gray-400">顾问微信联系，48小时内出图</p>
-        </section>
-
         {/* ── 底部链接 ─────────────────────────────── */}
         <section className="space-y-2.5 md:space-y-3">
-          <div className="rounded-xl bg-gray-900 p-5 md:p-6 text-center space-y-3">
-            <p className="text-white font-semibold text-base md:text-lg">加微信咨询</p>
-            <p className="text-white/50 text-xs md:text-sm">顾问发你高清图 + 使用建议</p>
-            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-lg px-4 md:px-5 py-2.5 md:py-3">
-              <span className="text-white text-sm font-medium">微信：z425659107</span>
-              <button
-                onClick={() => navigator.clipboard.writeText("z425659107")}
-                className="text-white/50 hover:text-white text-xs transition-colors"
-              >
-                复制
-              </button>
-            </div>
-            <p className="text-white/30 text-xs">免费，不推销，只发结果</p>
+          <div className="rounded-xl bg-gray-50 border border-gray-200 p-4 text-center space-y-2">
+            <p className="text-gray-500 font-medium text-sm">有问题？<a href="https://u.wechat.com/EasyUseAI" target="_blank" rel="noopener noreferrer" className="text-amber-600 hover:text-amber-700 transition-colors">加微信咨询</a></p>
+            <p className="text-gray-400 text-xs">微信：z425659107 <button onClick={() => navigator.clipboard.writeText("z425659107")} className="text-amber-600 hover:text-amber-700 transition-colors ml-1">复制</button></p>
           </div>
 
           <div className="flex items-center justify-center gap-6 pt-1">
