@@ -89,6 +89,7 @@ const IMAGE_ACTIONS = new Set([
   "lifestyle",
   "fashion_model",
   "fashion_lifestyle",
+  "removebg_composite",
 ]);
 
 const ACTION_TASKTYPE: Record<string, string> = {
@@ -98,6 +99,7 @@ const ACTION_TASKTYPE: Record<string, string> = {
   lifestyle: "图片生成",
   fashion_model: "图片生成",
   fashion_lifestyle: "图片生成",
+  removebg_composite: "图片生成",
   copywriting: "内容生成",
   headline: "内容生成",
   product_desc: "内容生成",
@@ -402,6 +404,73 @@ export async function POST(req: NextRequest) {
     const finalPrompt = basePatternPrompt
       ? `${PRODUCT_PRESERVE_PREFIX}${basePatternPrompt} ${enrichedPrompt}`.trim()
       : `${PRODUCT_PRESERVE_PREFIX}${enrichedPrompt}`.trim();
+
+    // ── removebg_composite: 专用 product-preservation pipeline ──────────────────
+    // 流程：remove.bg 抠图 → MiniMax 生成纯背景 → 客户端 Canvas 合成
+    // 保证产品 100% 保留，因为产品是抠图后贴上去的，不是 AI 生成的
+    if (action === "removebg_composite") {
+      const { removeBackground } = await import("@/lib/image/providers/removebg");
+      let transparentUrl = "";
+      let transparentBase64: string | undefined;
+
+      if (!effectiveRefUrl) {
+        return NextResponse.json(
+          { error: "removebg_composite 需要 originalImageUrl 或 referenceImageUrl" },
+          { status: 400 }
+        );
+      }
+
+      // Step 1: remove.bg 抠图（产品 100% 保留）
+      try {
+        const rbResult = await removeBackground({
+          imageUrl: effectiveRefUrl,
+          size: "auto",
+          format: "png",
+        });
+        transparentUrl = rbResult.resultUrl;
+        transparentBase64 = rbResult.resultBase64;
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error(`[removebg_composite] Step 1 removebg failed: ${msg}`);
+        return NextResponse.json({ error: `removebg 失败: ${msg}`, step: "remove_background" }, { status: 502 });
+      }
+
+      // Step 2: MiniMax 生成纯背景（不传参考图，防止模型替换产品）
+      let backgroundUrl = "";
+      try {
+        const bgResult = await generateImageFromOptions({
+          templateId: "background_swap",
+          // ⚠️ 不传 originalImageUrl！纯背景生成，不参考原图，避免模型替换产品
+          originalImageUrl: undefined,
+          userRefinement: effectivePrompt ?? "clean professional studio white background, e-commerce standard",
+          aspectRatio: (aspectRatio as "1:1" | "3:4" | "16:9") ?? "1:1",
+          style: (style as "minimal" | "luxury" | "commercial") ?? undefined,
+        });
+        backgroundUrl = bgResult.imageUrl;
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error(`[removebg_composite] Step 2 MiniMax failed: ${msg}`);
+        return NextResponse.json({ error: `背景生成失败: ${msg}`, step: "background_generation" }, { status: 502 });
+      }
+
+      // Step 3: 返回两个 URL → 客户端 Canvas 合成 → 上传 → 返回最终 URL
+      return NextResponse.json({
+        success: true,
+        action: "removebg_composite",
+        type: "pipeline",
+        step: "pipeline_ready",
+        data: {
+          transparentUrl,
+          backgroundUrl,
+          transparentBase64,
+        },
+        instructions: {
+          description: "客户端使用 Canvas API 合成: draw background → draw transparent PNG on top → toDataURL → upload to /api/upload",
+          compositeUrl: transparentUrl,
+          backgroundImageUrl: backgroundUrl,
+        },
+      });
+    }
 
     // ② 执行生成（带重试降级）
     // 使用 effectiveRefUrl：前端 originalImageUrl 或 API referenceImageUrl
