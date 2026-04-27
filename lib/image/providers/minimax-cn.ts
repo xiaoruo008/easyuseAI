@@ -88,7 +88,7 @@ export class MiniMaxCNProvider implements ImageProvider {
       model: MODEL,
       prompt: fullPrompt,
       aspect_ratio: aspectRatio,
-      response_format: "url",
+      response_format: "base64", // base64 绕过 OSS URL IP 限制，返回永久可用路径
       n: 1,
     };
 
