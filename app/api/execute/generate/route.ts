@@ -220,6 +220,8 @@ export async function POST(req: NextRequest) {
     style,
     aspectRatio,
     referenceImageUrl,
+    // 支持前端传来的 originalImageUrl（与 referenceImageUrl 等效）
+    originalImageUrl,
     // 结构化字段（可选）
     market,
     gender,
@@ -249,6 +251,7 @@ export async function POST(req: NextRequest) {
     style?: string;
     aspectRatio?: string;
     referenceImageUrl?: string;
+    originalImageUrl?: string;
     market?: string;
     gender?: string;
     category?: string;
@@ -374,7 +377,10 @@ export async function POST(req: NextRequest) {
 
     // ── 产品保留约束（当提供了原始产品图时注入）────────────────────
     // 强制要求 AI 保留用户上传的产品主体，不允许替换
-    const PRODUCT_PRESERVE_PREFIX = referenceImageUrl
+    // 支持两种字段名：originalImageUrl（前端新字段）或 referenceImageUrl（API 旧字段）
+    const hasReferenceImage = !!(referenceImageUrl || originalImageUrl);
+    const effectiveRefUrl = referenceImageUrl || originalImageUrl || "";
+    const PRODUCT_PRESERVE_PREFIX = hasReferenceImage
       ? "【产品保留强制约束】The uploaded product image is the ONLY subject. " +
         "KEEP IT 100% IDENTICAL — exact same shape, structure, details, color, pattern, texture. " +
         "DO NOT replace the product. DO NOT generate a different product or object. " +
@@ -398,9 +404,10 @@ export async function POST(req: NextRequest) {
       : `${PRODUCT_PRESERVE_PREFIX}${enrichedPrompt}`.trim();
 
     // ② 执行生成（带重试降级）
+    // 使用 effectiveRefUrl：前端 originalImageUrl 或 API referenceImageUrl
     const { output, errorMessage } = await generateImageWithRetry({
       templateId,
-      originalImageUrl: referenceImageUrl,
+      originalImageUrl: effectiveRefUrl || undefined,
       userRefinement: finalPrompt,
       aspectRatio,
       category: cat,

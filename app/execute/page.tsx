@@ -256,6 +256,24 @@ function ExecuteContent() {
       // 从 sessionStorage 读取 leads 流程路由的 selectedProvider
       const storedProvider = typeof window !== "undefined" ? sessionStorage.getItem("selectedProvider") : null;
 
+      // 从 sessionStorage 读取并传给 API（如果用户上传了原图）
+      const storedOriginalUrl = typeof window !== "undefined"
+        ? sessionStorage.getItem("original_image_url") || ""
+        : "";
+
+      // 【产品保留保护】如果没有原图，弹出确认框
+      if (!storedOriginalUrl) {
+        const confirmed = window.confirm(
+          "⚠️ 你还没有上传产品图，当前生成将是「文字生图」（AI 自由发挥），结果可能与你的商品不符。\n\n" +
+          "建议：先上传产品图再生成，以确保结果保留你的商品主体。\n\n" +
+          "点击「确定」继续生成，或「取消」返回上传产品图。"
+        );
+        if (!confirmed) {
+          setWorking(false);
+          return;
+        }
+      }
+
       const body: Record<string, unknown> = {
         action: actionId,
         type: diagnosisResult.type,
@@ -273,6 +291,8 @@ function ExecuteContent() {
         gender: (data?.fields?.gender as Gender) || "womenswear",
         market: data?.fields?.market || "domestic",
         aspectRatio: scene === "white_hero" ? "1:1" : "3:4",
+        // 【关键】原图 URL — 图生图的核心输入
+        originalImageUrl: storedOriginalUrl || undefined,
       };
 
       const res = await fetch("/api/execute/generate", {
