@@ -372,6 +372,17 @@ export async function POST(req: NextRequest) {
         }).then((t) => (t as { id: string }).id)
       : null;
 
+    // ── 产品保留约束（当提供了原始产品图时注入）────────────────────
+    // 强制要求 AI 保留用户上传的产品主体，不允许替换
+    const PRODUCT_PRESERVE_PREFIX = referenceImageUrl
+      ? "【产品保留强制约束】The uploaded product image is the ONLY subject. " +
+        "KEEP IT 100% IDENTICAL — exact same shape, structure, details, color, pattern, texture. " +
+        "DO NOT replace the product. DO NOT generate a different product or object. " +
+        "DO NOT add unrelated people or subjects. " +
+        "ONLY improve: background, lighting, shadows, environment, visual mood. " +
+        "The product must remain completely unchanged. "
+      : "";
+
     // 构建诊断上下文注入 prompt（增强 MiniMax 生成效果）
     const ctxParts: string[] = [];
     if (userPersona) ctxParts.push(`目标用户：${userPersona}`);
@@ -381,10 +392,10 @@ export async function POST(req: NextRequest) {
     const diagnosisContext = ctxParts.length > 0 ? `${ctxParts.join("，")}。` : "";
     const enrichedPrompt = `${diagnosisContext}${effectivePrompt ?? ""}`.trim();
 
-    // 构建最终 prompt：图案指导 + 诊断上下文 + 用户输入
+    // 构建最终 prompt：产品保留约束 + 图案指导 + 诊断上下文 + 用户输入
     const finalPrompt = basePatternPrompt
-      ? `${basePatternPrompt} ${enrichedPrompt}`.trim()
-      : enrichedPrompt;
+      ? `${PRODUCT_PRESERVE_PREFIX}${basePatternPrompt} ${enrichedPrompt}`.trim()
+      : `${PRODUCT_PRESERVE_PREFIX}${enrichedPrompt}`.trim();
 
     // ② 执行生成（带重试降级）
     const { output, errorMessage } = await generateImageWithRetry({

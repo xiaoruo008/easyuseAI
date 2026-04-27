@@ -367,7 +367,9 @@ export function getRetryPrompt(attempt: number): string {
     return (
       "CRITICAL SAFETY NOTE: The previous image had quality issues. " +
       "Please prioritize: exact product color match, clean background, professional lighting. " +
-      "Do not introduce any creative variations — stay faithful to the reference product."
+      "Do not introduce any creative variations — stay faithful to the reference product. " +
+      "IMPORTANT: The uploaded product image is the ONLY subject. KEEP IT 100% IDENTICAL. " +
+      "DO NOT replace or generate a different product. Only improve background and lighting."
     );
   }
   return "";

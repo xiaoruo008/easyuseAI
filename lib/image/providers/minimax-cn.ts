@@ -33,12 +33,12 @@ const STYLE_GUIDANCE: Record<string, string> = {
 };
 
 const TYPE_PROMPT_PREFIX: Record<string, string> = {
-  product_photo: "Professional e-commerce product photography, clean studio lighting,",
-  model_photo: "Professional fashion/lifestyle product photography,",
-  background_swap: "Professional product photography with clean background,",
-  background: "Clean pure white or light neutral background, seamless studio product photography,",
-  enhance: "Professional commercial product photography, bright natural window light,",
-  lifestyle: "Product beautifully placed in a lifestyle scene, warm natural lighting,",
+  product_photo: "Professional e-commerce product photography, clean studio lighting. The uploaded product is the ONLY subject — keep it 100% identical in shape, color, texture, details. DO NOT replace or modify the product. Only improve background and lighting.",
+  model_photo: "Professional fashion/lifestyle product photography. The uploaded product is the ONLY subject — keep it 100% identical. If adding a model, the model must interact with the ORIGINAL product. DO NOT replace the product. Only improve scene and lighting.",
+  background_swap: "Professional product photography with clean background. The uploaded product is the ONLY subject — keep it 100% identical. DO NOT generate a different product. Only change the background.",
+  background: "Clean pure white or light neutral background, seamless studio product photography. The uploaded product is the ONLY subject — keep it 100% identical. DO NOT replace or modify the product.",
+  enhance: "Professional commercial product photography, bright natural window light. The uploaded product is the ONLY subject — keep it 100% identical in shape, color, texture, details. DO NOT alter the product. Only enhance lighting and color.",
+  lifestyle: "Product beautifully placed in a lifestyle scene, warm natural lighting. The uploaded product is the ONLY subject — keep it 100% identical. DO NOT replace the product with a different one. Only place the original product in a new scene.",
 };
 
 // 爆款前缀：根据诊断类型注入转化率增强 prompt
