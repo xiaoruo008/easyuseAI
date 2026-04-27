@@ -78,6 +78,7 @@ const CASE_STUDIES: CaseStudyItem[] = [
 ];
 function CostCalculator() {
   const [monthlyCount, setMonthlyCount] = useState(20);
+  const [collapsed, setCollapsed] = useState(true);
 
   // 传统摄影成本估算（每件商品）
   const traditionalCostPerItem = 800; // 模特+场景+后期
@@ -93,115 +94,194 @@ function CostCalculator() {
 
   return (
     <section className="space-y-4">
-      <p className="text-xs font-medium text-amber-600 tracking-wide">成本节省计算器</p>
-      <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-5 md:p-6 text-white space-y-5">
-        <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <span className="text-white/70 text-sm">每月上新数量</span>
-            <span className="text-lg font-bold">{monthlyCount} 件</span>
-          </div>
-          <input
-            type="range"
-            min="5"
-            max="100"
-            step="5"
-            value={monthlyCount}
-            onChange={(e) => setMonthlyCount(Number(e.target.value))}
-            className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-amber-500"
-          />
-          <div className="flex justify-between text-xs text-white/40">
-            <span>5件</span>
-            <span>100件</span>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white/10 rounded-xl p-4 text-center">
-            <p className="text-white/50 text-xs mb-1">传统摄影</p>
-            <p className="text-xl font-bold">¥{traditionalMonthly.toLocaleString()}</p>
-            <p className="text-white/40 text-xs">/月</p>
-          </div>
-          <div className="bg-white/10 rounded-xl p-4 text-center">
-            <p className="text-white/50 text-xs mb-1">AI摄影</p>
-            <p className="text-xl font-bold text-emerald-400">¥{aiTotal.toLocaleString()}</p>
-            <p className="text-white/40 text-xs">/月</p>
-          </div>
-        </div>
-
-        <div className="bg-emerald-500/20 border border-emerald-500/30 rounded-xl p-4 text-center">
-          <p className="text-emerald-300 text-sm">预计每月节省</p>
-          <p className="text-2xl font-bold text-emerald-300">¥{savings.toLocaleString()}</p>
-          <p className="text-emerald-400/70 text-xs">节省 {savingsPercent}% 成本</p>
-        </div>
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-medium text-amber-600 tracking-wide">成本节省计算器</p>
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="text-xs text-gray-400 hover:text-gray-600 transition-colors flex items-center gap-1"
+        >
+          {collapsed ? "展开" : "收起"}
+          <svg className={`w-3 h-3 transition-transform ${collapsed ? "" : "rotate-180"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
       </div>
+      {collapsed ? (
+        /* 折叠状态：一行摘要 */
+        <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-4 text-white flex items-center justify-between">
+          <div>
+            <p className="text-white/50 text-xs">传统摄影 vs AI摄影</p>
+            <p className="text-sm font-bold text-white/80 mt-0.5">每月节省 up to <span className="text-emerald-400 text-base">¥{savings.toLocaleString()}</span></p>
+          </div>
+          <button
+            onClick={() => setCollapsed(false)}
+            className="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg transition-colors"
+          >
+            查看详情 →
+          </button>
+        </div>
+      ) : (
+        /* 展开状态：完整计算器 */
+        <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-5 md:p-6 text-white space-y-5">
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-white/70 text-sm">每月上新数量</span>
+              <span className="text-lg font-bold">{monthlyCount} 件</span>
+            </div>
+            <input
+              type="range"
+              min="5"
+              max="100"
+              step="5"
+              value={monthlyCount}
+              onChange={(e) => setMonthlyCount(Number(e.target.value))}
+              className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-amber-500"
+            />
+            <div className="flex justify-between text-xs text-white/40">
+              <span>5件</span>
+              <span>100件</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-white/10 rounded-xl p-4 text-center">
+              <p className="text-white/50 text-xs mb-1">传统摄影</p>
+              <p className="text-xl font-bold">¥{traditionalMonthly.toLocaleString()}</p>
+              <p className="text-white/40 text-xs">/月</p>
+            </div>
+            <div className="bg-white/10 rounded-xl p-4 text-center">
+              <p className="text-white/50 text-xs mb-1">AI摄影</p>
+              <p className="text-xl font-bold text-emerald-400">¥{aiTotal.toLocaleString()}</p>
+              <p className="text-white/40 text-xs">/月</p>
+            </div>
+          </div>
+
+          <div className="bg-emerald-500/20 border border-emerald-500/30 rounded-xl p-4 text-center">
+            <p className="text-emerald-300 text-sm">预计每月节省</p>
+            <p className="text-2xl font-bold text-emerald-300">¥{savings.toLocaleString()}</p>
+            <p className="text-emerald-400/70 text-xs">节省 {savingsPercent}% 成本</p>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
 
-// 案例展示组件（带真实图片）
-const OLD_CASE_STUDIES: CaseStudyItem[] = [
-  {
-    id: "case-bg",
-    category: "lifestyle",
-    resultTypes: ["image_poor", "image_cost", "image_stability"],
-    title: "换背景",
-    subtitle: "白底图→品牌场景图",
-    beforeImage: "/images/cases/suit-white.jpg",
-    afterImage: "/images/cases/suit-brand.jpg",
-    aspectRatio: "1:1",
-    beforeLabel: "白底图",
-    afterLabel: "品牌场景图",
-    priority: 1,
-  },
-  {
-    id: "case-retouch",
-    category: "lifestyle",
-    resultTypes: ["image_poor", "image_cost", "image_stability"],
-    title: "商品精修",
-    subtitle: "原图→模特上身效果图",
-    beforeImage: "/images/cases/suit-before.jpg",
-    afterImage: "/images/cases/suit-model.jpg",
-    aspectRatio: "3:4",
-    beforeLabel: "原图",
-    afterLabel: "模特上身效果图",
-    priority: 2,
-  },
-  {
-    id: "case-model",
-    category: "lifestyle",
-    resultTypes: ["image_poor", "image_cost", "image_stability", "image_start"],
-    title: "模特上身",
-    subtitle: "白底图→真实模特效果",
-    beforeImage: "/images/cases/suit-white.jpg",
-    afterImage: "/images/cases/suit-model.jpg",
-    aspectRatio: "3:4",
-    beforeLabel: "白底图",
-    afterLabel: "真实模特效果",
-    priority: 3,
-  },
-  {
-    id: "case-scene",
-    category: "lifestyle",
-    resultTypes: ["image_poor", "image_cost", "image_stability"],
-    title: "场景图",
-    subtitle: "白底图→生活场景图",
-    beforeImage: "/images/cases/suit-white.jpg",
-    afterImage: "/images/cases/suit-scene.jpg",
-    aspectRatio: "1:1",
-    beforeLabel: "白底图",
-    afterLabel: "生活场景图",
-    priority: 4,
-  },
-];
+// 用户结果首屏：before=用户原图，after=AI生成图，无数据时用 CASE_STUDIES[0] 占位
+function UserResultFirstScreen() {
+  const [beforeUrl, setBeforeUrl] = useState(CASE_STUDIES[0].beforeImage);
+  const [afterUrl, setAfterUrl] = useState(CASE_STUDIES[0].afterImage);
+  const [beforeError, setBeforeError] = useState(false);
+  const [afterError, setAfterError] = useState(false);
+
+  useEffect(() => {
+    // before: 用户上传原图（sessionStorage）
+    const storedBefore = sessionStorage.getItem("original_image_url");
+    if (storedBefore) setBeforeUrl(storedBefore);
+
+    // after: 从生成历史取最新一条（localStorage）
+    try {
+      const history = JSON.parse(localStorage.getItem("generation_history") || "[]");
+      if (history.length > 0) {
+        setAfterUrl(history[0].generatedImageUrl);
+      }
+    } catch { /* ignore */ }
+  }, []);
+
+  // 下载结果图（从 afterUrl 下载）
+  const handleDownload = () => {
+    if (!afterUrl || afterError) return;
+    const a = document.createElement("a");
+    a.href = afterUrl;
+    a.download = "AI效果图.jpg";
+    a.target = "_blank";
+    a.click();
+  };
+
+  return (
+    <section className="space-y-3">
+      <p className="text-xs font-medium text-amber-600 tracking-wide">我的结果</p>
+      <div className="grid grid-cols-2 gap-3 md:gap-4">
+        {/* Before */}
+        <div className="relative rounded-2xl overflow-hidden bg-gray-50 aspect-[3/4]">
+          {!beforeError ? (
+            <Image
+              src={beforeUrl}
+              alt="用户上传原图"
+              fill
+              className="object-cover"
+              onError={() => setBeforeError(true)}
+            />
+          ) : (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-gray-50 border-2 border-dashed border-gray-300">
+              <svg className="w-8 h-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <p className="text-xs text-gray-400">你的原图</p>
+            </div>
+          )}
+          {/* 底部横条标签（黑底白字），与 CaseCard 的右上角小标签明显区分 */}
+          <span className="absolute bottom-0 left-0 right-0 bg-black/80 text-white text-[10px] px-2 py-1 text-center font-medium tracking-wide">
+            你的原图
+          </span>
+        </div>
+
+        {/* After */}
+        <div className="relative rounded-2xl overflow-hidden bg-gray-50 aspect-[3/4]">
+          {!afterError ? (
+            <Image
+              src={afterUrl}
+              alt="AI生成效果图"
+              fill
+              className="object-cover"
+              onError={() => setAfterError(true)}
+            />
+          ) : (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-gray-50 border-2 border-dashed border-gray-300">
+              <svg className="w-8 h-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <p className="text-xs text-gray-400">AI效果图</p>
+            </div>
+          )}
+          {/* 底部横条标签（黑底白字），与 CaseCard 的右上角小标签明显区分 */}
+          <span className="absolute bottom-0 left-0 right-0 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] px-2 py-1 text-center font-medium tracking-wide">
+            AI效果图
+          </span>
+        </div>
+      </div>
+
+      {/* 下载按钮：放在首屏 Before/After 正下方，最显眼位置 */}
+      <button
+        onClick={handleDownload}
+        className="w-full py-3 bg-gradient-to-r from-[#FF6B6B] to-[#ff8e8e] hover:from-[#ff5252] hover:to-[#FF6B6B] text-white rounded-xl font-bold text-center transition-colors shadow-lg shadow-red-500/25 flex items-center justify-center gap-2"
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        保存图片
+      </button>
+    </section>
+  );
+}
 
 function CaseCard({ item }: { item: CaseStudyItem }) {
   const [beforeError, setBeforeError] = useState(false);
   const [afterError, setAfterError] = useState(false);
 
+  // aspectRatio 映射到 Tailwind class
+  const aspectClass = item.aspectRatio === "1:1"
+    ? "aspect-square"
+    : item.aspectRatio === "4:5"
+    ? "aspect-[4/5]"
+    : item.aspectRatio === "9:16"
+    ? "aspect-[9/16]"
+    : "aspect-[3/4]"; // 默认 3:4
+
   return (
     <div className="rounded-xl overflow-hidden bg-white border border-gray-100 shadow-sm">
       {/* Before 图 */}
-      <div className="relative w-full aspect-[3/4] bg-gray-50">
+      <div className={`relative w-full ${aspectClass} bg-gray-50`}>
         {!beforeError ? (
           <Image
             src={item.beforeImage}
@@ -211,10 +291,14 @@ function CaseCard({ item }: { item: CaseStudyItem }) {
             onError={() => setBeforeError(true)}
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-            <p className="text-xs text-gray-400">原图</p>
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-gray-50 border-2 border-dashed border-gray-200">
+            <svg className="w-6 h-6 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <p className="text-[10px] text-gray-400">原图</p>
           </div>
         )}
+        {/* 右上角小标签（与 UserResultFirstScreen 的底部横条明显区分） */}
         <span className="absolute top-2 left-2 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded">
           Before · {item.beforeLabel}
         </span>
@@ -224,7 +308,7 @@ function CaseCard({ item }: { item: CaseStudyItem }) {
       <div className="h-px bg-gradient-to-r from-transparent via-amber-300 to-transparent" />
 
       {/* After 图 */}
-      <div className="relative w-full aspect-[3/4] bg-gray-50">
+      <div className={`relative w-full ${aspectClass} bg-gray-50`}>
         {!afterError ? (
           <Image
             src={item.afterImage}
@@ -234,10 +318,14 @@ function CaseCard({ item }: { item: CaseStudyItem }) {
             onError={() => setAfterError(true)}
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-            <p className="text-xs text-gray-400">效果图</p>
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-gray-50 border-2 border-dashed border-gray-200">
+            <svg className="w-6 h-6 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <p className="text-[10px] text-gray-400">效果图</p>
           </div>
         )}
+        {/* 右上角小标签（琥珀色，与 UserResultFirstScreen 的底部横条明显区分） */}
         <span className="absolute top-2 right-2 bg-amber-500 text-white text-[10px] px-2 py-0.5 rounded font-medium">
           After · {item.afterLabel}
         </span>
@@ -379,14 +467,17 @@ export default function ResultPage() {
 
       <main className="max-w-2xl mx-auto px-4 md:px-6 py-8 md:py-12 space-y-8 md:space-y-10">
 
-        {/* ── 诊断结论 ─────────────────────────────── */}
-        <section className="space-y-3">
+        {/* ── 用户结果首屏：BEFORE/AFTER 对比 ─────────── */}
+        <UserResultFirstScreen />
+
+        {/* ── 诊断结论（缩小为紧凑摘要）────────────────────────────── */}
+        <section className="space-y-2">
           <p className="text-xs font-medium text-amber-600 tracking-wide">诊断结论</p>
-          <div className="bg-gray-900 rounded-2xl p-6 md:p-8 text-white">
-            <h1 className="text-lg md:text-xl font-bold leading-relaxed mb-3">
+          <div className="bg-gray-900 rounded-xl p-4 text-white">
+            <h1 className="text-sm md:text-base font-bold leading-snug">
               {title}
             </h1>
-            <p className="text-white/70 text-sm md:text-base leading-relaxed">
+            <p className="text-white/60 text-xs mt-1 leading-relaxed line-clamp-2">
               {description}
             </p>
           </div>
@@ -450,7 +541,7 @@ export default function ResultPage() {
                     ? `/execute?session=${sid}&action=product_photo&workflowKey=product_photo`
                     : `/execute?action=product_photo&workflowKey=product_photo`;
                 }}
-                className="block w-full py-3.5 bg-gradient-to-r from-gray-900 to-gray-700 hover:from-gray-800 hover:to-gray-600 text-white rounded-xl font-bold text-center transition-colors shadow-lg shadow-gray-900/30"
+                className="block w-full py-3.5 bg-gradient-to-r from-[#FF6B6B] to-[#ff8e8e] hover:from-[#ff5252] hover:to-[#FF6B6B] text-white rounded-xl font-bold text-center transition-colors shadow-lg shadow-red-500/25"
               >
                 ⚡ 立即在线生成（30秒出图）
               </button>

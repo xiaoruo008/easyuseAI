@@ -254,7 +254,7 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-              <p className="text-xs text-white/50 text-center">先回答5个问题，AI精准匹配最佳模型</p>
+              <p className="text-xs text-white/50 text-center">先回答8个问题，AI精准匹配最佳模型</p>
               <p className="text-xs text-white/50 text-center">无需信用卡，立即开始</p>
               <a
                 href="/upload"
@@ -659,6 +659,9 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
           <p className="text-xs md:text-sm text-white/30">© 2026 easyuse.ai · 帮你把事情做完</p>
           <div className="flex gap-6 text-xs md:text-sm text-white/30">
+            <Link href="/blog" className="hover:text-white/60 transition-colors">Blog</Link>
+            <Link href="/faq" className="hover:text-white/60 transition-colors">FAQ</Link>
+            <Link href="/affiliate" className="hover:text-white/60 transition-colors">Affiliate</Link>
             <Link href="/diagnosis" className="hover:text-white/60 transition-colors">开始使用</Link>
           </div>
         </div>

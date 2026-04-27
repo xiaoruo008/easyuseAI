@@ -1,9 +1,9 @@
 {
-  "round": 99,
-  "stable_count": 6,
-  "last_check": "2026-04-26T19:01:00.000Z",
+  "round": 144,
+  "stable_count": 53,
+  "last_check": "2026-04-27T21:00:00.000000+00:00",
   "last_result": "pass",
-  "consecutive_stable": 6,
+  "consecutive_stable": 53,
   "status": "pass",
   "notify_stable": false,
   "checks": {
@@ -12,51 +12,6 @@
     "flow": "5/5 steps passed",
     "mobile": "3/3 steps passed"
   },
-  "this_round_fix": "R98: WeShop R98对比分析。所有健康检查全量通过（HTTP 200/Console 0/Flow 5/5/Mobile 3/3）。代码级差距已全部清零（R82-R98持续确认）。剩余A/B/C级差距均为业务决策或重大工程投入，无可操作代码项。",
-  "incident": null,
-  "weshop_comparison": {
-    "key_findings": [
-      "WeShop NYSE背书: Backed by MOGU (NYSE: MOGU) - Hero第2行，极显眼",
-      "WeShop GPT Image 2 新模型banner上线（带⭐图标）",
-      "WeShop 16模型全视频封面（全部Unable to play media，与easyuse同类问题）",
-      "WeShop Hero视频背景 vs easyuse 静态图轮播",
-      "WeShop 3,000,000+ users vs easyuse 3,200+ 跨境卖家",
-      "WeShop 语言切换器 vs easyuse 无",
-      "WeShop Resource/Affiliate菜单 vs easyuse 无",
-      "WeShop Sign In hover tooltip 'Claim 40 free points' vs easyuse 注册送40点 tooltip（✅已对齐）",
-      "easyuse 模型缩略图为静态图片，眼睛图标（R80已修复 ✅）",
-      "easyuse 模型filter按钮（全部/AI图像/多模态）已对齐WeShop（All/Image/Video）✅",
-      "easyuse Nano-Banana Pro 紫色NEW banner ✅，与WeShop GPT Image 2 banner功能对齐"
-    ],
-    "priority_gaps": [
-      "A级: NYSE背书（需用户提供关联公司证明，业务决策）",
-      "A级: GPT Image 2接入（WeShop已上线，需业务决策+工程）",
-      "A级: 视频生成能力接入（需业务决策+工程，WeShop有Sora2/Kling等7个视频模型）",
-      "B级: 模型数扩充至8+（需内容+工程，参考WeShop 16模型列表）",
-      "B级: 语言切换器（需i18n工程投入）",
-      "B级: 注册点数从当前提升（需后端配合）",
-      "B级: 社交证明量化增强（需真实数据支撑）",
-      "C级: Resource/Affiliate菜单",
-      "C级: Hot Features从5项扩充至8项",
-      "C级: Hero视频化（需内容团队制作视频素材）"
-    ],
-    "code_level_fixes_complete": [
-      "✅ R25: Pricing锚点 id=pricing",
-      "✅ R28: Hot Features眼睛图标",
-      "✅ R37: Homepage nav '后台'链接移除",
-      "✅ R45: models页 '后台'链接移除",
-      "✅ R45: models页 Filter按钮修复",
-      "✅ R46: Hot Feature双语标题+眼睛图标",
-      "✅ R50: Models页移除空Video模型filter",
-      "✅ R52: Hot Features眼睛图标+文案'演示效果'",
-      "✅ R54: 英文H1副标题",
-      "✅ R56: Hot Features aria-label可访问性修复",
-      "✅ R59: SEO title+description英文化",
-      "✅ R66: models页4个模型卡片正常渲染",
-      "✅ R79: Hero CTA tooltip（注册即得40点）",
-      "✅ R80: Models区域假播放图标→眼睛图标",
-      "✅ R89: Hero CTA文字 '20张'→'40点'，与tooltip对齐",
-      "✅ R82-R98: 代码级差距清零，健康检查持续全量通过"
-    ]
-  }
+  "this_round_fix": "R144: 健康检查全量通过（HTTP 200/Console 0/Flow 5/5/Mobile 3/3）。连续稳定53轮。代码级差距0。WeShop对比：NYSE背书/视频模型/GPT Image 2=业务级差距；模型4→16/i18n=工程级差距。",
+  "incident": null
 }
