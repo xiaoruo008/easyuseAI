@@ -274,8 +274,13 @@ function ExecuteContent() {
         }
       }
 
+      const useRemovebgComposite = !!storedOriginalUrl;
+
       const body: Record<string, unknown> = {
-        action: actionId,
+        // 有原图时使用抠图+合成 pipeline，保证产品 100% 保留
+        action: useRemovebgComposite ? "removebg_composite" : actionId,
+        // 保留原始模板 ID，用于生成 prompt 上下文
+        templateAction: actionId,
         type: diagnosisResult.type,
         sessionId,
         userPainPoint: diagnosisResult.painPoint,
@@ -302,6 +307,56 @@ function ExecuteContent() {
       });
       if (!res.ok) throw new Error();
       const d = await res.json();
+
+      // ── removebg_composite pipeline 处理 ─────────────────────────────
+      // API 返回 pipeline_ready 时，客户端执行 Canvas 合成
+      if (d.action === "removebg_composite" && d.step === "pipeline_ready") {
+        setStatusText("正在合成图片...");
+
+        // 动态导入 Canvas 合成工具（客户端专用）
+        const { compositeImages } = await import("@/utils/canvas-composite");
+
+        const compositeResult = await compositeImages({
+          transparentUrl: d.data?.transparentUrl,
+          backgroundUrl: d.data?.backgroundUrl,
+          transparentBase64: d.data?.transparentBase64,
+          outputFormat: "jpeg",
+          quality: 0.95,
+        });
+
+        setStatusText("正在上传合成结果...");
+
+        // 上传合成结果到 /api/upload
+        const uploadRes = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            base64: compositeResult.base64,
+            mimeType: "image/jpeg",
+            filename: "composite.jpg",
+          }),
+        });
+        if (!uploadRes.ok) throw new Error("合成图片上传失败");
+        const { url: finalImageUrl } = await uploadRes.json();
+
+        const finalResult = {
+          imageUrl: finalImageUrl,
+          thumbnailUrl: finalImageUrl,
+          provider: "removebg_composite",
+          model: "composite",
+          generatedAt: new Date().toISOString(),
+        };
+        setImageResult({ ...finalResult, source: "composite", workflowLabel: d.workflowLabel });
+        saveToHistory(finalImageUrl);
+
+        // 标记免费试用已使用
+        const prev = parseInt(localStorage.getItem("trial_count") ?? "0", 10);
+        const next = prev + 1;
+        localStorage.setItem("trial_count", String(next));
+        if (next >= FREE_MAX) setFreeLimitReached(true);
+        setWorking(false);
+        return;
+      }
 
       const taskId = d.taskId as string | null;
 

@@ -242,6 +242,8 @@ export async function POST(req: NextRequest) {
     choiceMode,
     extraFeatures,
     scene,
+    // 用于 removebg_composite pipeline
+    templateAction,
   } = body as {
     sessionId?: string;
     action: string;
@@ -268,6 +270,9 @@ export async function POST(req: NextRequest) {
     choiceMode?: boolean;
     extraFeatures?: string;
     scene?: string;
+    // 用于 removebg_composite pipeline：从 execute page 传来的原始模板 action
+    // 因为 action 字段被 rebrand 为 pipeline 标识
+    templateAction?: string;
   };
 
   // === Choice 模式：自动拼 prompt ===
@@ -331,10 +336,12 @@ export async function POST(req: NextRequest) {
       const templateKey = WORKFLOW_TO_TEMPLATE_KEY_MAP[effectiveWorkflowKey];
       route = findRoute(templateKey) ?? null;
     }
-    
+
     // 回退到 routeFromAction 逻辑
+    // removebg_composite 使用 templateAction 来查询 workflow（action 本身是 pipeline 标识）
     if (!route) {
-      route = routeFromAction(action, cat as Parameters<typeof routeFromAction>[1]);
+      const effectiveAction = action === "removebg_composite" ? (templateAction ?? action) : action;
+      route = routeFromAction(effectiveAction, cat as Parameters<typeof routeFromAction>[1]);
     }
 
     if (!route) {
