@@ -203,13 +203,13 @@ function UserResultFirstScreen() {
       <p className="text-xs font-medium text-amber-600 tracking-wide">我的结果</p>
       <div className="grid grid-cols-2 gap-3 md:gap-4">
         {/* Before */}
-        <div className="relative rounded-2xl overflow-hidden bg-gray-50 aspect-[3/4]">
+        <div className="relative rounded-2xl overflow-hidden bg-gray-50 aspect-square">
           {!beforeError ? (
             <Image
               src={beforeUrl}
               alt="用户上传原图"
               fill
-              className="object-cover"
+              className="object-contain"
               onError={() => setBeforeError(true)}
             />
           ) : (
@@ -227,13 +227,13 @@ function UserResultFirstScreen() {
         </div>
 
         {/* After */}
-        <div className="relative rounded-2xl overflow-hidden bg-gray-50 aspect-[3/4]">
+        <div className="relative rounded-2xl overflow-hidden bg-gray-50 aspect-square">
           {!afterError ? (
             <Image
               src={afterUrl}
               alt="AI生成效果图"
               fill
-              className="object-cover"
+              className="object-contain"
               onError={() => setAfterError(true)}
             />
           ) : (
@@ -287,7 +287,7 @@ function CaseCard({ item }: { item: CaseStudyItem }) {
             src={item.beforeImage}
             alt={item.beforeLabel}
             fill
-            className="object-cover"
+            className="object-contain"
             onError={() => setBeforeError(true)}
           />
         ) : (
@@ -314,7 +314,7 @@ function CaseCard({ item }: { item: CaseStudyItem }) {
             src={item.afterImage}
             alt={item.afterLabel}
             fill
-            className="object-cover"
+            className="object-contain"
             onError={() => setAfterError(true)}
           />
         ) : (

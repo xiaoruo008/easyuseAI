@@ -83,23 +83,20 @@ const MOCK_TEXT_RESULTS: Record<string, { title: string; items: string[] }> = {
   },
 };
 
+// P0紧急停止：model_photo/fashion_model/fashion_lifestyle 已禁用（MiniMax character reference 商品保持失败）
+const DISABLED_ACTIONS = new Set(["model_photo", "fashion_model", "fashion_lifestyle"]);
+
 const IMAGE_ACTIONS = new Set([
   "product_photo",
-  "model_photo",
   "background_swap",
   "lifestyle",
-  "fashion_model",
-  "fashion_lifestyle",
   "removebg_composite",
 ]);
 
 const ACTION_TASKTYPE: Record<string, string> = {
   product_photo: "图片生成",
-  model_photo: "图片生成",
   background_swap: "图片生成",
   lifestyle: "图片生成",
-  fashion_model: "图片生成",
-  fashion_lifestyle: "图片生成",
   removebg_composite: "图片生成",
   copywriting: "内容生成",
   headline: "内容生成",
@@ -303,6 +300,18 @@ export async function POST(req: NextRequest) {
   const effectiveWorkflowKey = useChoiceMode && autoWorkflowKey ? autoWorkflowKey : workflowKey;
 
   const isImageAction = IMAGE_ACTIONS.has(action);
+
+  // P0紧急：检查是否在禁用列表
+  if (DISABLED_ACTIONS.has(action)) {
+    return NextResponse.json(
+      {
+        error: "该功能暂停服务",
+        code: "FEATURE_DISABLED",
+        message: "模特上身/生活场景/品牌场景功能因商品保持问题已暂停，请使用「白底图」或「背景替换」",
+      },
+      { status: 403 }
+    );
+  }
   const taskType = ACTION_TASKTYPE[action] ?? "内容生成";
 
   // 解析 leadId
