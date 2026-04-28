@@ -590,11 +590,15 @@ function ExecuteContent() {
               </div>
             </div>
 
-            {/* 步骤2：选场景 */}
+            {/* 步骤2：选场景 - P0商品保护：仅保留白底图，其他场景已禁用 */}
             <div className="rounded-xl border border-gray-200 p-4 space-y-3">
-              <h3 className="text-sm font-semibold text-gray-700">② 选择出图场景</h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-gray-700">② 选择出图场景</h3>
+                <span className="text-xs text-amber-600 font-medium">白底图模式 · 商品100%保留</span>
+              </div>
               <div className="grid grid-cols-2 gap-2">
-                {(Object.keys(SCENE_LABELS) as SceneType[]).map((s) => (
+                {/* P0商品保护：仅显示白底图，禁用模特上身/生活场景/品牌海报 */}
+                {(Object.keys(SCENE_LABELS) as SceneType[]).filter(s => s === "white_hero").map((s) => (
                   <button
                     key={s}
                     onClick={() => setScene(s)}
@@ -613,6 +617,13 @@ function ExecuteContent() {
                     </p>
                   </button>
                 ))}
+              </div>
+              {/* 商品保护提示 */}
+              <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                <p className="text-xs text-amber-700">
+                  <span className="font-semibold">商品保护模式：</span>
+                  系统将自动从原图提取商品主体，生成专业白底主图。商品细节100%保留。
+                </p>
               </div>
             </div>
 
@@ -692,16 +703,16 @@ function ExecuteContent() {
                 {imageResult.workflowLabel ? `${imageResult.workflowLabel} · 你的图做好了` : "你的图做好了"}
               </h3>
             </div>
-            {/* Before/After 对比区 */}
+            {/* Before/After 对比区 - P0商品保护：1:1比例，object-contain防止裁切 */}
             <div className="grid grid-cols-2 gap-2 rounded-xl border border-gray-200 overflow-hidden">
               {/* Before - 原图 */}
-              <div className="relative bg-gray-100 aspect-[3/4]">
+              <div className="relative bg-gray-100 aspect-square">
                 {originalImageUrl ? (
                   <Image
                     src={originalImageUrl}
                     alt="原图"
                     fill
-                    className="object-cover"
+                    className="object-contain"
                   />
                 ) : (
                   <div className="absolute inset-0 flex flex-col items-center justify-center p-2">
@@ -719,12 +730,12 @@ function ExecuteContent() {
                 </div>
               </div>
               {/* After - AI生成图 */}
-              <div className="relative bg-gray-50 aspect-[3/4]">
+              <div className="relative bg-gray-50 aspect-square">
                 <Image
                   src={imageResult.imageUrl}
                   alt="AI制作结果"
                   fill
-                  className="object-cover"
+                  className="object-contain"
                 />
                 {/* 标签 */}
                 <div className="absolute top-2 right-2 px-2 py-1 bg-indigo-600 rounded-md">
