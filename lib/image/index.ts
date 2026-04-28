@@ -2,8 +2,9 @@ import type { ImageProvider } from "./provider";
 import type { ImageTaskInput, ImageTaskOutput, ImageTaskType } from "./types";
 import { MockImageProvider } from "./mock-provider";
 import { FalImageProvider } from "./fal-provider";
-import { MiniMaxImageProvider } from "../providers/minimax-image";
-import { MiniMaxCNProvider } from "./providers/minimax-cn";
+// MiniMax CN/International — P1紧急禁用，保留import但不注册到PROVIDER_MAP
+// import { MiniMaxImageProvider } from "../providers/minimax-image";
+// import { MiniMaxCNProvider } from "./providers/minimax-cn";
 import { GeminiNanobananaProvider } from "./providers/gemini-nanobanana";
 import path from "path";
 import fs from "fs";
@@ -22,13 +23,15 @@ export function getImageProvider(): ImageProvider {
  * selectedProvider 来自 leads 流程的路由决策（routeGenerationModel）。
  * 未提供 selectedProvider 时回退到 IMAGE_PROVIDER 环境变量。
  */
-export function getImageProviderForRequest(selectedProvider?: "minimax" | "nanobanana"): ImageProvider {
+/**
+ * P1紧急：MiniMax CN/International 已全面禁用
+ * - MiniMaxCNProvider.generate() 直接抛出错误
+ * - 此处移除所有 MiniMax 相关逻辑，防止误调用
+ */
+export function getImageProviderForRequest(selectedProvider?: "nanobanana"): ImageProvider {
   // 优先使用 leads 流程确定的 provider
   if (selectedProvider) {
     const envValue = PROVIDER_MAP[selectedProvider];
-    if (envValue === "minimax-cn" && process.env.MINIMAX_API_KEY) {
-      return new MiniMaxCNProvider();
-    }
     if (envValue === "gemini-nanobanana" && process.env.GEMINI_API_KEY) {
       return new GeminiNanobananaProvider();
     }
@@ -37,9 +40,6 @@ export function getImageProviderForRequest(selectedProvider?: "minimax" | "nanob
   // 回退到环境变量
   if (IMAGE_PROVIDER === "gemini-nanobanana" && process.env.GEMINI_API_KEY) {
     return new GeminiNanobananaProvider();
-  }
-  if ((IMAGE_PROVIDER === "minimax" || IMAGE_PROVIDER === "minimax-cn") && process.env.MINIMAX_API_KEY) {
-    return new MiniMaxCNProvider();
   }
   if (IMAGE_PROVIDER === "fal" && process.env.IMAGE_API_KEY) {
     return new FalImageProvider();
@@ -63,17 +63,15 @@ export interface GenerateImageOptions {
   /** 诊断类型，用于注入爆款前缀（可选） */
   diagnosisType?: "traffic" | "customer" | "efficiency" | "unclear";
   /** Provider 路由覆盖：优先使用 leads 流程确定的 provider（可选） */
-  selectedProvider?: "minimax" | "nanobanana";
+  selectedProvider?: "nanobanana";
 }
 
 // provider name映射（route-decision → IMAGE_PROVIDER值）
 const PROVIDER_MAP: Record<string, string> = {
-  minimax: "minimax-cn",
   nanobanana: "gemini-nanobanana",
 };
 
 // templateId → ImageTaskType 映射
-// 决定 MiniMax CN TYPE_PROMPT_PREFIX 的类型前缀（语义对齐很重要）
 const TEMPLATE_TYPE_MAP: Record<string, ImageTaskType> = {
   product_photo: "product_photo",
   model_photo: "model_photo",

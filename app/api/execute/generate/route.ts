@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createTask, updateTask, getOrCreateLeadForSession } from "@/lib/db";
-import { generateContent, isAIEnabled, healthCheckAI } from "@/lib/ai";
+import { generateContent, isAIEnabled } from "@/lib/ai";
 import { generateImageFromOptions } from "@/lib/image";
+import { FalImageProvider } from "@/lib/image/fal-provider";
 import type { GenerateResult } from "@/lib/ai";
 import type { ImageTaskOutput } from "@/lib/image";
 import { routeFromAction, getRetryPrompt, WORKFLOW_TO_TEMPLATE_KEY_MAP, findRoute, PATTERN_PROMPTS, type TargetImage } from "@/lib/types/fashion";
@@ -123,7 +124,7 @@ async function generateImageWithRetry(opts: {
   category?: string;
   style?: "minimal" | "luxury" | "commercial";
   diagnosisType?: "traffic" | "customer" | "efficiency" | "unclear";
-  selectedProvider?: "minimax" | "nanobanana";
+  selectedProvider?: "nanobanana";
 }): Promise<{ output: ImageTaskOutput; errorMessage: string | null }> {
   const { templateId, originalImageUrl, userRefinement, aspectRatio, style, diagnosisType, selectedProvider } = opts;
 
@@ -196,20 +197,20 @@ export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
   if (!body) return NextResponse.json({ error: "无效请求" }, { status: 400 });
 
-  // ── MiniMax 健康检查（异步打日志，不阻塞主流程）────────────
-  // 使用 waitUntil 确保在响应返回后仍能完成日志记录
-  const ctx = globalThis as typeof globalThis & { waitUntil?: (p: Promise<void>) => void };
-  if (ctx.waitUntil) {
-    ctx.waitUntil(
-      healthCheckAI().then((hc) => {
-        if (hc.ok) {
-          console.log(`[healthCheck] ✅ MiniMax 可用 | model=${hc.model} | HTTP ${hc.status}`);
-        } else {
-          console.error(`[healthCheck] ❌ MiniMax 不可用 | model=${hc.model} | HTTP ${hc.status} | error=${hc.error}`);
-        }
-      }).catch(() => {})
-    );
-  }
+  // ── MiniMax 健康检查（已禁用 — P1紧急停止MiniMax链路）────────────
+  // P1紧急：所有MiniMax生图已禁用，货不对版问题必须彻底解决
+  // const ctx = globalThis as typeof globalThis & { waitUntil?: (p: Promise<void>) => void };
+  // if (ctx.waitUntil) {
+  //   ctx.waitUntil(
+  //     healthCheckAI().then((hc) => {
+  //       if (hc.ok) {
+  //         console.log(`[healthCheck] ✅ MiniMax 可用 | model=${hc.model} | HTTP ${hc.status}`);
+  //       } else {
+  //         console.error(`[healthCheck] ❌ MiniMax 不可用 | model=${hc.model} | HTTP ${hc.status} | error=${hc.error}`);
+  //       }
+  //     }).catch(() => {})
+  //   );
+  // }
 
   const {
     sessionId,
@@ -266,7 +267,7 @@ export async function POST(req: NextRequest) {
     userPainPoint?: string;
     userPersona?: string;
     diagnosisType?: string;
-    selectedProvider?: "minimax" | "nanobanana";
+    selectedProvider?: "nanobanana";
     choiceMode?: boolean;
     extraFeatures?: string;
     scene?: string;
@@ -442,21 +443,21 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: `removebg 失败: ${msg}`, step: "remove_background" }, { status: 502 });
       }
 
-      // Step 2: MiniMax 生成纯背景（不传参考图，防止模型替换产品）
+      // Step 2: FAL.ai 生成纯背景（P1紧急：MiniMax已禁用，改用fal.ai FLUX Schnell）
+      // 不传参考图，纯背景生成，保证商品100%从原图抠图提取
       let backgroundUrl = "";
       try {
-        const bgResult = await generateImageFromOptions({
-          templateId: "background_swap",
-          // ⚠️ 不传 originalImageUrl！纯背景生成，不参考原图，避免模型替换产品
-          originalImageUrl: undefined,
-          userRefinement: effectivePrompt ?? "clean professional studio white background, e-commerce standard",
+        const falProvider = new FalImageProvider();
+        const bgResult = await falProvider.generate({
+          type: "background_swap",
+          prompt: effectivePrompt ?? "clean professional studio white background, e-commerce standard",
           aspectRatio: (aspectRatio as "1:1" | "3:4" | "16:9") ?? "1:1",
           style: (style as "minimal" | "luxury" | "commercial") ?? undefined,
         });
         backgroundUrl = bgResult.imageUrl;
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
-        console.error(`[removebg_composite] Step 2 MiniMax failed: ${msg}`);
+        console.error(`[removebg_composite] Step 2 fal.ai failed: ${msg}`);
         return NextResponse.json({ error: `背景生成失败: ${msg}`, step: "background_generation" }, { status: 502 });
       }
 

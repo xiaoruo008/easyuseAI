@@ -1,16 +1,16 @@
 /**
- * remove.bg + MiniMax composite pipeline API
+ * remove.bg + fal.ai composite pipeline API
  *
  * Pipeline:
  *  1. Call remove.bg API → transparent product PNG
- *  2. Call MiniMax API → generated background image
+ *  2. Call fal.ai FLUX Schnell API → generated background image（P1紧急：MiniMax已禁用）
  *  3. Return both URLs → client-side Canvas compositing
  *  4. Client uploads composed result via /api/upload
  *
  * POST /api/removebg/composite
  * Body: {
  *   imageUrl: string;           // Product image URL (required)
- *   backgroundPrompt?: string;   // MiniMax background prompt
+ *   backgroundPrompt?: string;   // Background prompt
  *   aspectRatio?: "1:1" | "3:4" | "16:9";
  *   style?: "minimal" | "luxury" | "commercial";
  * }
@@ -18,7 +18,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { removeBackground } from "@/lib/image/providers/removebg";
-import { generateImageFromOptions } from "@/lib/image";
+import { FalImageProvider } from "@/lib/image/fal-provider";
 
 export const runtime = "nodejs";
 
@@ -69,24 +69,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ── Step 2: Generate background via MiniMax ────────────────────────
+    // ── Step 2: Generate background via fal.ai FLUX Schnell（P1紧急：MiniMax已禁用）────────
     let backgroundUrl: string;
 
     try {
-      const bgResult = await generateImageFromOptions({
-        templateId: "background_swap",
-        originalImageUrl: imageUrl,
-        userRefinement: backgroundPrompt,
+      const falProvider = new FalImageProvider();
+      const bgResult = await falProvider.generate({
+        type: "background_swap",
+        prompt: backgroundPrompt,
         aspectRatio: aspectRatio as "1:1" | "3:4" | "16:9",
         style: style as "minimal" | "luxury" | "commercial" | undefined,
       });
       backgroundUrl = bgResult.imageUrl;
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      console.error(`[removebg+composite] Step 2 (MiniMax background) failed: ${msg}`);
+      console.error(`[removebg+composite] Step 2 (fal.ai background) failed: ${msg}`);
       return NextResponse.json(
         {
-          error: `MiniMax background generation failed: ${msg}`,
+          error: `背景生成失败: ${msg}`,
           step: "background_generation",
         },
         { status: 502 }
@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
     // ── Step 3: Return both URLs for client-side Canvas compositing ─────
     // The client-side JS will:
     //  1. Load transparentUrl as PNG (with alpha)
-    //  2. Load backgroundUrl as JPG
+    //  2. Load backgroundUrl as JPG（fal.ai生成的背景）
     //  3. Draw background on canvas, then draw transparent PNG on top
     //  4. Convert canvas to Blob, upload via POST /api/upload (base64)
     //  5. Return final composed image URL

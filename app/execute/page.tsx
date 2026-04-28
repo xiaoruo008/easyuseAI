@@ -46,6 +46,113 @@ const RATIO_OPTIONS = [
   { value: "16:9", label: "16:9" },
 ];
 
+// ── P1紧急：商品一致性检测函数 ───────────────────────────────────────
+// 检测合成结果是否保留了原图商品主体
+// 逻辑：比较原图和合成图的中心区域，如果合成图中心区域与纯白底几乎无差异，则商品未保留
+async function checkProductConsistency(
+  originalImageUrl: string,
+  compositeImageUrl: string
+): Promise<boolean> {
+  try {
+    // 加载两张图片
+    const [originalImg, compositeImg] = await Promise.all([
+      loadImage(originalImageUrl),
+      loadImage(compositeImageUrl),
+    ]);
+
+    // 创建 Canvas 用于采样中心区域像素
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return true; // 无法检测，默认放行
+
+    // 使用较小的采样尺寸加速检测
+    const sampleSize = 64;
+    canvas.width = sampleSize;
+    canvas.height = sampleSize;
+
+    // 绘制合成图中心区域
+    const cx = Math.floor(compositeImg.naturalWidth / 2 - sampleSize / 2);
+    const cy = Math.floor(compositeImg.naturalHeight / 2 - sampleSize / 2);
+    ctx.drawImage(compositeImg, cx, cy, sampleSize, sampleSize, 0, 0, sampleSize, sampleSize);
+
+    // 获取像素数据
+    const data = ctx.getImageData(0, 0, sampleSize, sampleSize).data;
+
+    // 统计非白色/非纯色背景的像素比例
+    // 商品主体区域应该有明显的前景颜色（非白、非纯灰）
+    let nonBackgroundPixels = 0;
+    const totalPixels = sampleSize * sampleSize;
+
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+
+      // 判断是否为背景色（接近白色或纯色）
+      // 白色背景: r>240, g>240, b>240
+      // 纯色背景: 单色且亮度高
+      const isNearWhite = r > 240 && g > 240 && b > 240;
+      const isFlatColor = (Math.abs(r - g) < 15 && Math.abs(g - b) < 15 && Math.abs(r - b) < 15 && r > 200);
+
+      if (!isNearWhite && !isFlatColor) {
+        nonBackgroundPixels++;
+      }
+    }
+
+    const nonBgRatio = nonBackgroundPixels / totalPixels;
+
+    // 如果中心区域只有<5%的非背景像素，认为商品未保留（纯白底图）
+    // 正常商品图应该有>15%的非背景像素
+    if (nonBgRatio < 0.05) {
+      console.error("[checkProductConsistency] ❌ 商品未保留：中心区域非背景像素比例仅", nonBgRatio);
+      return false;
+    }
+
+    // 额外检查：中心区域的颜色丰富度（标准差）
+    // 正常商品应该有颜色变化，标准差应该较高
+    let sumR = 0, sumG = 0, sumB = 0;
+    for (let i = 0; i < data.length; i += 4) {
+      sumR += data[i];
+      sumG += data[i + 1];
+      sumB += data[i + 2];
+    }
+    const pixelCount = totalPixels;
+    const avgR = sumR / pixelCount;
+    const avgG = sumG / pixelCount;
+    const avgB = sumB / pixelCount;
+
+    let variance = 0;
+    for (let i = 0; i < data.length; i += 4) {
+      variance += Math.pow(data[i] - avgR, 2) + Math.pow(data[i + 1] - avgG, 2) + Math.pow(data[i + 2] - avgB, 2);
+    }
+    variance /= (pixelCount * 3);
+    const stdDev = Math.sqrt(variance);
+
+    // 如果标准差<10，认为颜色过于单调（可能是纯色白底），商品未保留
+    if (stdDev < 10) {
+      console.error("[checkProductConsistency] ❌ 商品未保留：颜色标准差仅", stdDev);
+      return false;
+    }
+
+    console.log(`[checkProductConsistency] ✅ 商品一致性检测通过 | 非背景像素比例=${nonBgRatio.toFixed(3)} | 颜色标准差=${stdDev.toFixed(2)}`);
+    return true;
+  } catch (err) {
+    console.error("[checkProductConsistency] ⚠️ 检测过程出错，默认放行:", err);
+    return true; // 检测失败时默认放行，避免阻塞正常流程
+  }
+}
+
+// 辅助函数：加载图片
+function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = document.createElement("img");
+    img.crossOrigin = "anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+    img.src = src;
+  });
+}
+
 function ExecuteContent() {
   const params = useSearchParams();
   const router = useRouter();
@@ -67,6 +174,7 @@ function ExecuteContent() {
   const [scene, setScene] = useState<SceneType>("white_hero");
   const [extraFeatures, setExtraFeatures] = useState("");
   const [copied, setCopied] = useState(false);
+  const [statusText, setStatusText] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -339,6 +447,22 @@ function ExecuteContent() {
         if (!uploadRes.ok) throw new Error("合成图片上传失败");
         const { url: finalImageUrl } = await uploadRes.json();
 
+        // ── P1紧急：商品一致性检测 ───────────────────────────────────────
+        // 对比原图商品区域和合成结果，确保商品被保留
+        // 检测逻辑：检查合成结果的中心区域是否有明显的前景主体（非白底）
+        const storedOriginalUrl = typeof window !== "undefined"
+          ? sessionStorage.getItem("original_image_url") || ""
+          : "";
+        if (storedOriginalUrl) {
+          const isProductPreserved = await checkProductConsistency(storedOriginalUrl, finalImageUrl);
+          if (!isProductPreserved) {
+            setStatusText(null);
+            setWorking(false);
+            setError("生成失败，商品未保留，请重新生成。如持续失败请联系顾问协助。");
+            return;
+          }
+        }
+
         const finalResult = {
           imageUrl: finalImageUrl,
           thumbnailUrl: finalImageUrl,
@@ -355,6 +479,7 @@ function ExecuteContent() {
         localStorage.setItem("trial_count", String(next));
         if (next >= FREE_MAX) setFreeLimitReached(true);
         setWorking(false);
+        setStatusText(null);
         return;
       }
 

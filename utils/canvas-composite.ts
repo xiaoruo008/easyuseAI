@@ -3,7 +3,7 @@
  * 
  * Used by the removebg_composite pipeline to composite:
  * 1. A transparent product PNG (from remove.bg)
- * 2. A generated background image (from MiniMax)
+ * 2. A generated background image (from fal.ai FLUX Schnell — P1紧急：MiniMax已禁用)
  * 
  * Flow: draw background → draw transparent PNG on top → toDataURL → upload
  */
