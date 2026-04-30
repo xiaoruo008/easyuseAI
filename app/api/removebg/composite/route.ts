@@ -21,10 +21,8 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-// Allow referencing local modules without tsconfig paths
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-// eslint-disable-next-line import/extensions
-const { removeBackgroundViaReplicate } = require("../../../../lib/image/providers/replicate-rembg");
+import sharp from "sharp";
+import { removeBackgroundViaReplicate } from "@/lib/image/providers/replicate-rembg";
 
 export const runtime = "nodejs";
 
@@ -139,11 +137,6 @@ async function compositeOnWhiteCanvas(
   transparentPngUrl: string,
   dims: { width: number; height: number }
 ): Promise<string> {
-  // Use sharp for server-side image processing
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const sharp: any = require("sharp");
-
   // Download transparent PNG
   const response = await fetch(transparentPngUrl);
   if (!response.ok) {
