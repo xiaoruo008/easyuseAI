@@ -1,9 +1,9 @@
 {
-  "round": 233,
-  "stable_count": 117,
-  "last_check": "2026-04-30T16:01:00.000000+00:00",
+  "round": 241,
+  "stable_count": 127,
+  "last_check": "2026-04-30T22:00:00.000000+00:00",
   "last_result": "pass",
-  "consecutive_stable": 117,
+  "consecutive_stable": 127,
   "status": "pass",
   "notify_stable": false,
   "checks": {
@@ -12,6 +12,6 @@
     "flow": "5/5 steps passed ✅",
     "mobile": "3/3 steps passed ✅"
   },
-  "this_round_fix": "R232: Orphan next-server进程冲突导致500，pkill+清缓存+重启恢复。全量通过。连续稳定117轮。",
+  "this_round_fix": "R241例行健康检查，全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定127轮。",
   "incident": null
 }

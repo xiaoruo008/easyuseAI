@@ -635,8 +635,8 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
             {[
               { tier: "免费", price: "¥0", unit: "/月", desc: "无限使用所有AI商拍功能", best: false, cta: "立即开始" },
-              { tier: "免费", price: "¥0", unit: "/月", desc: "无限使用所有AI商拍功能", best: true, cta: "立即开始" },
-              { tier: "免费", price: "¥0", unit: "/月", desc: "无限使用所有AI商拍功能", best: false, cta: "立即开始" },
+              { tier: "专业版", price: "¥99", unit: "/月", desc: "优先队列 + 商用授权", best: true, cta: "立即升级" },
+              { tier: "企业版", price: "¥299", unit: "/月", desc: "API调用 + 专属客服", best: false, cta: "联系销售" },
             ].map((plan) => (
               <div key={plan.tier} className={`relative rounded-2xl p-5 md:p-6 flex flex-col ${plan.best ? "bg-white text-gray-900 ring-1 ring-white/20" : "bg-white/5 border border-white/10"}`}>
                 {plan.best && <div className="absolute -top-3 left-1/2 -translate-x-1/2"><span className="bg-amber-400 text-gray-900 text-xs font-bold px-3 py-1 rounded-full">最受欢迎</span></div>}
