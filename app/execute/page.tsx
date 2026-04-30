@@ -175,6 +175,8 @@ function ExecuteContent() {
   const [extraFeatures, setExtraFeatures] = useState("");
   const [copied, setCopied] = useState(false);
   const [statusText, setStatusText] = useState<string | null>(null);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [uploadPreview, setUploadPreview] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -397,7 +399,6 @@ function ExecuteContent() {
         diagnosisType: mapResultTypeToTrendingDiagnosisType(diagnosisResult.type),
         selectedProvider: storedProvider ?? undefined,
         // 选择模式字段：
-        prompt,
         category,
         scene,
         extraFeatures: extraFeatures || undefined,
@@ -406,6 +407,12 @@ function ExecuteContent() {
         aspectRatio: scene === "white_hero" ? "1:1" : "3:4",
         // 【关键】原图 URL — 图生图的核心输入
         originalImageUrl: storedOriginalUrl || undefined,
+        // 新增：上传的产品图 base64
+        productImageBase64: uploadedImage ?? undefined,
+        // 如果有上传图片，覆盖 prompt
+        prompt: uploadedImage
+          ? "Use the uploaded product image as the main subject"
+          : prompt,
       };
 
       const res = await fetch("/api/execute/generate", {
@@ -694,6 +701,40 @@ function ExecuteContent() {
               <p className="text-xs text-white/50 mt-1">{SCENE_LABELS[scene].desc}</p>
             </div>
 
+            {/* 产品图上传区域 */}
+            <div className="rounded-xl border-2 border-dashed border-gray-300 p-6 text-center space-y-3">
+              <p className="font-semibold text-gray-800">① 上传你的产品图（必填）</p>
+              <p className="text-xs text-gray-400">支持 JPG/PNG，建议白底清晰图</p>
+              {uploadPreview ? (
+                <div className="relative w-full aspect-[3/4] max-w-[200px] mx-auto">
+                  <Image src={uploadPreview} alt="产品图" fill className="object-contain rounded-lg" />
+                  <button onClick={() => { setUploadedImage(null); setUploadPreview(null); }}
+                    className="absolute top-1 right-1 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                    重新上传
+                  </button>
+                </div>
+              ) : (
+                <label className="block cursor-pointer">
+                  <div className="py-8 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                    <p className="text-3xl mb-2">📷</p>
+                    <p className="text-sm text-gray-500">点击或拖拽上传</p>
+                  </div>
+                  <input type="file" accept="image/*" className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      const reader = new FileReader();
+                      reader.onload = (ev) => {
+                        const base64 = ev.target?.result as string;
+                        setUploadedImage(base64);
+                        setUploadPreview(base64);
+                      };
+                      reader.readAsDataURL(file);
+                    }} />
+                </label>
+              )}
+            </div>
+
             {/* 步骤1：选品类 */}
             <div className="rounded-xl border border-gray-200 p-4 space-y-3">
               <h3 className="text-sm font-semibold text-gray-700">① 选择产品类型</h3>
@@ -784,11 +825,12 @@ function ExecuteContent() {
             {/* 生成按钮 */}
             <button
               onClick={handleCreate}
-              disabled={working || freeLimitReached}
+              disabled={working || freeLimitReached || !uploadedImage}
               className="w-full py-4 bg-gradient-to-r from-gray-900 to-gray-700 hover:from-gray-800 text-white rounded-xl font-bold text-base shadow-lg disabled:opacity-50 transition-all"
             >
               {working ? "AI 正在生成中..." : "⚡ 开始生成（约30秒）"}
             </button>
+            {!uploadedImage && <p className="text-xs text-red-400 text-center">请先上传产品图片</p>}
             <p className="text-center text-xs text-gray-400">不用手写提示词，系统自动匹配最佳模板</p>
           </>
         )}

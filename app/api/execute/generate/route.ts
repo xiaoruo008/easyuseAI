@@ -242,6 +242,8 @@ export async function POST(req: NextRequest) {
     scene,
     // 用于 removebg_composite pipeline
     templateAction,
+    // 产品图 base64（来自 execute page 新上传）
+    productImageBase64,
   } = body as {
     sessionId?: string;
     action: string;
@@ -268,9 +270,8 @@ export async function POST(req: NextRequest) {
     choiceMode?: boolean;
     extraFeatures?: string;
     scene?: string;
-    // 用于 removebg_composite pipeline：从 execute page 传来的原始模板 action
-    // 因为 action 字段被 rebrand 为 pipeline 标识
     templateAction?: string;
+    productImageBase64?: string;
   };
 
   // === Choice 模式：自动拼 prompt ===
@@ -418,74 +419,57 @@ export async function POST(req: NextRequest) {
     const enrichedPrompt = `${diagnosisContext}${effectivePrompt ?? ""}`.trim();
 
     // 构建最终 prompt：产品保留约束 + 图案指导 + 诊断上下文 + 用户输入
-    const finalPrompt = basePatternPrompt
+    // 【新增】如果有 productImageBase64，强制指定产品图为主体
+    const basePrompt = basePatternPrompt
       ? `${PRODUCT_PRESERVE_PREFIX}${basePatternPrompt} ${enrichedPrompt}`.trim()
       : `${PRODUCT_PRESERVE_PREFIX}${enrichedPrompt}`.trim();
+    const finalPrompt = productImageBase64
+      ? `Use the uploaded product image as the main subject. ${basePrompt}`
+      : basePrompt;
 
-    // ── removebg_composite: 专用 product-preservation pipeline ──────────────────
-    // 流程：remove.bg 抠图 → MiniMax 生成纯背景 → 客户端 Canvas 合成
+    // ── removebg_composite: 路由到新版 composite endpoint ───────────────────────
+    // 新版流程：Replicate cjwbw/rembg 抠图 → 服务端白底画布合成 → 上传 → 返回最终 URL
     // 保证产品 100% 保留，因为产品是抠图后贴上去的，不是 AI 生成的
     if (action === "removebg_composite") {
-      const { removeBackground } = await import("@/lib/image/providers/removebg");
-      let transparentUrl = "";
-      let transparentBase64: string | undefined;
-
       if (!effectiveRefUrl) {
         return NextResponse.json(
-          { error: "removebg_composite 需要 originalImageUrl 或 referenceImageUrl" },
+          { error: "removebg_composite 需要 originalImageUrl 或 referenceImageUrl", code: "MISSING_IMAGE" },
           { status: 400 }
         );
       }
 
-      // Step 1: remove.bg 抠图（产品 100% 保留）
-      try {
-        const rbResult = await removeBackground({
+      // 调用新的 composite endpoint（服务端白底合成）
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? `http://localhost:${process.env.PORT ?? 3000}`;
+      const compositeRes = await fetch(`${baseUrl}/api/removebg/composite`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           imageUrl: effectiveRefUrl,
-          size: "auto",
-          format: "png",
-        });
-        transparentUrl = rbResult.resultUrl;
-        transparentBase64 = rbResult.resultBase64;
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : String(err);
-        console.error(`[removebg_composite] Step 1 removebg failed: ${msg}`);
-        return NextResponse.json({ error: `removebg 失败: ${msg}`, step: "remove_background" }, { status: 502 });
-      }
-
-      // Step 2: FAL.ai 生成纯背景（P1紧急：MiniMax已禁用，改用fal.ai FLUX Schnell）
-      // 不传参考图，纯背景生成，保证商品100%从原图抠图提取
-      let backgroundUrl = "";
-      try {
-        const falProvider = new FalImageProvider();
-        const bgResult = await falProvider.generate({
-          type: "background_swap",
-          prompt: effectivePrompt ?? "clean professional studio white background, e-commerce standard",
           aspectRatio: (aspectRatio as "1:1" | "3:4" | "16:9") ?? "1:1",
-          style: (style as "minimal" | "luxury" | "commercial") ?? undefined,
-        });
-        backgroundUrl = bgResult.imageUrl;
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : String(err);
-        console.error(`[removebg_composite] Step 2 fal.ai failed: ${msg}`);
-        return NextResponse.json({ error: `背景生成失败: ${msg}`, step: "background_generation" }, { status: 502 });
+        }),
+      });
+
+      const compositeData = await compositeRes.json();
+
+      if (!compositeRes.ok || !compositeData.success) {
+        return NextResponse.json(
+          {
+            error: compositeData.error ?? "白底图生成失败",
+            step: compositeData.step ?? "unknown",
+            code: "COMPOSITE_FAILED",
+          },
+          { status: 502 }
+        );
       }
 
-      // Step 3: 返回两个 URL → 客户端 Canvas 合成 → 上传 → 返回最终 URL
+      // 返回与旧版兼容的格式
       return NextResponse.json({
         success: true,
         action: "removebg_composite",
         type: "pipeline",
-        step: "pipeline_ready",
-        data: {
-          transparentUrl,
-          backgroundUrl,
-          transparentBase64,
-        },
-        instructions: {
-          description: "客户端使用 Canvas API 合成: draw background → draw transparent PNG on top → toDataURL → upload to /api/upload",
-          compositeUrl: transparentUrl,
-          backgroundImageUrl: backgroundUrl,
-        },
+        step: "done",
+        result: compositeData.result,
+        source: "ai",
       });
     }
 

@@ -6,6 +6,7 @@ import { FalImageProvider } from "./fal-provider";
 // import { MiniMaxImageProvider } from "../providers/minimax-image";
 // import { MiniMaxCNProvider } from "./providers/minimax-cn";
 import { GeminiNanobananaProvider } from "./providers/gemini-nanobanana";
+import { ReplicateImageProvider } from "./providers/replicate";
 import path from "path";
 import fs from "fs";
 
@@ -43,6 +44,9 @@ export function getImageProviderForRequest(selectedProvider?: "nanobanana"): Ima
   }
   if (IMAGE_PROVIDER === "fal" && process.env.IMAGE_API_KEY) {
     return new FalImageProvider();
+  }
+  if (IMAGE_PROVIDER === "replicate" && process.env.REPLICATE_API_TOKEN) {
+    return new ReplicateImageProvider();
   }
   return new MockImageProvider();
 }

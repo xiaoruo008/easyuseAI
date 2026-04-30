@@ -186,11 +186,11 @@ export default function HomePage() {
               </span>
             </div>
             <h1 className="text-xl sm:text-3xl lg:text-5xl font-bold text-white leading-[1.15] tracking-tight mb-3 md:mb-4">
-              发来一张图<br className="hidden sm:block" /> 直接给你可上架的电商主图
+              最新AI图像模型<br className="hidden sm:block" /> 分钟级生成可上架的电商主图
             </h1>
             {/* 英文副标题 — 对标 WeShop 英文 H1，面向跨境卖家 */}
             <p className="text-white/40 text-sm md:text-base leading-relaxed mb-0">
-              Upload a product photo · Get e-commerce-ready images in minutes
+              Powered by Latest AI Models · E-commerce-ready images in minutes
             </p>
             {/* 最新模型公告 — 对标 WeShop "GPT Image 2 is now available" */}
             <div className="mb-4 md:mb-5">
@@ -659,9 +659,6 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
           <p className="text-xs md:text-sm text-white/30">© 2026 easyuse.ai · 帮你把事情做完</p>
           <div className="flex gap-6 text-xs md:text-sm text-white/30">
-            <Link href="/blog" className="hover:text-white/60 transition-colors">Blog</Link>
-            <Link href="/faq" className="hover:text-white/60 transition-colors">FAQ</Link>
-            <Link href="/affiliate" className="hover:text-white/60 transition-colors">Affiliate</Link>
             <Link href="/diagnosis" className="hover:text-white/60 transition-colors">开始使用</Link>
           </div>
         </div>
