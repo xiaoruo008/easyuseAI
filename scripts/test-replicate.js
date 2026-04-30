@@ -1,118 +1,72 @@
+#!/usr/bin/env node
 /**
- * Test script for Replicate API
- * Usage: node scripts/test-replicate.js
- *
- * Verifies:
- * 1. REPLICATE_API_TOKEN is configured
- * 2. API key is valid (can authenticate)
- * 3. Can create and complete a prediction
+ * Test Replicate API - Image Generation
+ * Run: node scripts/test-replicate.js
  */
 
-const path = require("path");
-require("dotenv").config({ path: path.join(__dirname, "..", ".env") });
+const Replicate = require("replicate");
 
-const API_TOKEN = process.env.REPLICATE_API_TOKEN;
+const replicate = new Replicate({
+  auth: process.env.REPLICATE_API_TOKEN,
+});
 
-if (!API_TOKEN) {
-  console.error("❌ REPLICATE_API_TOKEN is not set in .env");
-  process.exit(1);
-}
-
-const displayToken = API_TOKEN.slice(0, 8) + "...";
-console.log(`🔑 Using token: ${displayToken}`);
+const TEST_MODEL = "openai/gpt-image-2";
 
 async function main() {
-  // Load Replicate SDK
-  let Replicate;
-  try {
-    Replicate = require("replicate");
-    console.log("✅ Replicate package loaded");
-  } catch (e) {
-    console.error("❌ Failed to load 'replicate' package. Run: npm install replicate");
+  console.log("=== Replicate API Test ===");
+  console.log(`Model: ${TEST_MODEL}`);
+  console.log(`Token: ${process.env.REPLICATE_API_TOKEN ? "✓ set" : "✗ missing"}`);
+  
+  if (!process.env.REPLICATE_API_TOKEN) {
+    console.error("ERROR: REPLICATE_API_TOKEN not set");
     process.exit(1);
   }
 
-  const client = new Replicate({ auth: API_TOKEN });
-
-  // Test 1: Try a lightweight run call to verify auth
-  // Using a very fast model with minimal steps to verify the token works
-  console.log("\n📡 Test 1: Verifying API authentication (lightweight run)...");
   try {
-    // Call client.run with flux-schnell which is fast
-    // This will throw if auth is invalid
-    const output = await client.run("black-forest-labs/flux-schnell", {
+    console.log("\n1. Listing model info...");
+    const model = await replicate.models.get("openai", "gpt-image-2");
+    console.log(`   Model: ${model.owner}/${model.name}`);
+    console.log(`   Latest version: ${model.latest_version?.id}`);
+
+    console.log("\n2. Running prediction...");
+    const startTime = Date.now();
+    
+    const prediction = await replicate.predictions.create({
+      version: model.latest_version.id,
       input: {
-        prompt: "a cute cat",
-        num_inference_steps: 4,
-        width: 512,
-        height: 512,
+        prompt: "A clean white background e-commerce product photo of a handbag, professional studio lighting, high quality",
+        aspect_ratio: "1:1",
+        num_outputs: 1,
       },
     });
-    console.log("✅ API authentication successful!");
-    console.log("   Output type:", typeof output, Array.isArray(output) ? "(array)" : "");
 
-    // Extract URL from output
-    // Replicate v1.x output: array of objects with url() method or toString()
-    let imageUrl = null;
-    if (typeof output === "string" && output.startsWith("http")) {
-      imageUrl = output;
-    } else if (output && typeof output === "object") {
-      if ("href" in output && typeof output.href === "string") {
-        // Standard URL object
-        imageUrl = output.href;
-      } else if ("url" in output) {
-        // FileOutput: { url: fn() } or { url: "..." }
-        const urlProp = output.url;
-        const resolved = typeof urlProp === "function" ? urlProp() : urlProp;
-        if (typeof resolved === "string" && resolved.startsWith("http")) {
-          imageUrl = resolved;
-        } else if (resolved && typeof resolved === "object" && "href" in resolved) {
-          imageUrl = resolved.href;
-        }
-      } else if (Array.isArray(output)) {
-        for (const item of output) {
-          if (typeof item === "string" && item.startsWith("http")) {
-            imageUrl = item;
-          } else if (item && typeof item === "object") {
-            // Try toString() which Replicate objects implement
-            const asString = String(item);
-            if (asString.startsWith("http")) {
-              imageUrl = asString;
-            } else if ("url" in item) {
-              const urlProp = item.url;
-              const resolved = typeof urlProp === "function" ? urlProp() : urlProp;
-              if (typeof resolved === "string" && resolved.startsWith("http")) {
-                imageUrl = resolved;
-                } else if (resolved && typeof resolved === "object" && "href" in resolved) {
-                  imageUrl = resolved.href;
-                }
-            }
-          }
-          if (imageUrl) break;
-        }
-      } else {
-        // Fallback: try toString()
-        const asString = String(output);
-        if (asString.startsWith("http")) {
-          imageUrl = asString;
-        }
-      }
+    console.log(`   Prediction ID: ${prediction.id}`);
+    console.log(`   Status: ${prediction.status}`);
+
+    // Poll for completion
+    let result = prediction;
+    while (result.status !== "succeeded" && result.status !== "failed") {
+      await new Promise(r => setTimeout(r, 2000));
+      result = await replicate.predictions.get(result.id);
+      console.log(`   Status: ${result.status}...`);
     }
-    console.log("   Image URL:", imageUrl ?? "(not found in output)");
-  } catch (e) {
-    const err = e instanceof Error ? e.message : String(e);
-    if (err.includes("401") || err.includes("unauthorized") || err.includes("Unauthenticated")) {
-      console.error(`❌ Invalid API token (401 Unauthorized)`);
+
+    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+    
+    if (result.status === "succeeded") {
+      console.log(`\n3. SUCCESS! (${elapsed}s)`);
+      console.log(`   Output: ${JSON.stringify(result.output)}`);
     } else {
-      console.error(`❌ API test failed: ${err}`);
+      console.log(`\n4. FAILED: ${result.error?.join?.(", ") || result.error}`);
+    }
+
+  } catch (err) {
+    console.error("\nERROR:", err.message);
+    if (err.response?.data) {
+      console.error("Details:", JSON.stringify(err.response.data, null, 2));
     }
     process.exit(1);
   }
-
-  console.log("\n🎉 All tests passed! Replicate API is configured correctly.");
 }
 
-main().catch((e) => {
-  console.error("❌ Unexpected error:", e);
-  process.exit(1);
-});
+main();

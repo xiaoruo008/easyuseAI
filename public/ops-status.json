@@ -1,17 +1,17 @@
 {
-  "round": 232,
-  "stable_count": 116,
-  "last_check": "2026-04-30T15:30:00.000000+00:00",
+  "round": 233,
+  "stable_count": 117,
+  "last_check": "2026-04-30T16:01:00.000000+00:00",
   "last_result": "pass",
-  "consecutive_stable": 116,
+  "consecutive_stable": 117,
   "status": "pass",
   "notify_stable": false,
   "checks": {
     "http": "localhost:3005: 200 OK",
     "console": "0 errors ✅",
     "flow": "5/5 steps passed ✅",
-    "mobile": "networkidle timeout (known issue, not site problem) ⚠️"
+    "mobile": "3/3 steps passed ✅"
   },
-  "this_round_fix": "R231: Desktop全量通过(HTTP200/Console0/Flow5/5)。Mobile因networkidle超时属已知脚本问题。连续稳定116轮。",
+  "this_round_fix": "R232: Orphan next-server进程冲突导致500，pkill+清缓存+重启恢复。全量通过。连续稳定117轮。",
   "incident": null
 }

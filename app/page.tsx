@@ -240,7 +240,7 @@ export default function HomePage() {
                   href="/diagnosis"
                   className="inline-flex items-center justify-center gap-2 px-6 md:px-8 py-3.5 md:py-4 bg-white text-gray-900 rounded-xl font-bold hover:bg-gray-100 transition-all text-base shadow-lg shadow-white/10"
                 >
-                  🎁 注册送40点免费额度
+                  🎁 免费使用所有功能
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
@@ -249,7 +249,7 @@ export default function HomePage() {
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 hidden group-hover:block z-50">
                   <div className="relative bg-gray-900/95 border border-white/20 rounded-xl px-4 py-3 shadow-xl shadow-black/30 whitespace-nowrap">
                     <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-gray-900/95 border-r border-b border-white/20 rotate-45"></div>
-                    <p className="text-sm text-white font-medium">注册即得 <span className="text-amber-400 font-bold">40点</span> 免费额度</p>
+                    <p className="text-sm text-white font-medium">免费使用所有 <span className="text-amber-400 font-bold">AI功能</span></p>
                     <p className="text-xs text-white/60 mt-0.5">无需信用卡，立即激活</p>
                   </div>
                 </div>
@@ -630,13 +630,13 @@ export default function HomePage() {
       {/* Pricing */}
       <section id="pricing" className="py-12 md:py-20 px-4 md:px-6 bg-gray-900 border-t border-white/5">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-xl md:text-3xl font-bold text-white text-center tracking-tight mb-2 md:mb-3">明码标价，做完才收钱</h2>
-          <p className="text-white/40 text-center mb-8 md:mb-12 text-sm md:text-base">先做一版给你看，满意再付款；不满意全额退款</p>
+          <h2 className="text-xl md:text-3xl font-bold text-white text-center tracking-tight mb-2 md:mb-3">免费使用所有AI商拍功能</h2>
+          <p className="text-white/40 text-center mb-8 md:mb-12 text-sm md:text-base">所有功能免费开放，无需注册无需充值</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
             {[
-              { tier: "体验", price: "¥29", unit: "/张", desc: "1张图，换背景或基础精修", best: false, cta: "查看详情" },
-              { tier: "标准", price: "¥99", unit: "/5张", desc: "5张同规格图，批量制作", best: true, cta: "查看详情" },
-              { tier: "定制", price: "¥299", unit: "/套", desc: "完整方案，含模特+场景+精修", best: false, cta: "查看详情" },
+              { tier: "免费", price: "¥0", unit: "/月", desc: "无限使用所有AI商拍功能", best: false, cta: "立即开始" },
+              { tier: "免费", price: "¥0", unit: "/月", desc: "无限使用所有AI商拍功能", best: true, cta: "立即开始" },
+              { tier: "免费", price: "¥0", unit: "/月", desc: "无限使用所有AI商拍功能", best: false, cta: "立即开始" },
             ].map((plan) => (
               <div key={plan.tier} className={`relative rounded-2xl p-5 md:p-6 flex flex-col ${plan.best ? "bg-white text-gray-900 ring-1 ring-white/20" : "bg-white/5 border border-white/10"}`}>
                 {plan.best && <div className="absolute -top-3 left-1/2 -translate-x-1/2"><span className="bg-amber-400 text-gray-900 text-xs font-bold px-3 py-1 rounded-full">最受欢迎</span></div>}

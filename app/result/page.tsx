@@ -502,13 +502,13 @@ export default function ResultPage() {
         )}
 
         <section className="space-y-4">
-          <p className="text-xs font-medium text-amber-600 tracking-wide">免费体验</p>
+          <p className="text-xs font-medium text-amber-600 tracking-wide">免费使用</p>
           <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-5 md:p-6 border border-amber-100">
             <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">
-              免费试做 1 张，看看适不适合你
+              无限使用所有AI商拍功能，完全免费
             </h3>
             <p className="text-gray-500 text-sm mb-4">
-              不用写提示词。你只需要：
+              不用写提示词，AI自动识别商品。你只需要：
             </p>
             <ul className="space-y-1.5 text-sm text-gray-600 mb-5">
               <li className="flex items-start gap-2">
@@ -517,11 +517,11 @@ export default function ResultPage() {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-amber-500 mt-0.5">2.</span>
-                <span>再发一张你喜欢的参考图</span>
+                <span>选择想要的风格和场景</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-amber-500 mt-0.5">3.</span>
-                <span>我们免费帮你试做 1 张</span>
+                <span>AI生成专业商拍效果图</span>
               </li>
             </ul>
             <p className="text-amber-600 text-sm font-medium mb-4">
@@ -543,7 +543,7 @@ export default function ResultPage() {
                 }}
                 className="block w-full py-3.5 bg-gradient-to-r from-[#FF6B6B] to-[#ff8e8e] hover:from-[#ff5252] hover:to-[#FF6B6B] text-white rounded-xl font-bold text-center transition-colors shadow-lg shadow-red-500/25"
               >
-                ⚡ 立即在线生成（30秒出图）
+                ⚡ 立即开始使用（无限次免费）
               </button>
               <div className="flex items-center justify-center gap-4 text-sm text-gray-500">
                 <button
