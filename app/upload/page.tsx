@@ -67,7 +67,8 @@ export default function UploadPage() {
             uploadFailed = true;
           }
         } catch (err) {
-          console.error("[Upload] ❌ upload error:", file.name, err);
+          const msg = err instanceof Error ? err.message : String(err);
+          console.error("[Upload] ❌ upload error:", file.name, msg);
           uploadFailed = true;
         }
       }
