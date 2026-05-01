@@ -33,7 +33,7 @@ export default function UploadPage() {
   const [error, setError] = useState<string | null>(null);
   const [working, setWorking] = useState(false);
   const [imageResult, setImageResult] = useState<ImageResult | null>(null);
-  const [originalImageUrl, setOriginalImageUrl] = useState<string | null>(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -45,8 +45,12 @@ export default function UploadPage() {
         return;
       }
       setError(null);
-      setImages(files);
-      // 上传到服务器获取 URL
+      // 先清空旧的预览和URL状态
+      setImages([]);
+      setPreviews([]);
+      setUploadedImageUrl(null);
+
+      // 上传到服务器获取 URL（必须成功，否则不显示预览）
       const urls: string[] = [];
       let uploadFailed = false;
       for (const file of files) {
@@ -67,14 +71,22 @@ export default function UploadPage() {
           uploadFailed = true;
         }
       }
-      if (uploadFailed) {
-        setError("图片上传失败，请检查网络后重试");
+
+      if (uploadFailed || urls.length === 0) {
+        setError("图片上传失败，请重新上传");
+        // 上传失败：不显示预览，不设置URL状态
+        return;
       }
-      if (urls.length > 0) {
-        sessionStorage.setItem("original_image_url", urls[0]);
-        setOriginalImageUrl(urls[0]);
-      }
-      setPreviews(files.map((f) => URL.createObjectURL(f)));
+
+      // 上传成功：写入 sessionStorage 并设置状态
+      const firstUrl = urls[0];
+      sessionStorage.setItem("original_image_url", firstUrl);
+      setUploadedImageUrl(firstUrl);
+      setImages(files);
+      setPreviews(urls); // 使用服务器URL作为预览
+
+      console.log("[Upload] 📋 uploadedImageUrl:", firstUrl);
+      console.log("[Upload] 📋 sessionStorage:", sessionStorage.getItem("original_image_url"));
     },
     []
   );
@@ -146,32 +158,24 @@ export default function UploadPage() {
       setError("请至少选择一个出图风格");
       return;
     }
-    if (images.length === 0) {
+
+    // P0：唯一可信来源 = uploadedImageUrl（上传成功后才设置）
+    const imageUrl = uploadedImageUrl || sessionStorage.getItem("original_image_url");
+
+    console.log("[Upload] 📋 generate payload:");
+    console.log("  - uploadedImageUrl state:", uploadedImageUrl);
+    console.log("  - sessionStorage:", sessionStorage.getItem("original_image_url"));
+    console.log("  - imageUrl used:", imageUrl);
+
+    // P0：没有URL → 直接阻止，不走任何兜底
+    if (!imageUrl) {
       setError("请上传产品图片");
       return;
     }
 
-    // 获取已上传的图片 URL
-    const imageUrl = sessionStorage.getItem("original_image_url") || originalImageUrl;
-
-    // P0修复：如果URL丢失，从当前预览状态直接取值（兜底）
-    const finalImageUrl = imageUrl || (previews[0] || null);
-
-    console.log("[Upload] 📋 generate payload:");
-    console.log("  - uploaded files:", images.length, images.map(f => f.name));
-    console.log("  - uploaded image url:", imageUrl);
-    console.log("  - sessionStorage original_image_url:", sessionStorage.getItem("original_image_url"));
-    console.log("  - finalImageUrl used:", finalImageUrl);
-
-    // P0修复：URL丢失时直接提示，不允许继续
-    if (!finalImageUrl) {
-      setError("上传图丢失，请重新上传");
-      return;
-    }
-
-    // URL存在但来自blob（上传API失败），降级提示
-    if (finalImageUrl && finalImageUrl.startsWith("blob:")) {
-      setError("上传失败（服务器连接异常），请重新上传图片");
+    // blob URL → 上传API失败，阻止
+    if (imageUrl.startsWith("blob:")) {
+      setError("图片上传失败，请重新上传");
       return;
     }
 
@@ -179,7 +183,6 @@ export default function UploadPage() {
     setWorking(true);
     setError(null);
 
-    // 取第一个选中的风格进行生成
     const firstStyle = STYLE_OPTIONS.find((s) => s.id === selectedStyles[0]);
     if (!firstStyle) {
       setError("未知的出图风格");
@@ -188,7 +191,6 @@ export default function UploadPage() {
       return;
     }
 
-    // 平台映射到市场
     const marketMap: Record<string, string> = {
       taobao: "domestic",
       xiaohongshu: "domestic",
@@ -198,22 +200,19 @@ export default function UploadPage() {
     };
     const market = marketMap[platform] || "domestic";
 
-    // 构建生成参数（参考 execute/page.tsx handleCreate）
     const body: Record<string, unknown> = {
       action: firstStyle.action,
       type: "traffic",
       choiceMode: true,
       referenceImageUrl: imageUrl,
-      // 使用 choiceMode 时需要：category, gender, scene
+      originalImageUrl: imageUrl,
       category: "dress",
       gender: "womenswear",
       scene: firstStyle.scene,
       market,
       aspectRatio: firstStyle.scene === "white_hero" ? "1:1" : "3:4",
       style: "commercial",
-      // 用户补充说明作为额外特征
       extraFeatures: notes || undefined,
-      // 诊断上下文（简化版本）
       userPainPoint: `平台：${platform || "未选择"}，风格：${firstStyle.label}`,
       userPersona: "电商卖家",
       diagnosisType: "traffic",
@@ -297,7 +296,7 @@ export default function UploadPage() {
     } finally {
       setSubmitting(false);
     }
-  }, [images, selectedStyles, platform, notes, originalImageUrl, saveToHistory]);
+  }, [images, selectedStyles, platform, notes, uploadedImageUrl, saveToHistory]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -348,9 +347,9 @@ export default function UploadPage() {
             <div className="grid grid-cols-2 gap-2 rounded-xl border border-gray-200 overflow-hidden">
               {/* Before - 原图 */}
               <div className="relative bg-gray-100 aspect-[3/4]">
-                {originalImageUrl ? (
+                {uploadedImageUrl ? (
                   <Image
-                    src={originalImageUrl}
+                    src={uploadedImageUrl}
                     alt="原图"
                     fill
                     className="object-cover"
@@ -471,6 +470,7 @@ export default function UploadPage() {
                   setSelectedStyles([]);
                   setImages([]);
                   setPreviews([]);
+                  setUploadedImageUrl(null);
                   setPlatform("");
                   setNotes("");
                 }}

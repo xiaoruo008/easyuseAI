@@ -2081,3 +2081,12 @@ R265|2026-05-01 15:30|HTTP200/Console0/Flow5/5/Mobile3/3|稳定152轮|无|无
 - **修复**：orphan next-server (pid 7620) EADDRINUSE冲突，清理.next + 重启dev server
 - **症状**：/diagnosis/result返回500（curl直接测试），但flow测试误报5/5（orphan缓存旧页面）
 - **结论**：全量通过，连续稳定重新计数=1
+
+## R267 — 2026-05-01 09:05 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- **修复**：orphan next-server (v15.5.14, pid 8691) 再次占用port 3005，pkill -9 -f next + rm .next + env PORT=3005 npx next dev
+- **结论**：全量通过，连续稳定2轮。WeShop模型矩阵无变化。
+
+## R268 — 2026-05-01 17:30
+- HTTP: 200 ✅ | Console: 0 ✅ | Flow: 5/5 ✅ | Mobile: 3/3 ✅
+- 连续稳定: 3轮 | WeShop模型矩阵无变化
