@@ -395,6 +395,16 @@ export async function POST(req: NextRequest) {
         }).then((t) => (t as { id: string }).id)
       : null;
 
+    console.log("[generate] 📥 request payload:", {
+      action,
+      choiceMode,
+      referenceImageUrl,
+      originalImageUrl,
+      effectiveRefUrl: effectiveRefUrl || "(empty)",
+      hasReferenceImage,
+      templateId,
+    });
+
     // ── 产品保留约束（当提供了原始产品图时注入）────────────────────
     // 强制要求 AI 保留用户上传的产品主体，不允许替换
     // 支持两种字段名：originalImageUrl（前端新字段）或 referenceImageUrl（API 旧字段）

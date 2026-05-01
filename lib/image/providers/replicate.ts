@@ -44,7 +44,8 @@ export class ReplicateImageProvider implements ImageProvider {
     // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
-    const Replicate = require("replicate") as typeof import("replicate");
+    const ReplicateModule = require("replicate") as typeof import("replicate");
+    const Replicate = ReplicateModule.default;
     const client = new Replicate({ auth: REPLICATE_API_TOKEN });
 
     const modelInput = this.buildModelInput(input);

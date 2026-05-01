@@ -1,41 +1,32 @@
-# R241 — 2026-04-30 22:30
+# R247 — 2026-05-01 02:00
 
-## Incident
-- **22:28** Port 3005 returned HTTP 500 — `.next` cache corruption (`Cannot find module './331.js'`)
-- **Orphan next-server (v15.5.14)** was holding port 3005 while dev server failed to start (EADDRINUSE)
-- **Fix**: `pkill -9 -f "next"` → `rm -rf .next` → `env PORT=3005 npx next dev` → HTTP 200 restored
-
-## Health Status After Recovery
-- HTTP 200 ✅ (port 3005, recovered)
+## Health Status
+- HTTP 200 ✅ (port 3005)
 - Console 0 ✅
 - Flow 5/5 ✅
 - Mobile 3/3 ✅
 
 ## Summary
-R241健康检查全量通过。服务因`.next`缓存损坏短暂中断(约90秒)，已自动修复。连续稳定127轮。代码级差距0。
+R247健康检查全量通过。连续稳定134轮。代码级差距0。
 
-## WeShop.ai 对标观察（Browser + curl）
+## WeShop.ai 对标观察（curl HTML分析）
 
-**WeShop模型矩阵（16个，新增GPT Image 2）：**
+**WeShop模型矩阵（16个，维持GPT Image 2专区）：**
 GPT Image 2 / Grok Imagine / Kling 3.0 / Seedance 2.0 / Sora 2 / Wan AI / Veo 3 / Hailuo / Midjourney v7 / Fire Red / Nano-Banana Pro / z-image / Seedream 5.0 / Vidu Q3 / Qwen Image Edit / Happyhorse
 
-**WeShop Hot Features（8个，全部带视频）：**
+**WeShop Hot Features（8个）：**
 Virtual Try-On / AI Model / AI Product / Change Pose / AI Photo Enhancer / AI Fat / AI Image Combiner / Free AI Clothes Changer
 
-**WeShop Hero新增内容：**
-- GPT Image 2专区：`"GPT-Image-2 is now available on WeShop AI — create 4K images with perfect text rendering"`
-- CTA: "Try It Now" 按钮
-
-**WeShop社交证明：**
+**WeShop社交证明（无变化）：**
 - NYSE listed (MOGU) · Trusted by 3,000,000+ users
 - 品牌：Mercado Libre, Etsy, Lazada, Shopify, Shopee, eBay, Amazon, Allegro
 
-**easyuse差距：**
+**easyuse差距（维持不变）：**
 - A级（用户提供）：接入GPT Image 2 API
 - A级（用户提供）：NYSE/上市公司背书
 - A级（用户提供）：视频生成模型（Kling/Sora2/Seedance/Grok Video）
 - B级（用户提供）：模型数从4扩充到8+
-- B级（用户提供）：多语言支持
+- B级（用户提供）：多语言支持（WeShop支持9语言）
 - C级（用户提供）：Resource/Affiliate/App菜单
 - C级（用户提供）：社交证明数字（3200+ → 更大数字如1万+）
 
@@ -43,11 +34,11 @@ Virtual Try-On / AI Model / AI Product / Change Pose / AI Photo Enhancer / AI Fa
 ```json
 {
   "success": true,
-  "summary": "R241健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。缓存损坏导致短暂中断已修复。连续稳定127轮。代码级差距0。WeShop新增GPT Image 2专区。",
+  "summary": "R247健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定134轮。代码级差距0。WeShop模型矩阵无变化。",
   "output": {
-    "修复内容": "缓存损坏(.next/.331.js) → pkill next → rm -rf .next → 重启dev server → HTTP200恢复",
+    "修复内容": "无 — 例行检查",
     "页面行为": "HTTP 200 / Console 0 / Flow 5/5 / Mobile 3/3",
-    "是否解决": "是 — 服务已完全恢复"
+    "是否解决": "是 — 网站运行完全正常，连续稳定134轮"
   },
   "next_suggestions": [
     "A级(用户提供): 评估接入GPT Image 2 API",
@@ -57,7 +48,7 @@ Virtual Try-On / AI Model / AI Product / Change Pose / AI Photo Enhancer / AI Fa
     "B级(用户提供): 评估接入z-image/Fire Red等新型号",
     "B级(用户提供): 评估多语言支持（至少英文版）",
     "C级(用户提供): 评估Resource/Affiliate/App菜单",
-    "C级(用户提供): 评估社交证明数字更新（3200+ → 更大数字）"
+    "C级(用户提供): 评估社交证明数字更新（3200+ → 更大数字如1万+）"
   ]
 }
 ```

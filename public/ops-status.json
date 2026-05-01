@@ -1,9 +1,9 @@
 {
-  "round": 241,
-  "stable_count": 127,
-  "last_check": "2026-04-30T22:00:00.000000+00:00",
+  "round": 266,
+  "stable_count": 1,
+  "last_check": "2026-05-01T16:00:00.000000+00:00",
   "last_result": "pass",
-  "consecutive_stable": 127,
+  "consecutive_stable": 1,
   "status": "pass",
   "notify_stable": false,
   "checks": {
@@ -12,6 +12,6 @@
     "flow": "5/5 steps passed ✅",
     "mobile": "3/3 steps passed ✅"
   },
-  "this_round_fix": "R241例行健康检查，全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定127轮。",
-  "incident": null
+  "this_round_fix": "R266修复orphan next-server进程冲突（EADDRINUSE），清理.next缓存并重启dev server，/diagnosis/result/execute全部恢复200。",
+  "incident": "orphan next-server (v15.5.14) pid 7620 was occupying port 3005, causing /diagnosis and /result to return 500. Fixed by pkill + rm .next + restart."
 }

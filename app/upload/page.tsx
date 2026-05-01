@@ -48,6 +48,7 @@ export default function UploadPage() {
       setImages(files);
       // 上传到服务器获取 URL
       const urls: string[] = [];
+      let uploadFailed = false;
       for (const file of files) {
         try {
           const fd = new FormData();
@@ -56,8 +57,18 @@ export default function UploadPage() {
           if (r.ok) {
             const data = await r.json();
             urls.push(data.url);
+            console.log("[Upload] ✅ file uploaded:", file.name, "→", data.url);
+          } else {
+            console.error("[Upload] ❌ upload failed:", file.name, "HTTP", r.status);
+            uploadFailed = true;
           }
-        } catch { /* ignore upload error, fallback to blob */ }
+        } catch (err) {
+          console.error("[Upload] ❌ upload error:", file.name, err);
+          uploadFailed = true;
+        }
+      }
+      if (uploadFailed) {
+        setError("图片上传失败，请检查网络后重试");
       }
       if (urls.length > 0) {
         sessionStorage.setItem("original_image_url", urls[0]);
@@ -140,12 +151,33 @@ export default function UploadPage() {
       return;
     }
 
+    // 获取已上传的图片 URL
+    const imageUrl = sessionStorage.getItem("original_image_url") || originalImageUrl;
+
+    // P0修复：如果URL丢失，从当前预览状态直接取值（兜底）
+    const finalImageUrl = imageUrl || (previews[0] || null);
+
+    console.log("[Upload] 📋 generate payload:");
+    console.log("  - uploaded files:", images.length, images.map(f => f.name));
+    console.log("  - uploaded image url:", imageUrl);
+    console.log("  - sessionStorage original_image_url:", sessionStorage.getItem("original_image_url"));
+    console.log("  - finalImageUrl used:", finalImageUrl);
+
+    // P0修复：URL丢失时直接提示，不允许继续
+    if (!finalImageUrl) {
+      setError("上传图丢失，请重新上传");
+      return;
+    }
+
+    // URL存在但来自blob（上传API失败），降级提示
+    if (finalImageUrl && finalImageUrl.startsWith("blob:")) {
+      setError("上传失败（服务器连接异常），请重新上传图片");
+      return;
+    }
+
     setSubmitting(true);
     setWorking(true);
     setError(null);
-
-    // 获取已上传的图片 URL
-    const imageUrl = sessionStorage.getItem("original_image_url") || originalImageUrl;
 
     // 取第一个选中的风格进行生成
     const firstStyle = STYLE_OPTIONS.find((s) => s.id === selectedStyles[0]);
