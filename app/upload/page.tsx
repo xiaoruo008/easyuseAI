@@ -180,6 +180,12 @@ export default function UploadPage() {
       return;
     }
 
+    // data: URL → 不允许作为生成来源（必须是真实 https URL）
+    if (imageUrl.startsWith("data:")) {
+      setError("图片上传失败，请重新上传");
+      return;
+    }
+
     setSubmitting(true);
     setWorking(true);
     setError(null);

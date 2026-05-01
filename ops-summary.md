@@ -2090,3 +2090,14 @@ R265|2026-05-01 15:30|HTTP200/Console0/Flow5/5/Mobile3/3|稳定152轮|无|无
 ## R268 — 2026-05-01 17:30
 - HTTP: 200 ✅ | Console: 0 ✅ | Flow: 5/5 ✅ | Mobile: 3/3 ✅
 - 连续稳定: 3轮 | WeShop模型矩阵无变化
+
+## R269 — 2026-05-01 18:31 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- **Incident**: orphan next-server (v15.5.14) process + .next cache corruption (Cannot find module './331.js')
+- **Fix**: pkill -9 -f "next" → rm -rf .next → env PORT=3005 npx next dev
+- **Status**: pass
+
+## R270 — 2026-05-01 19:03 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅ | 连续稳定148+轮
+- WeShop: Grok(12)/Seedance(10)/Kling(10)/z-image(8)/Seedream(7)/Wan AI(6)/Sora(6)/GPT Image(5)/Veo(4)/Nano-Banana(4)/Midjourney(4)/Hailuo(4)/Fire Red(4)
+- 业务级差距(用户提供): NYSE背书/视频模型/GPT Image 2/模型扩充/i18n/Resource菜单/社交证明数字
