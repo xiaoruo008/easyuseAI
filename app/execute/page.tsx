@@ -367,22 +367,22 @@ function ExecuteContent() {
       // 从 sessionStorage 读取 leads 流程路由的 selectedProvider
       const storedProvider = typeof window !== "undefined" ? sessionStorage.getItem("selectedProvider") : null;
 
-      // 从 sessionStorage 读取并传给 API（如果用户上传了原图）
-      const storedOriginalUrl = typeof window !== "undefined"
+      // 优先使用 state（upload 时会写入 state；mount 时 useEffect 会从 sessionStorage 回填）
+      // 无 state 时再读 sessionStorage兜底
+      const effectiveUrl = originalImageUrl || (typeof window !== "undefined"
         ? sessionStorage.getItem("original_image_url") || ""
-        : "";
+        : "");
 
-      console.log("[generate] originalImageUrl =", originalImageUrl);
-      console.log("[generate] storedOriginalUrl =", storedOriginalUrl);
+      console.log("[execute] read original_image_url =", effectiveUrl ? effectiveUrl.slice(0, 80) : "(empty)");
 
       // 【产品保留保护】如果没有原图，直接阻止
-      if (!storedOriginalUrl) {
+      if (!effectiveUrl) {
         alert("请先上传产品图片");
         setWorking(false);
         return;
       }
 
-      const useRemovebgComposite = !!storedOriginalUrl;
+      const useRemovebgComposite = !!effectiveUrl;
 
       const body: Record<string, unknown> = {
         // 有原图时使用抠图+合成 pipeline，保证产品 100% 保留
@@ -404,7 +404,7 @@ function ExecuteContent() {
         market: data?.fields?.market || "domestic",
         aspectRatio: scene === "white_hero" ? "1:1" : "3:4",
         // 【关键】原图 URL — 图生图的核心输入
-        originalImageUrl: storedOriginalUrl || undefined,
+        originalImageUrl: effectiveUrl || undefined,
         // 新增：上传的产品图 base64
         productImageBase64: uploadedImage ?? undefined,
         // 如果有上传图片，覆盖 prompt
@@ -726,6 +726,9 @@ function ExecuteContent() {
                         const base64 = ev.target?.result as string;
                         setUploadedImage(base64);
                         setUploadPreview(base64);
+                        // 写入 sessionStorage，供 handleCreate 读取
+                        sessionStorage.setItem("original_image_url", base64);
+                        console.log("[execute] write original_image_url =", base64.slice(0, 80));
                       };
                       reader.readAsDataURL(file);
                     }} />
