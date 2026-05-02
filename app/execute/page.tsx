@@ -360,6 +360,7 @@ function ExecuteContent() {
       return;
     }
 
+    console.log("[handleCreate] freeLimitReached:", freeLimitReached);
     setWorking(true);
     setError(null);
     try {
@@ -371,17 +372,14 @@ function ExecuteContent() {
         ? sessionStorage.getItem("original_image_url") || ""
         : "";
 
-      // 【产品保留保护】如果没有原图，弹出确认框
+      console.log("[generate] originalImageUrl =", originalImageUrl);
+      console.log("[generate] storedOriginalUrl =", storedOriginalUrl);
+
+      // 【产品保留保护】如果没有原图，直接阻止
       if (!storedOriginalUrl) {
-        const confirmed = window.confirm(
-          "⚠️ 你还没有上传产品图，当前生成将是「文字生图」（AI 自由发挥），结果可能与你的商品不符。\n\n" +
-          "建议：先上传产品图再生成，以确保结果保留你的商品主体。\n\n" +
-          "点击「确定」继续生成，或「取消」返回上传产品图。"
-        );
-        if (!confirmed) {
-          setWorking(false);
-          return;
-        }
+        alert("请先上传产品图片");
+        setWorking(false);
+        return;
       }
 
       const useRemovebgComposite = !!storedOriginalUrl;
