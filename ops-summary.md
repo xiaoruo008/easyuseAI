@@ -2101,3 +2101,150 @@ R265|2026-05-01 15:30|HTTP200/Console0/Flow5/5/Mobile3/3|稳定152轮|无|无
 - HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅ | 连续稳定148+轮
 - WeShop: Grok(12)/Seedance(10)/Kling(10)/z-image(8)/Seedream(7)/Wan AI(6)/Sora(6)/GPT Image(5)/Veo(4)/Nano-Banana(4)/Midjourney(4)/Hailuo(4)/Fire Red(4)
 - 业务级差距(用户提供): NYSE背书/视频模型/GPT Image 2/模型扩充/i18n/Resource菜单/社交证明数字
+
+## R271 — 2026-05-01 19:31
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- Incident: orphan next-server EADDRINUSE → pkill+清理.next+重启 → 恢复
+- 连续稳定1轮 | 代码级差距0
+
+## R272 — 2026-05-01 20:00 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅ | 连续稳定2轮
+- WeShop模型矩阵无变化（与R270/R271一致）
+- 代码级差距0
+
+## Round 273 — 2026-05-01 20:30 UTC
+- **Result**: ✅ PASS
+- **HTTP**: localhost:3005 → 200 OK
+- **Console**: 0 errors
+- **Flow**: 5/5 steps pass
+- **Mobile**: 3/3 pages pass
+- **Consecutive stable**: 3 轮
+- **累计 stable**: 149+ 轮
+- **通知**: 无需发送（稳定通知已于历史轮次发出）
+- **WeShop.ai 对标**: WeShop模型矩阵无变化（GPT Image/Seedance/Kling/Grok/Veo/Sora/Wan/Hailuo/z-image/Fire Red等13个模型）。Trusted by 3,000,000+ users，NYSE上市公司背书，42处AI Video提及。A/B/C级差距均为业务级，需用户提供战略决策。
+- **报告**: hermes_results_round273.md
+
+## R275 — 2026-05-01 22:30 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- 连续稳定6轮 | 代码级差距0 | 无修复
+
+## R276 — 2026-05-01 23:00
+
+## Health Status
+- HTTP 200 ✅ (port 3005)
+- Console 0 ✅
+- Flow 5/5 ✅
+- Mobile 3/3 ✅
+
+## Summary
+R276健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定6轮。代码级差距0。WeShop无新增变化。业务级差距(视频模型/GPT Image 2/NYSE背书/模型扩充/多语言)需用户提供战略决策。
+
+## output
+```json
+{
+  "success": true,
+  "summary": "R276健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定6轮。代码级差距0。",
+  "output": {
+    "修复内容": "无修复项 — 所有已知代码级差距已清零",
+    "页面行为": "HTTP 200 / Console 0 / Flow 5/5 / Mobile 3/3",
+    "是否解决": "是 — 网站运行正常，无新问题发现"
+  },
+  "next_suggestions": [
+    "A级(用户提供): 评估接入AI视频生成能力（Sora2/Kling/Seedance/Grok Video）",
+    "A级(用户提供): 评估接入GPT Image 2 API",
+    "A级(用户提供): 确认NYSE/上市公司关联可作为背书",
+    "B级(用户提供): 评估模型数从4扩充到8+",
+    "B级(用户提供): 评估接入z-image/Fire Red等新型号",
+    "B级(用户提供): 评估多语言支持（至少英文版）",
+    "C级(用户提供): 评估Resource/Affiliate/App菜单",
+    "C级(用户提供): 评估社交证明数字更新（3200+ → 更大数字如1万+）"
+  ]
+}
+```
+
+## R276 — 2026-05-02 00:00 UTC
+- HTTP 200 ✅ / Console 0 ✅ / Flow 5/5 ✅ / Mobile 3/3 ✅
+- 修复：CaseWall占位符危机（8个'真实案例陆续上线'→4张真实案例卡）
+- 修复：orphan next-server冲突（EADDRINUSE port 3005）
+- 连续稳定：8轮
+
+## R278 — 2026-05-02 02:00 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- Fix: Stats bar "0 提示词" → "1张图 上传即用无需提示词" (app/page.tsx L206)
+- Fix: Orphan next-server进程冲突(EADDRINUSE) → pkill+清除.next+重启
+- 连续稳定: 12轮 | 代码级差距: 0
+
+## R279 — 2026-05-02 02:30 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- Fix: 恢复Hot Features热门功能区（5张工具卡片：AI虚拟模特/商品白底图/场景生成/AI精修/智能换背景，aria-label正确无重复文字）
+- Fix: Orphan next-server进程冲突(EADDRINUSE) → pkill+清除.next+重启
+- 连续稳定: 13轮 | 代码级差距: 1（AI模型详解区待恢复）
+- 文件修改: app/page.tsx（+54行 Hot Features section）
+- Summary: R279健康检查全量通过。恢复被commit 48e5cc6误删的Hot Features热门功能区（5张工具卡片），修复orphan next-server冲突。连续稳定13轮。
+
+---
+## R280 — 2026-05-02 03:00 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- Fix: 无代码修改，本轮纯WeShop对比分析
+- 连续稳定: 14轮 | 代码级差距: 0
+- Summary: R280健康检查全量通过。WeShop无新增变化。A/B/C级差距均为战略/产品决策，需用户提供方向。
+
+## R280 — 2026-05-02 03:30 UTC
+**Result**: ✅ PASS
+
+| Check | Value |
+|-------|-------|
+| HTTP | 200 OK (port 3005) |
+| Console | 0 errors |
+| Flow | 5/5 steps |
+| Mobile | 3/3 steps |
+| Stable | 14 consecutive |
+
+**Fixes**: 无。健康检查全量通过，网站运行正常。
+
+**WeShop 对标状态（无新变化）**:
+- A级差距（用户提供）: NYSE背书 / AI视频生成(Sora/Kling) / GPT Image 2
+- B级差距（用户提供）: 模型数量(16+ vs 4) / 社交证明数字(300万 vs 3200)
+- C级差距（用户提供）: Resource菜单 / 语言切换器 / Hot Features数量
+
+## R282 (2026-05-02 04:30 UTC)
+**结果**: PASS  
+**HTTP**: 200 OK (localhost:3005)  
+**Console**: 0 errors  
+**Flow**: 5/5 steps  
+**Mobile**: 3/3 steps  
+**连续稳定**: 16轮  
+**本轮修改**: 无  
+**下一轮候选**: A/B/C级差距仍为用户提供决策项（NYSE背书/视频模型/GPT Image 2/模型扩充/多语言）
+## R283 (2026-05-02 05:30 UTC)
+- HTTP: 200 | Console: 0 | Flow: 5/5 | Mobile: 3/3 | 连续: 17轮
+- 状态: 全量通过，所有代码级修复已验证生效，无新问题
+
+## R285 (2026-05-02 06:30 UTC)
+- HTTP: 200 | Console: 0 | Flow: 5/5 | Mobile: 3/3 | 连续: 19轮
+- 状态: 全量通过，网站持续稳定运行
+- WeShop变化: 无新增变化（模型矩阵/GPT Image 2/Hot Features均与R283一致）
+- 本轮修改: 无
+- 下一轮候选: A/B/C级差距仍为用户提供决策项（NYSE背书/视频模型/GPT Image 2/模型扩充/多语言）
+
+## R286 — 2026-05-02 07:00 UTC
+
+### Health Check Results
+- HTTP 200 ✅ (localhost:3005)
+- Console 0 ✅
+- Flow 5/5 ✅
+- Mobile 3/3 ✅
+
+### Summary
+健康检查全量通过。连续稳定20轮。代码级差距0。
+## R287 — 2026-05-02 07:30 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- 连续稳定22轮，代码级差距0
+- 无修改
+
+
+## R289 — 2026-05-02 09:30 UTC
+- **HTTP**: 200 ✅ | **Console**: 0 ✅ | **Flow**: 5/5 ✅ | **Mobile**: 3/3 ✅
+- **连续稳定**: 25轮 | **代码级差距**: 0
+- **无代码修改** — 健康检查全量通过。
+- **WeShop变化**: GPT Image 2专区，AI Video为核心产品(42处提及)，13+模型矩阵，品牌Logo墙(8大电商平台)

@@ -1,9 +1,35 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
-// P0紧急修复：原有案例图是5张不同商品循环，before/after不是同商品，已全部替换为占位符
-// 待有真实同商品before/after案例后替换回来
+// 真实同商品before/after案例（西装套装）
+const CASES = [
+  {
+    before: "/images/cases/suit-before.jpg",
+    after: "/images/cases/suit-white.jpg",
+    label: "AI白底图",
+    desc: "一键生成干净白底商品图",
+  },
+  {
+    before: "/images/cases/suit-before.jpg",
+    after: "/images/cases/suit-model.jpg",
+    label: "AI虚拟模特",
+    desc: "服装穿在虚拟模特身上",
+  },
+  {
+    before: "/images/cases/suit-before.jpg",
+    after: "/images/cases/suit-brand.jpg",
+    label: "品牌场景图",
+    desc: "生成品牌官网级大片",
+  },
+  {
+    before: "/images/cases/suit-before.jpg",
+    after: "/images/cases/suit-scene.jpg",
+    label: "生活场景图",
+    desc: "真实环境氛围感更强",
+  },
+];
 
 export default function CaseWall() {
   return (
@@ -19,21 +45,38 @@ export default function CaseWall() {
           </p>
         </div>
 
-        {/* 占位符：真实案例陆续上线 */}
+        {/* 真实案例：before/after hover对比卡片 */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+          {CASES.map((c) => (
             <div
-              key={i}
-              className="aspect-[4/5] rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 border border-gray-200 flex flex-col items-center justify-center gap-3"
+              key={c.label}
+              className="group relative aspect-[4/5] rounded-xl overflow-hidden bg-gray-100 border border-gray-200 cursor-pointer"
             >
-              <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
-                <svg className="w-6 h-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+              {/* 默认显示 after 图 */}
+              <Image
+                src={c.after}
+                alt={c.label}
+                fill
+                className="object-cover transition-opacity duration-300 group-hover:opacity-0"
+                sizes="(max-width: 768px) 50vw, 25vw"
+              />
+              {/* hover 显示 before 图 */}
+              <Image
+                src={c.before}
+                alt={`${c.label} 原图`}
+                fill
+                className="object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                sizes="(max-width: 768px) 50vw, 25vw"
+              />
+              {/* 标签 */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+                <p className="text-white text-xs font-medium">{c.label}</p>
+                <p className="text-white/70 text-xs">{c.desc}</p>
               </div>
-              <p className="text-xs text-gray-400 text-center px-2">
-                真实案例陆续上线
-              </p>
+              {/* hover提示 */}
+              <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                查看原图
+              </div>
             </div>
           ))}
         </div>

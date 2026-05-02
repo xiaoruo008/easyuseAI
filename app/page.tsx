@@ -203,7 +203,7 @@ export default function HomePage() {
               { num: "3,200+", label: "已服务卖家" },
               { num: "98%", label: "商品保留率" },
               { num: "30秒", label: "平均出图速度" },
-              { num: "0", label: "提示词 用户无需学习" },
+              { num: "1张图", label: "上传即用 无需提示词" },
             ].map((item) => (
               <div key={item.label} className="text-center">
                 <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-1 md:mb-2">
@@ -220,6 +220,60 @@ export default function HomePage() {
 
       {/* Case Wall */}
       <CaseWall />
+
+      {/* Hot Features 热门功能 — 对标 WeShop Hot Features */}
+      <section className="py-12 md:py-20 px-4 md:px-6 bg-gray-900 border-t border-white/5">
+        <div className="max-w-5xl mx-auto">
+          {/* Bilingual heading — Hot Feature */}
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-xl md:text-3xl font-bold text-white tracking-tight mb-2">
+              Hot Feature
+            </h2>
+            <p className="text-white/40 text-sm">热门功能 · 演示效果</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
+            {[
+              { name: "AI虚拟模特", src: "/images/home/home-model.png", desc: "服装穿在虚拟模特身上，多肤色/体型可选" },
+              { name: "商品白底图", src: "/images/home/white-product.png", desc: "一键去除背景，生成标准电商白底图" },
+              { name: "场景生成", src: "/images/home/home-scene.png", desc: "将商品放入生活场景，提升种草感" },
+              { name: "AI精修", src: "/images/home/home-brand.png", desc: "智能增强光影、质感、清晰度" },
+              { name: "智能换背景", src: "/images/home/home-before.jpg", desc: "随意切换背景，一个商品多种用法" },
+            ].map((item) => (
+              <Link
+                key={item.name}
+                href="/diagnosis"
+                aria-label={item.name}
+                className="group relative aspect-square rounded-xl overflow-hidden bg-white/5 border border-white/10 cursor-pointer hover:border-amber-400/40 hover:shadow-lg hover:shadow-amber-400/10 transition-all duration-200 hover:scale-[1.03] hover:brightness-110"
+              >
+                <Image
+                  src={item.src}
+                  alt=""
+                  fill
+                  sizes="(max-width: 768px) 50vw, 20vw"
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                {/* View demo icon — eye icon indicates preview/demo */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity duration-200">
+                  <div className="w-12 h-12 rounded-full bg-black/60 backdrop-blur-sm border border-white/30 flex items-center justify-center shadow-lg">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  </div>
+                </div>
+                {/* Hover overlay with description */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-end gap-2 p-2 pb-3">
+                  <p className="text-white text-xs font-medium text-center leading-snug">{item.desc}</p>
+                </div>
+                {/* Name label (always visible) */}
+                <div className="absolute bottom-0 left-0 right-0 p-2 md:p-3 bg-gradient-to-t from-black/80 to-transparent">
+                  <p className="text-white text-xs md:text-sm font-medium text-center group-hover:text-amber-300 transition-colors">{item.name}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Capabilities Section */}
       <section className="py-20 px-4 md:px-6 bg-gray-50 border-t border-gray-100">
@@ -308,6 +362,60 @@ export default function HomePage() {
                 <p className="text-gray-500 text-sm">{s.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section id="pricing" className="py-16 md:py-20 px-4 md:px-6 bg-gray-50 border-t border-gray-200">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12 md:mb-14">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight mb-3">选择适合你的方案</h2>
+            <p className="text-gray-500 text-sm md:text-base">无需信用卡，随时可升级或取消</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {/* Free */}
+            <div className="bg-white rounded-2xl p-6 md:p-8 border border-gray-200 flex flex-col">
+              <div className="text-lg font-semibold text-gray-900 mb-2">免费版</div>
+              <div className="text-3xl md:text-4xl font-bold text-gray-900 mb-1">¥0<span className="text-base font-normal text-gray-500">/月</span></div>
+              <p className="text-gray-500 text-sm mb-6">适合尝鲜体验</p>
+              <ul className="space-y-2 mb-8 flex-1">
+                <li className="flex items-center gap-2 text-sm text-gray-600"><svg className="w-4 h-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>每月 10 张免费额度</li>
+                <li className="flex items-center gap-2 text-sm text-gray-600"><svg className="w-4 h-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>基础场景模特</li>
+                <li className="flex items-center gap-2 text-sm text-gray-600"><svg className="w-4 h-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>商品白底图</li>
+                <li className="flex items-center gap-2 text-sm text-gray-600"><svg className="w-4 h-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>基础精修</li>
+              </ul>
+              <Link href="/diagnosis" className="w-full py-3 text-center border border-gray-300 rounded-xl text-gray-700 font-medium text-sm hover:bg-gray-50 transition-colors">免费试用</Link>
+            </div>
+            {/* Pro */}
+            <div className="bg-white rounded-2xl p-6 md:p-8 border-2 border-gray-900 flex flex-col relative">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-3 py-1 rounded-full font-medium">最受欢迎</div>
+              <div className="text-lg font-semibold text-gray-900 mb-2">专业版</div>
+              <div className="text-3xl md:text-4xl font-bold text-gray-900 mb-1">¥99<span className="text-base font-normal text-gray-500">/月</span></div>
+              <p className="text-gray-500 text-sm mb-6">适合成长型卖家</p>
+              <ul className="space-y-2 mb-8 flex-1">
+                <li className="flex items-center gap-2 text-sm text-gray-600"><svg className="w-4 h-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>无限生成额度</li>
+                <li className="flex items-center gap-2 text-sm text-gray-600"><svg className="w-4 h-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>全部场景模特</li>
+                <li className="flex items-center gap-2 text-sm text-gray-600"><svg className="w-4 h-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>高清原图下载</li>
+                <li className="flex items-center gap-2 text-sm text-gray-600"><svg className="w-4 h-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>优先队列</li>
+                <li className="flex items-center gap-2 text-sm text-gray-600"><svg className="w-4 h-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>商用授权</li>
+              </ul>
+              <Link href="/diagnosis" className="w-full py-3 text-center bg-gray-900 text-white rounded-xl font-medium text-sm hover:bg-gray-800 transition-colors">立即升级</Link>
+            </div>
+            {/* Enterprise */}
+            <div className="bg-white rounded-2xl p-6 md:p-8 border border-gray-200 flex flex-col">
+              <div className="text-lg font-semibold text-gray-900 mb-2">企业版</div>
+              <div className="text-3xl md:text-4xl font-bold text-gray-900 mb-1">¥299<span className="text-base font-normal text-gray-500">/月</span></div>
+              <p className="text-gray-500 text-sm mb-6">适合规模化团队</p>
+              <ul className="space-y-2 mb-8 flex-1">
+                <li className="flex items-center gap-2 text-sm text-gray-600"><svg className="w-4 h-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>专业版全部功能</li>
+                <li className="flex items-center gap-2 text-sm text-gray-600"><svg className="w-4 h-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>API 调用</li>
+                <li className="flex items-center gap-2 text-sm text-gray-600"><svg className="w-4 h-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>专属客服</li>
+                <li className="flex items-center gap-2 text-sm text-gray-600"><svg className="w-4 h-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>批量处理</li>
+                <li className="flex items-center gap-2 text-sm text-gray-600"><svg className="w-4 h-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>自定义风格</li>
+              </ul>
+              <Link href="/diagnosis" className="w-full py-3 text-center border border-gray-300 rounded-xl text-gray-700 font-medium text-sm hover:bg-gray-50 transition-colors">联系销售</Link>
+            </div>
           </div>
         </div>
       </section>
