@@ -418,7 +418,10 @@ function ExecuteContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const text = await res.text().catch(() => "unknown");
+        throw new Error(`API_ERROR:${res.status}:${text}`);
+      }
       const d = await res.json();
 
       // ── removebg_composite pipeline 处理 ─────────────────────────────

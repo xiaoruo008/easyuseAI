@@ -191,8 +191,9 @@ async function generateImageWithRetry(opts: {
 // ── POST handler ───────────────────────────────────
 
 export async function POST(req: NextRequest) {
-  const body = await req.json().catch(() => null);
-  if (!body) return NextResponse.json({ error: "无效请求" }, { status: 400 });
+  try {
+    const body = await req.json().catch(() => null);
+    if (!body) return NextResponse.json({ error: "无效请求" }, { status: 400 });
 
   // ── MiniMax 健康检查（已禁用 — P1紧急停止MiniMax链路）────────────
   // P1紧急：所有MiniMax生图已禁用，货不对版问题必须彻底解决
@@ -400,8 +401,6 @@ export async function POST(req: NextRequest) {
       choiceMode,
       referenceImageUrl,
       originalImageUrl,
-      effectiveRefUrl: effectiveRefUrl || "(empty)",
-      hasReferenceImage,
       templateId,
     });
 
@@ -586,4 +585,11 @@ export async function POST(req: NextRequest) {
     generatedAt: new Date().toISOString(),
     error: errorMessage,
   });
+  } catch (err) {
+    console.error("[generate fatal]", err);
+    return NextResponse.json(
+      { error: "GENERATION_FAILED", message: err instanceof Error ? err.message : "unknown" },
+      { status: 500 }
+    );
+  }
 }
