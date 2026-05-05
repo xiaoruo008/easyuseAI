@@ -37,15 +37,8 @@ export class ReplicateImageProvider implements ImageProvider {
     }
 
     // Lazy-load Replicate to avoid top-level import issues
-    // eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/no-require-imports
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
-    const ReplicateModule = require("replicate") as typeof import("replicate");
-    const Replicate = ReplicateModule.default;
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const Replicate = require("replicate");
     const client = new Replicate({ auth: REPLICATE_API_TOKEN });
 
     const modelInput = this.buildModelInput(input);

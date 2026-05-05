@@ -92,17 +92,24 @@ export async function generateImageFromOptions(opts: GenerateImageOptions): Prom
   const type = TEMPLATE_TYPE_MAP[opts.templateId] ?? "product_photo";
   // selectedProvider 覆盖：优先使用 leads 流程路由决策
   const provider = getImageProviderForRequest(opts.selectedProvider);
-  const output = await provider.generate({
-    type,
-    prompt: opts.userRefinement ?? "",
-    referenceImageUrl: opts.originalImageUrl,
-    aspectRatio: opts.aspectRatio,
-    style: opts.style,
-    // 【修复】透传 diagnosisType 用于爆款前缀注入
-    diagnosisType: opts.diagnosisType,
-  });
+  console.log("[generateImageFromOptions] using provider:", provider.name, "| IMAGE_PROVIDER env:", process.env.IMAGE_PROVIDER);
+  let output: ImageTaskOutput;
+  try {
+    output = await provider.generate({
+      type,
+      prompt: opts.userRefinement ?? "",
+      referenceImageUrl: opts.originalImageUrl,
+      aspectRatio: opts.aspectRatio,
+      style: opts.style,
+      diagnosisType: opts.diagnosisType,
+    });
+    console.log("[generateImageFromOptions] SUCCESS provider.generate() returned:", output.provider, "| url:", output.imageUrl?.slice(0,50));
+  } catch (err) {
+    console.error("[generateImageFromOptions] ❌ provider.generate() THREW:", (err as Error).message);
+    throw err; // Re-throw so generateImageWithRetry catches it
+  }
 
-  // 【新增】图片 URL 校验：检查返回的 URL 是否有效
+  // 【新增】图片 URL 校验
   const imageUrlValid = output.imageUrl && 
     (output.imageUrl.startsWith("http") || 
      output.imageUrl.startsWith("/") || 

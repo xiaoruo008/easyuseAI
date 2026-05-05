@@ -456,8 +456,8 @@ export default function HomePage() {
           </div>
           <div className="flex gap-6 text-xs text-gray-500">
             <span>© 2024 easyuse.ai</span>
-            <Link href="/diagnosis" className="hover:text-gray-300 transition-colors duration-300">使用条款</Link>
-            <Link href="/diagnosis" className="hover:text-gray-300 transition-colors duration-300">隐私政策</Link>
+            <Link href="/terms" className="hover:text-gray-300 transition-colors duration-300">使用条款</Link>
+            <Link href="/privacy" className="hover:text-gray-300 transition-colors duration-300">隐私政策</Link>
           </div>
         </div>
       </footer>

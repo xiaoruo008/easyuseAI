@@ -436,6 +436,24 @@ export async function POST(req: NextRequest) {
       ? `Use the uploaded product image as the main subject. ${basePrompt}`
       : basePrompt;
 
+    // 【Part 2】打印最终请求 payload
+    console.log("[FINAL PAYLOAD]", {
+      prompt: finalPrompt,
+      promptLen: finalPrompt?.length ?? 0,
+      originalImageUrl: effectiveRefUrl,
+      templateId,
+      hasReferenceImage,
+    });
+
+    // 【Part 3】prompt 空校验
+    if (!finalPrompt || finalPrompt.trim() === "") {
+      console.error("[generate] ❌ PROMPT_EMPTY");
+      return NextResponse.json(
+        { error: "PROMPT_EMPTY", message: "prompt 不能为空" },
+        { status: 400 }
+      );
+    }
+
     // ── removebg_composite: 路由到新版 composite endpoint ───────────────────────
     // 新版流程：Replicate cjwbw/rembg 抠图 → 服务端白底画布合成 → 上传 → 返回最终 URL
     // 保证产品 100% 保留，因为产品是抠图后贴上去的，不是 AI 生成的
