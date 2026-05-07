@@ -4,7 +4,7 @@
 //
 // 所有 API route 只 import 这个文件，不直接 import prisma 或 mock-db
 
-import { prisma } from "./prisma";
+import { getPrisma } from "./prisma";
 import * as mock from "./mock-db";
 
 // 默认使用 mock，确保生产环境（无数据库配置时）不崩溃
@@ -14,7 +14,7 @@ const USE_MOCK = process.env.USE_MOCK !== "false";
 
 export async function createSession() {
   if (USE_MOCK) return mock.createSession();
-  return prisma.diagnosisSession.create({
+  return getPrisma().diagnosisSession.create({
     data: { step: 1, answers: {}, completed: false },
   });
 }
@@ -31,7 +31,7 @@ export async function getSession(id: string): Promise<{
   contact?: string | null;
 } | null> {
   if (USE_MOCK) return mock.getSession(id);
-  return prisma.diagnosisSession.findUnique({ where: { id } });
+  return getPrisma().diagnosisSession.findUnique({ where: { id } });
 }
 
 export async function updateSession(
@@ -53,7 +53,7 @@ export async function updateSession(
   if (data.resultType !== undefined) patch.resultType = data.resultType;
   if (data.confidence !== undefined) patch.confidence = data.confidence;
 
-  return prisma.diagnosisSession.update({ where: { id }, data: patch });
+  return getPrisma().diagnosisSession.update({ where: { id }, data: patch });
 }
 
 // ─── Lead ─────────────────────────────────────────────────────
@@ -75,7 +75,7 @@ export async function createLead(data: {
       diagnosisSessionId: data.diagnosisSessionId ?? null,
     });
   }
-  return prisma.lead.create({
+  return getPrisma().lead.create({
     data: {
       name: data.name,
       contact: data.contact,
@@ -89,7 +89,7 @@ export async function createLead(data: {
 
 export async function getLead(id: string) {
   if (USE_MOCK) return mock.getLead(id);
-  return prisma.lead.findUnique({
+  return getPrisma().lead.findUnique({
     where: { id },
     include: { conversations: { orderBy: { createdAt: "asc" } } },
   });
@@ -122,7 +122,7 @@ export async function getAllLeads(filter?: { status?: string; q?: string }) {
       { businessType: { contains: filter.q, mode: "insensitive" } },
     ];
   }
-  return prisma.lead.findMany({
+  return getPrisma().lead.findMany({
     where,
     orderBy: { createdAt: "desc" },
     include: { session: { select: { answers: true, updatedAt: true } } },
@@ -135,7 +135,7 @@ export async function updateLead(id: string, data: Record<string, unknown>) {
   for (const key of ["name", "contact", "businessType", "note", "status"]) {
     if (data[key] !== undefined) patch[key] = data[key];
   }
-  return prisma.lead.update({ where: { id }, data: patch });
+  return getPrisma().lead.update({ where: { id }, data: patch });
 }
 
 // ─── Task ─────────────────────────────────────────────────────
@@ -171,7 +171,7 @@ export async function createTask(data: {
       isCaseCandidate: false,
     });
   }
-  return prisma.task.create({
+  return getPrisma().task.create({
     data: {
       leadId: data.leadId,
       taskType: data.taskType,
@@ -197,7 +197,7 @@ export async function createTask(data: {
 
 export async function getTasksByLead(leadId: string) {
   if (USE_MOCK) return mock.getTasksByLead(leadId);
-  return prisma.task.findMany({
+  return getPrisma().task.findMany({
     where: { leadId },
     orderBy: { createdAt: "desc" },
   });
@@ -208,7 +208,7 @@ export async function getTask(id: string) {
     const tasks = mock.getTasksByLead("");
     return tasks.find((t) => t.id === id) ?? null;
   }
-  return prisma.task.findUnique({ where: { id } });
+  return getPrisma().task.findUnique({ where: { id } });
 }
 
 export async function updateTask(
@@ -254,7 +254,7 @@ export async function updateTask(
   if (data.promptVersion !== undefined) patch.promptVersion = data.promptVersion;
   if (data.moderationRiskLevel !== undefined) patch.moderationRiskLevel = data.moderationRiskLevel;
   if (data.retryStrategy !== undefined) patch.retryStrategy = data.retryStrategy;
-  return prisma.task.update({ where: { id }, data: patch });
+  return getPrisma().task.update({ where: { id }, data: patch });
 }
 
 export async function getOrCreateLeadForSession(sessionId: string) {
@@ -262,7 +262,7 @@ export async function getOrCreateLeadForSession(sessionId: string) {
     const leads = mock.getAllLeads();
     return leads.find((l) => l.diagnosisSessionId === sessionId) ?? null;
   }
-  return prisma.lead.findFirst({ where: { diagnosisSessionId: sessionId } });
+  return getPrisma().lead.findFirst({ where: { diagnosisSessionId: sessionId } });
 }
 
 // ─── Conversation ─────────────────────────────────────────────
@@ -273,12 +273,12 @@ export async function createConversation(data: {
   role: "user" | "ai" | "human";
 }) {
   if (USE_MOCK) return mock.createConversation(data);
-  return prisma.conversation.create({ data });
+  return getPrisma().conversation.create({ data });
 }
 
 export async function getConversationsByLead(leadId: string) {
   if (USE_MOCK) return mock.getConversationsByLead(leadId);
-  return prisma.conversation.findMany({
+  return getPrisma().conversation.findMany({
     where: { leadId },
     orderBy: { createdAt: "asc" },
   });
