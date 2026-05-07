@@ -1,17 +1,17 @@
 {
-  "round": 414,
-  "stable_count": 149,
-  "last_check": "2026-05-07T16:00:00.000000",
+  "round": 418,
+  "stable_count": 154,
+  "last_check": "2026-05-08T09:31:00.000000+00:00",
   "last_result": "pass",
-  "consecutive_stable": 149,
+  "consecutive_stable": 154,
   "status": "pass",
   "notify_stable": false,
   "checks": {
-    "http_vercel": "https://easyuse-ai.vercel.app: 200 OK",
-    "console_vercel": "0 critical errors (SeoJuice warning + GSI FedCM error from third-party)",
-    "local_server_port": "3000 (orphan next-server, was 3005)",
-    "browser_localhost": "ERR_CONNECTION_REFUSED (Playwright sandbox limitation)"
+    "http_localhost_3005": "200 OK",
+    "console": "0 errors",
+    "flow": "5/5 steps passed",
+    "mobile": "3/3 steps passed"
   },
-  "this_round_fix": "无 — server端口迁移(orphan进程)，非业务问题，代码级差距0",
+  "this_round_fix": "无 — 全量通过，代码级差距0",
   "incident": "none"
 }
