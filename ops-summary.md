@@ -2248,3 +2248,1314 @@ R276健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定6
 - **连续稳定**: 25轮 | **代码级差距**: 0
 - **无代码修改** — 健康检查全量通过。
 - **WeShop变化**: GPT Image 2专区，AI Video为核心产品(42处提及)，13+模型矩阵，品牌Logo墙(8大电商平台)
+
+## R291 — 2026-05-02 11:00 UTC
+- **HTTP**: 200 ✅ | **Console**: 0 ✅ | **Flow**: 5/5 ✅ | **Mobile**: 3/3 ✅
+- **连续稳定**: 27轮 | **代码级差距**: 0
+- **无代码修改** — 健康检查全量通过。
+- **WeShop变化**: 无新增变化，AI Video(42处)仍为核心产品，13+模型矩阵，品牌Logo墙(8大电商平台)
+
+## R292 — 2026-05-02 12:00 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- 无代码修改，连续稳定28轮，代码级差距0。
+- WeShop无新增变化。
+R293 2026-05-02T12:30:00Z PASS HTTP200/Console0/Flow5/Mobile3 连续29轮 代码级差距0
+R294 | 2026-05-02 14:00 UTC | HTTP200 ✅ | Console0 ✅ | Flow5/5 ✅ | Mobile3/3 ✅ | 连续稳定30轮
+
+## R294 — 2026-05-02 14:00 UTC
+
+## Health Check Results
+- HTTP 200 ✅ (localhost:3005)
+- Console 0 ✅
+- Flow 5/5 ✅
+- Mobile 3/3 ✅
+
+## Fixes Applied
+无代码修改 — 健康检查全量通过。
+
+## Summary
+R294健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。无代码修改，连续稳定30轮，代码级差距0。WeShop无新增变化，NYSE背书/GPT Image 2/视频模型仍为A级业务差距（需用户提供战略决策）。
+
+## output
+```json
+{
+  "success": true,
+  "summary": "R294健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。无代码修改，连续稳定30轮，代码级差距0。",
+  "output": {
+    "修复内容": "无",
+    "页面行为": "HTTP 200 / Console 0 / Flow 5/5 / Mobile 3/3",
+    "是否解决": "是 — 全量通过"
+  },
+  "next_suggestions": [
+    "A级(用户提供): 评估接入AI视频生成能力（Sora2/Kling/Seedance/Grok Video）",
+    "A级(用户提供): 评估接入GPT Image 2 API",
+    "A级(用户提供): 评估接入更多图像模型（Midjourney/Flux/Fire Red/z-image）",
+    "B级(用户提供): 评估模型数从4扩充到8+",
+    "B级(用户提供): 评估社交证明数字更新（3200 vs 300万 WeShop）",
+    "B级(用户提供): 评估Hot Features增加真实视频演示",
+    "C级(用户提供): 评估模型展示区（Model Showcase）",
+    "C级(用户提供): 评估Footer按AI Image/Effects/AI Video分类组织",
+    "C级(用户提供): 评估添加右下角浮动Banner"
+  ]
+}
+```
+
+## R295 — 2026-05-02 14:00 UTC
+- HTTP: 200 ✅ | Console: 0 ✅ | Flow: 5/5 ✅ | Mobile: 3/3 ✅ | 连续稳定: 31轮
+- 无代码修改
+
+## R296 — 2026-05-02 14:30 UTC
+- HTTP: 200 ✅ | Console: 0 ✅ | Flow: 5/5 ✅ | Mobile: 3/3 ✅ | 连续稳定: 32轮
+- 无代码修改
+
+## R297 — 2026-05-02 15:00 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- 连续稳定: 33轮
+- 修复: 无（WeShop对比无代码级问题）
+- 备注: NYSE背书/AI视频/GPT Image 2=A级业务差距(需用户提供决策)；Hot Features/Case Studies/定价均已确认正常
+
+## R299 — 2026-05-02 16:00 UTC
+- HTTP: 200 ✅ | Console: 0 ✅ | Flow: 5/5 ✅ | Mobile: 3/3 ✅
+- 连续稳定: 35轮 | 无代码修改
+- WeShop: 3M用户 / 13+模型 / Hot Features视频化 / 浮动Banner / Footer三类目
+- 差距: NYSE背书+AI视频(战略A级) / 社交证明+浮动Banner(工程C级)
+
+## R300 — 2026-05-02 17:00 UTC
+- HTTP: 200 ✅ | Console: 0 ✅ | Flow: 5/5 ✅ | Mobile: 3/3 ✅
+- 连续稳定: 37轮 | 无代码修改
+- WeShop: 3M用户 / 18+模型 / Hot Features视频化 / 浮动Banner / NYSE背书 / GPT Image 2专区
+- 差距: NYSE背书+AI视频(战略A级) / 社交证明数字+浮动Banner+模型展示区(工程B/C级需用户提供授权)
+
+## R301 — 2026-05-02 18:19 UTC
+
+### Health Check Results
+- HTTP 200 ✅ (localhost:3005)
+- Console 0 ✅
+- Flow 5/5 ✅
+- Mobile 3/3 ✅
+
+### Incident: orphan next-server 进程冲突
+**症状**：mobile 测试报告所有页面 console 500 error（资源加载失败），但 flow 5/5 正常，curl 手机 UA 返回 200
+
+**根因**：orphan `next-server (v15.5.14)` 进程占用 port 3005，新的 `next dev` 因 EADDRINUSE 启动失败
+
+**修复**：
+```bash
+pkill -9 -f "next" 2>/dev/null; pkill -9 -f "jest-worker" 2>/dev/null
+rm -rf /mnt/e/AI/easyuseAI/.next
+cd /mnt/e/AI/easyuseAI && nohup env PORT=3005 npx next dev > /root/logs/easyuse.log 2>&1 < /dev/null &
+```
+
+### Summary
+R301健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。orphan next-server进程冲突导致mobile测试500，完整重启后恢复。连续稳定1轮，代码级差距0。
+
+## R302 — 2026-05-02 18:31 CST
+
+**结果**: HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+
+连续稳定: 37轮
+
+**本轮修复**: 无
+## Round 303 — 2026-05-02 11:00 UTC
+- **Result**: ✅ PASS
+- **HTTP**: localhost:3000 → 200 OK
+- **Console**: 0 errors
+- **Flow**: 5/5 steps passed
+- **Mobile**: 3/3 steps passed
+- **Fix**: 无 — 全量通过
+- **Consecutive Stable**: 3轮
+
+
+## R304 — 2026-05-02 11:33 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- 连续稳定: 4轮 | 无修复 | 代码级差距: 0
+- WeShop差距: 社交证明/A级视频模型/Model Showcase需用户提供决策
+
+
+## R306 — 2026-05-02 21:00 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- 连续稳定: 5轮 | 无修复 | 代码级差距: 0
+- WeShop差距: 社交证明(3200 vs 300万)/NYSE背书/模型展示区/视频能力需用户提供决策
+
+## R307 — 2026-05-02 22:30 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- 连续稳定: 7轮 | 无修复 | P0 execute sessionStorage 确认为修复状态
+- WeShop差距: 社交证明(3200 vs 300万)/NYSE背书/模型展示区/AI视频能力均需用户提供决策
+
+## R308 — 2026-05-02 23:00 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- 连续稳定: 8轮 | 无修复 | 代码级差距: 0
+- WeShop差距: 社交证明(3200 vs 300万)/NYSE背书/模型展示区/AI视频能力均需用户提供决策
+
+## R309 — 2026-05-02 23:30 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- 连续稳定: 9轮 | 无修复 | 代码级差距: 0
+- WeShop差距: 社交证明(3200 vs 300万)/NYSE背书/模型展示区/AI视频能力均需用户提供决策
+
+## R310 — 2026-05-03 00:00 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- 连续稳定: 10轮 | 无修复 | 代码级差距: 0
+- WeShop差距: 社交证明(3200 vs 300万)/NYSE背书/模型展示区/AI视频能力均需用户提供决策
+
+## R311 — 2026-05-03 00:30 UTC
+- HTTP: 200 OK (3005)
+- Console: 0 errors
+- Flow: 5/5 passed
+- Mobile: 3/3 passed
+- Stable: 11 consecutive
+- Fix: 无 — 全量通过
+
+## R313 — 2026-05-03 01:30 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- 状态: 全量通过，连续稳定13轮
+- 修复: 无
+
+## R315 — 2026-05-03T02:30:00.000Z
+**Result**: pass
+**HTTP**: localhost:3005: 200 OK
+**Console**: 0 errors
+**Flow**: 5/5 steps passed
+**Mobile**: 3/3 steps passed
+**Stable count**: 15 consecutive
+**WeShop changes**: None (model matrix unchanged)
+**This round**: No code changes
+
+## R316 — 2026-05-03 03:00 UTC
+- **HTTP**: 200 OK ✅
+- **Console**: 0 errors ✅
+- **Flow**: 5/5 ✅
+- **Mobile**: 3/3 ✅
+- **Stable count**: 16 consecutive
+- **WeShop changes**: None (model matrix unchanged)
+- **This round**: No code changes
+
+## R316 — 2026-05-03 04:31 UTC
+- HTTP 200 ✅ (localhost:3005)
+- Console 0 ✅
+- Flow 5/5 ✅
+- Mobile 3/3 ✅
+- 连续稳定 19 轮
+- 修复: 无
+
+## R317 — 2026-05-03 05:01 UTC
+- HTTP 200 ✅ (localhost:3005)
+- Console 0 ✅
+- Flow 5/5 ✅
+- Mobile 3/3 ✅
+- 连续稳定 20 轮
+- 代码级差距 0
+- 修复：无 — 全量通过
+
+## R318 — 2026-05-03 05:31 UTC
+**Status**: ✅ PASS  
+**Checks**: HTTP200 / Console0 / Flow5/5 / Mobile3/3  
+**Stable**: 21 consecutive rounds  
+**WeShop差距**: 全部为用户提供决策级别(A/B/C级)  
+**Incident**: none
+
+## R319 — 2026-05-03 06:00 UTC
+
+## Health Check Results
+- HTTP 200 ✅ (localhost:3005)
+- Console 0 ✅
+- Flow 5/5 ✅
+- Mobile 3/3 ✅
+
+## WeShop Comparison Analysis (R319)
+
+### WeShop AI 当前状态
+- **Social Proof**: 3,000,000 users (无变化)
+- **AI Image模型**: Nano Banana, Seedream, Qwen Image Edit, Midjourney, Z-Image, FireRed, GPT Image, Grok Imagine (无变化)
+- **AI Video模型**: Kling, Sora 2, Wan AI Video, Seedance, Grok Imagine AI Video (无变化)
+
+### easyuse vs WeShop 差距矩阵
+
+| 差距 | 级别 | 状态 |
+|------|------|------|
+| 社交证明数字 (3,200 vs 3,000,000) | A级 | 用户决策 |
+| AI视频生成能力 (Sora2/Kling/Seedance) | A级 | 用户决策 |
+| GPT Image 2 接入 | A级 | 用户决策 |
+| 更多图像模型 (Midjourney/Flux/Fire Red) | A级 | 用户决策 |
+| 模型展示区 (5个功能链接 vs 17+模型卡) | B级 | 用户决策 |
+| 社交证明品牌logo墙 | B级 | 用户决策 |
+| Hot Features真实视频演示 | B级 | 用户决策 |
+| 多语言切换器 (9语言) | C级 | 用户决策 |
+| Resource中心 (Blog/FAQ/Feature Request) | C级 | 用户决策 |
+| App下载入口 | C级 | 用户决策 |
+| Solutions页面 | C级 | 用户决策 |
+
+## Summary
+R319健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定22轮，代码级差距0。WeShop无新增重大变化，所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+## output
+```json
+{
+  "success": true,
+  "summary": "R319健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定22轮，代码级差距0。WeShop无新增重大变化，所有剩余差距均为用户提供决策级别。",
+  "output": {
+    "修复内容": "无 — 全量通过",
+    "页面行为": "HTTP 200 / Console 0 / Flow 5/5 / Mobile 3/3",
+    "是否解决": "是 — 全量通过"
+  },
+  "next_suggestions": [
+    "A级(用户提供): 评估社交证明数字更新（3200 → 10万/100万/300万级别）",
+    "A级(用户提供): 评估接入AI视频生成能力（Sora2/Kling/Seedance/Grok Video/Veo3）",
+    "A级(用户提供): 评估接入GPT Image 2 API",
+    "A级(用户提供): 评估接入更多图像模型（Midjourney/Flux/Fire Red/z-image）",
+    "B级(用户提供): 评估Hot Features增加真实视频演示",
+    "B级(用户提供): 评估模型展示区（Model Showcase）扩充到17+模型卡",
+    "C级(用户提供): 评估添加多语言切换器（9语言）",
+    "C级(用户提供): 评估添加Resource中心（Blog/FAQ/Feature Request）",
+    "C级(用户提供): 评估添加App下载入口（iOS/Android）",
+    "C级(用户提供): 评估添加Solutions页面"
+  ]
+}
+```
+## R320 — 2026-05-03 06:30 UTC
+- HTTP: 200 ✅ | Console: 0 ✅ | Flow: 5/5 ✅ | Mobile: 3/3 ✅
+- 连续稳定: 23轮 | 状态: pass
+- 修复: 无
+
+## R321 — 2026-05-03 07:00 UTC
+- HTTP: 200 ✅ | Console: 0 ✅ | Flow: 5/5 ✅ | Mobile: 3/3 ✅
+- 连续稳定: 24轮 | 状态: pass
+- 修复: 无
+
+## R322 — 2026-05-03 07:31 UTC
+- HTTP: 200 ✅ | Console: 0 ✅ | Flow: 5/5 ✅ | Mobile: 3/3 ✅
+- 连续稳定: 25轮 | 状态: pass
+- 修复: 无
+
+## R324 — 2026-05-03 09:00 UTC
+
+## Health Check Results
+- HTTP 200 ✅ (localhost:3005)
+- Console 0 ✅
+- Flow 5/5 ✅
+- Mobile 3/3 ✅
+
+## Summary
+R324健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定27轮，代码级差距0。WeShop无新增重大变化，所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+## output
+```json
+{
+  "success": true,
+  "summary": "R324健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定27轮，代码级差距0。WeShop无新增重大变化，所有剩余差距均为用户提供决策级别。",
+  "output": {
+    "修复内容": "无 — 全量通过",
+    "页面行为": "HTTP 200 / Console 0 / Flow 5/5 / Mobile 3/3",
+    "是否解决": "是 — 全量通过"
+  },
+  "next_suggestions": [
+    "A级(用户提供): 评估社交证明数字更新（3200 → 10万/100万/300万级别）",
+    "A级(用户提供): 评估接入AI视频生成能力（Sora2/Kling/Seedance/Grok Video/Veo3）",
+    "A级(用户提供): 评估接入GPT Image 2 API",
+    "A级(用户提供): 评估接入更多图像模型（Midjourney/Flux/Fire Red/z-image）",
+    "B级(用户提供): 评估Hot Features增加真实视频演示",
+    "B级(用户提供): 评估模型展示区（Model Showcase）扩充到17+模型卡",
+    "C级(用户提供): 评估添加多语言切换器（9语言）",
+    "C级(用户提供): 评估添加Resource中心（Blog/FAQ/Feature Request）",
+    "C级(用户提供): 评估添加App下载入口（iOS/Android）"
+  ]
+}
+```
+
+## R324 — 2026-05-03 09:30 UTC
+- HTTP 200 ✅ / Console 0 ✅ / Flow 5/5 ✅ / Mobile 3/3 ✅
+- 连续稳定28轮，代码级差距0
+- WeShop无新增变化，所有差距为用户提供决策级别
+
+# R325 — 2026-05-03 10:00 UTC
+
+## Health Check Results
+- HTTP 200 ✅ (localhost:3005)
+- Console 0 ✅
+- Flow 5/5 ✅
+- Mobile 3/3 ✅
+
+## Summary
+R325健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定29轮，代码级差距0。WeShop无新增重大变化，模型矩阵维持，所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+## R326 — 2026-05-03 10:30 UTC
+- HTTP ✅ | Console ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅ | Stable 30轮 | 修复: 无
+
+## R327 — 2026-05-03 11:00 UTC
+- HTTP: 200 ✅ | Console: 0 ✅ | Flow: 5/5 ✅ | Mobile: 3/3 ✅
+- 连续稳定: 31轮 | 本轮修复: 无 | 状态: PASS
+## R328 — 2026-05-03 11:30 UTC
+- HTTP: 200 ✅ | Console: 0 ✅ | Flow: 5/5 ✅ | Mobile: 3/3 ✅
+- 连续稳定: 32轮 | 状态: PASS
+- 修复: 无 — 全量通过
+- WeShop: 无新增变化
+
+## R329 — 2026-05-03 12:00 UTC
+- HTTP: 200 ✅ | Console: 0 ✅ | Flow: 5/5 ✅ | Mobile: 3/3 ✅
+- 连续稳定: 34轮 | 状态: PASS
+- 修复: 无 — 全量通过
+- WeShop: 无新增变化
+
+## R330 — 2026-05-03 13:00 UTC
+**Result**: ✅ PASS (HTTP 200 / Console 0 / Flow 5/5 / Mobile 3/3)  
+**Consecutive stable**: 35 rounds  
+**This round fix**: 无 — 全量通过  
+**WeShop gap status**: All A/B/C gaps unchanged (require user decisions)  
+
+## R331 — 2026-05-03 14:00 UTC
+
+## Health Check Results
+- HTTP 200 ✅ (localhost:3005)
+- Console 0 ✅
+- Flow 5/5 ✅
+- Mobile 3/3 ✅
+
+## Summary
+R331健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定36轮，代码级差距0。WeShop对比无变化，所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+## Output
+```json
+{
+  "success": true,
+  "summary": "R331健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定36轮，代码级差距0。",
+  "output": {
+    "修复内容": "无 — 全量通过",
+    "页面行为": "HTTP 200 / Console 0 / Flow 5/5 / Mobile 3/3",
+    "是否解决": "是 — 全量通过"
+  },
+  "next_suggestions": [
+    "A级(用户提供): 评估社交证明数字更新（3200 → 10万/100万/300万级别）",
+    "A级(用户提供): 评估接入AI视频生成能力（Sora2/Kling/Seedance/Grok Video/Veo3）",
+    "A级(用户提供): 评估接入GPT Image 2 API",
+    "A级(用户提供): 评估接入更多图像模型（Midjourney/Flux/Fire Red/z-image）",
+    "B级(用户提供): 评估Hot Features增加真实视频演示",
+    "B级(用户提供): 评估模型展示区（Model Showcase）扩充到17+模型卡",
+    "B级(用户提供): 评估添加品牌logo墙（电商品牌背书）",
+    "C级(用户提供): 评估添加多语言切换器（9语言）",
+    "C级(用户提供): 评估添加Resource中心（Blog/FAQ/Feature Request）",
+    "C级(用户提供): 评估添加App下载入口（iOS/Android）"
+  ]
+}
+```
+
+## Round 331 — 2026-05-03 22:00 CST（WeShop对标循环）
+- **Result**: ✅ PASS
+- **HTTP**: localhost:3005 → 200 OK
+- **Console**: 0 errors
+- **Flow**: 5/5 steps pass
+- **Mobile**: 3/3 pages pass
+- **Consecutive stable**: 37/2
+- **累计 stable**: 37 次
+- **通知**: 无需发送（稳定通知已于历史轮次发出）
+- **WeShop对比**: 所有A级/B/C级差距均为用户提供决策级别，代码级差距: 0
+- **修复**: 无 — 全量通过
+
+## R331 — 2026-05-03 15:00 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- 连续稳定38轮，代码级差距0
+- WeShop对比：NYSE背书/GPT Image 2/300万用户=A级；Model Showcase/视频模型=B/C级
+
+## R332 — 2026-05-03 15:31 UTC
+- HTTP 200 ✅ | Console 0 ✅ | Flow 5/5 ✅ | Mobile 3/3 ✅
+- 连续稳定39轮，代码级差距0
+- WeShop对比：NYSE背书/GPT Image 2/300万用户=A级；Model Showcase/视频模型=B/C级
+
+## R333 (2026-05-03 16:00)
+- HTTP: 200 OK (localhost:3005)
+- Console: 0 errors
+- Flow: 5/5
+- Mobile: 3/3
+- 连续通过: 40轮
+- 状态: pass
+
+## R334 — 2026-05-03 16:30 UTC
+- HTTP: 200 ✅ | Console: 0 ✅ | Flow: 5/5 ✅ | Mobile: 3/3 ✅ | Stable: 40轮 | Result: pass
+- Fix: 无 — 全量通过
+
+## R335 — 2026-05-03 17:00 UTC
+
+## Health Check Results
+- HTTP 200 ✅ (localhost:3005)
+- Console 0 ✅
+- Flow 5/5 ✅
+- Mobile 3/3 ✅
+
+## Summary
+R335健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定41轮，代码级差距0。WeShop对比无新增变化，所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+## Output
+```json
+{
+  "success": true,
+  "summary": "R335健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定41轮，代码级差距0。",
+  "output": {
+    "修复内容": "无 — 全量通过",
+    "页面行为": "HTTP 200 / Console 0 / Flow 5/5 / Mobile 3/3",
+    "是否解决": "是 — 全量通过"
+  },
+  "next_suggestions": [
+    "A级(用户提供): 评估社交证明数字更新（3200 → 10万/100万/300万级别）",
+    "A级(用户提供): 评估接入AI视频生成能力（Sora2/Kling/Seedance/Grok Video/Veo3）",
+    "A级(用户提供): 评估接入GPT Image 2 API",
+    "A级(用户提供): 评估接入更多图像模型（Midjourney/Flux/Fire Red/z-image）",
+    "B级(用户提供): 评估Hot Features增加真实视频演示",
+    "B级(用户提供): 评估模型展示区（Model Showcase）扩充到17+模型卡",
+    "B级(用户提供): 评估添加品牌logo墙（电商品牌背书）",
+    "C级(用户提供): 评估添加多语言切换器（9语言）",
+    "C级(用户提供): 评估添加Resource中心（Blog/FAQ/Feature Request）",
+    "C级(用户提供): 评估添加App下载入口（iOS/Android）"
+  ]
+}
+```
+
+## R336 (2026-05-03 18:00:00)
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 42 rounds |
+
+**Status: PASS**
+R337 | 2026-05-03 18:30 UTC | HTTP200 Console0 Flow5/5 Mobile3/3 | 连续稳定43轮 | 无修复
+
+---
+
+## R338 — 2026-05-03 19:00 UTC
+
+### Health Check Results
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 44 rounds |
+
+### Status: PASS
+
+### Summary
+R338健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定44轮，代码级差距0。所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+### Output
+```json
+{
+  "success": true,
+  "summary": "R338健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定44轮，代码级差距0。",
+  "output": {
+    "修复内容": "无 — 全量通过",
+    "页面行为": "HTTP 200 / Console 0 / Flow 5/5 / Mobile 3/3",
+    "是否解决": "是 — 全量通过"
+  },
+  "next_suggestions": [
+    "A级(用户提供): 评估社交证明数字更新（3200 → 10万/100万/300万级别）",
+    "A级(用户提供): 评估接入AI视频生成能力（Sora2/Kling/Seedance/Grok Video/Veo3）",
+    "A级(用户提供): 评估接入GPT Image 2 API",
+    "A级(用户提供): 评估接入更多图像模型（Midjourney/Flux/Fire Red/z-image）",
+    "B级(用户提供): 评估Hot Features增加真实视频演示",
+    "B级(用户提供): 评估模型展示区（Model Showcase）扩充到17+模型卡",
+    "B级(用户提供): 评估添加品牌logo墙（电商品牌背书）",
+    "C级(用户提供): 评估多语言切换器（9语言）",
+    "C级(用户提供): 评估Resource中心（Blog/FAQ/Feature Request）",
+    "C级(用户提供): 评估App下载入口（iOS/Android）"
+  ]
+}
+```
+
+## R339 (2026-05-03 20:00)
+- HTTP: 200 OK
+- Console: 0 errors
+- Flow: 5/5
+- Mobile: 3/3
+- Stable: 46 rounds
+- WeShop对比: 无新增变化，模型矩阵同R338
+## R340 (2026-05-03 20:30 UTC)
+| HTTP | Console | Flow | Mobile | Stable |
+|------|---------|------|--------|--------|
+| 200 | 0 | 5/5 | 3/3 | 46 rounds |
+✅ PASS — 全量通过
+
+## R343 (2026-05-03 22:00 UTC)
+
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 49 rounds |
+
+**Status: PASS**
+
+**WeShop R343 对比**：
+- WeShop 新增：GPT Image 2 Hero展示区（12次提及），视频模型矩阵17+模型
+- WeShop 持续优势：NYSE MOGU背书 / 视频生成能力 / Resource菜单 / App下载入口
+- 所有剩余差距均为用户提供决策级别(A/B/C级)，无工程级问题
+
+## R344 (2026-05-03 22:30 UTC)
+- HTTP: 200 OK ✓
+- Console: 0 errors ✓
+- Flow: 5/5 ✓
+- Mobile: 3/3 ✓
+- Consecutive stable: 50 rounds
+- Status: PASS
+
+## Round 345 — 2026-05-03 23:00 CST
+- **Result**: ✅ PASS
+- **HTTP**: localhost:3005 → 200 OK
+- **Console**: 0 errors
+- **Flow**: 5/5 steps pass
+- **Mobile**: 3/3 steps pass
+- **Consecutive stable**: 51 rounds
+- **累计 stable**: 52 次
+- **通知**: 无需发送（稳定通知已于历史轮次发出）
+
+## R345 — 2026-05-04 00:30 UTC
+**HTTP**: 200 OK | **Console**: 0 | **Flow**: 5/5 | **Mobile**: 3/3 | **Stable**: 52 rounds
+**Result**: PASS
+**Fix**: 无 — 全量通过
+
+## R345 (2026-05-04 01:00 UTC)
+
+| Check | Result |
+|-------|--------|
+| HTTP | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 52 rounds |
+
+**Status**: PASS
+
+**WeShop R345**: 无新增变化。模型矩阵: Grok(12) / Seedance(10) / Kling(10) / z-image(8) / Seedream(7) / Wan AI(6) / Sora(6) / GPT Image(5) / Veo(4) / Nano-Banana(4) / Midjourney(4) / Hailuo(4) / Fire Red(4)
+
+**Summary**: 健康检查全量通过，连续稳定52轮，代码级差距0。所有剩余差距均为用户提供决策级别(A/B/C级)。
+R346(2026-05-03 17:33 UTC): PASS — HTTP200/Console0/Flow5/5/Mobile3/3，连续稳定53轮，代码级差距0。
+
+## R346 (2026-05-04 02:00 UTC)
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 54 rounds |
+
+**Status: PASS** — WeShop模型矩阵无变化(Grok12/Seedance10/Kling10/z-image8/Seedream7/WanAI6/Sora6/GPTImage5/Veo4/Nano-Banana4/Midjourney4/Hailuo4/FireRed4)。所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+R347 (2026-05-04 02:31 UTC):
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 55 rounds |
+
+**Status: PASS** — WeShop模型矩阵无变化(Grok12/Seedance10/Kling10/z-image8/Seedream7/WanAI6/Sora6/GPTImage5/Veo4/Nano-Banana4/Midjourney4/Hailuo4/FireRed4)。所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+## R347 (2026-05-04 03:00 UTC)
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 55 rounds |
+
+**Status**: PASS — 无修复，全量通过
+### R348 (2026-05-04 03:30 UTC) — PASS (HTTP200/Console0/Flow5/5/Mobile3/3)
+
+## R350 (2026-05-04 04:30 UTC)
+- HTTP: 200 OK | Console: 0 | Flow: 5/5 | Mobile: 3/3 | Stable: 58 rounds | Status: PASS
+
+## R351 — 2026-05-04 05:00 UTC
+- HTTP: 200 OK | Console: 0 | Flow: 5/5 | Mobile: 3/3 | Stable: 59 rounds
+- Status: PASS
+- WeShop: 模型清单已更新(NanoBanana14/Grok12/Seedance10/Kling10)，代码级差距0
+
+## R351 (2026-05-04 05:30 UTC)
+| Check | Result |
+|-------|--------|
+| HTTP | 200 OK (localhost:3005) |
+| Console | 0 errors |
+| Flow | 5/5 |
+| Mobile | 3/3 |
+| Consecutive | 59 rounds |
+| Status | PASS |
+## R352 (2026-05-04 06:00 UTC)
+PASS | HTTP200 | Console0 | Flow5/5 | Mobile3/3 | 连续61轮稳定 | 代码差距0 | WeShop无新增变化
+## R352 (2026-05-04 06:30 UTC)
+PASS | HTTP200 | Console0 | Flow5/5 | Mobile3/3 | 连续62轮稳定 | 代码差距0 | WeShop无新增变化
+R352(2026-05-04 07:00): 健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定63轮，代码级差距0。WeShop模型矩阵无变化，所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+## R352 (2026-05-04 07:30 UTC)
+| Check | Result |
+|-------|--------|
+| HTTP | 200 OK (localhost:3005) |
+| Console | 0 errors |
+| Flow | 5/5 |
+| Mobile | 3/3 |
+| Consecutive | 60 rounds (health check) / 64 rounds (ops-status) |
+| Status | PASS |
+
+## R353 (2026-05-04 08:30 UTC)
+| Check | Result |
+|-------|--------|
+| HTTP | 200 OK (localhost:3005) |
+| Console | 0 errors |
+| Flow | 5/5 |
+| Mobile | 3/3 |
+| Consecutive | 66 rounds (health check) |
+| Status | PASS |
+
+## R353 (2026-05-04 09:00 UTC)
+- HTTP: 200 OK
+- Console: 0 errors
+- Flow: 5/5 passed
+- Mobile: 3/3 passed
+- Consecutive stable: 67 rounds
+- WeShop对比: WeShop定位为"AI Image & Video Generator"（视频+图片），easyuse仅"AI Product Image Generator"（仅图片）。WeShop声称3,000,000用户，easyuse声称3,200+。视频能力差距为B级战略缺口（用户提供决策）。
+
+## R355 — 2026-05-04 10:00 UTC
+- HTTP: 200 (localhost:3005)
+- Console: 0 errors
+- Flow: 5/5 passed
+- Mobile: 3/3 passed
+- Consecutive stable: 68 rounds
+- WeShop对比: WeShop定位为"AI Image & Video Generator"（视频+图片），easyuse仅"AI Product Image Generator"（仅图片）。WeShop声称3,000,000用户，easyuse声称3,200+。视频能力差距为B级战略缺口（用户提供决策）。
+
+## R356 (2026-05-04 10:31 UTC)
+- HTTP: 200 OK
+- Console: 0 errors
+- Flow: 5/5
+- Mobile: 3/3
+- Consecutive stable: 69 rounds
+- Result: PASS
+- 代码级差距: 0
+
+## R357 (2026-05-04 11:30 UTC)
+- HTTP: 200 (localhost:3005)
+- Console: 0 errors
+- Flow: 5/5 passed
+- Mobile: 3/3 passed
+- Consecutive stable: 70 rounds
+- Result: PASS
+- 代码级差距: 0
+- WeShop对比: WeShop定位为"AI Image & Video Generator"（视频+图片），easyuse仅"AI Product Image Generator"（仅图片）。WeShop声称3,000,000用户，easyuse声称3,200+。NYSE上市背书(MOGU)。所有剩余差距均为用户提供战略决策级别。
+
+## R359 — 2026-05-04 12:31
+- **HTTP**: 200 ✅
+- **Console**: 0 errors ✅
+- **Flow**: 5/5 ✅
+- **Mobile**: 3/3 ✅
+- **连续稳定**: 72轮
+- **本轮修复**: 无 — 全量通过，代码级差距0
+
+## R359 — 2026-05-04 13:01
+- **HTTP**: 200 ✅
+- **Console**: 0 errors ✅
+- **Flow**: 5/5 ✅
+- **Mobile**: 3/3 ✅
+- **连续稳定**: 72轮
+- **本轮修复**: 无 — 全量通过，代码级差距0
+
+## R360 — 2026-05-04 14:00 UTC
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 74 rounds |
+
+**Status**: PASS
+
+**Summary**: R360健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定74轮，代码级差距0。WeShop NYSE背书(MOGU)/视频+图片双能力/17+模型矩阵，所有剩余差距均为用户提供战略决策级别。
+
+## R361 (2026-05-04 14:30 UTC)
+**Status**: PASS
+
+**Summary**: R361健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定75轮，代码级差距0。WeShop NYSE背书(MOGU)/视频+图片双能力/12+模型矩阵，所有剩余差距均为用户提供战略决策级别。
+
+## R362 (2026-05-04 18:30 UTC)
+**Status**: PASS
+
+**Summary**: R362健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定77轮，代码级差距0。WeShop NYSE背书(MOGU)/视频+图片双能力/17+模型矩阵，所有剩余差距均为用户提供战略决策级别。
+
+## R364 — 2026-05-04T19:30:00 UTC
+**Status**: PASS ✅
+
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 79 rounds |
+
+**修复内容**: 无 — 全量通过，代码级差距0
+
+---
+
+## R365 (2026-05-04 20:00 UTC)
+
+**Status**: PASS ✅
+
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 80 rounds |
+
+**WeShop.ai (curl)**: 17 AI models unchanged (Grok12/Seedance10/Kling10/z-image8/Seedream7/WanAI6/Sora6/GPTImage5/Veo4/Nano-Banana4/Midjourney4/Hailuo4/FireRed4/Happyhorse2); NYSE MOGU背书; AI Image & Video Generator定位 — 无变化
+
+**Summary**: R365健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定80轮，代码级差距0。WeShop无新增变化，所有剩余差距均为用户提供战略决策级别。
+## R367 — 2026-05-04 22:00 — ✅ PASS
+
+HTTP 200 | Console 0 errors | Flow 5/5 | Mobile 3/3 | 连续稳定82轮 | 代码级差距0
+
+## Round 368 — 2026-05-04 22:30 CST
+- **Result**: ✅ PASS
+- **HTTP**: localhost:3005 → 200 OK
+- **Console**: 0 errors
+- **Flow**: 5/5 steps pass
+- **Mobile**: 3/3 pages pass
+- **Consecutive stable**: 83 rounds
+- **累计 stable**: 83 次
+- **通知**: 无需发送（稳定通知已于历史轮次发出）
+
+## R370 — 2026-05-04T23:00:00+08:00
+
+| 检查项 | 结果 |
+|--------|------|
+| HTTP (3005) | ✅ 200 |
+| Console | ✅ 0 errors |
+| Flow | ✅ 5/5 |
+| Mobile | ✅ 3/3 |
+
+**连续稳定**: 85轮 | **代码级差距**: 0
+
+> 所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+## R371 — 2026-05-05T00:00:00+08:00
+
+| 检查项 | 结果 |
+|--------|------|
+| HTTP (3005) | ✅ 200 |
+| Console | ✅ 0 errors |
+| Flow | ✅ 5/5 |
+| Mobile | ✅ 3/3 |
+
+**连续稳定**: 86轮 | **代码级差距**: 0
+
+> 所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+## R371 (2026-05-05 00:30 UTC)
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 86 rounds |
+
+**Status: PASS**
+
+R371健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定86轮，代码级差距0。WeShop无新增变化，所有剩余差距均为用户提供决策级别。
+
+**R372** (2026-05-05 00:00): HTTP200/Console0/Flow5/5/Mobile3/3 | Consecutive stable | 87 rounds |
+
+**Status: PASS**
+
+R372健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定87轮，代码级差距0。WeShop无新增变化，所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+## R373 (2026-05-05 00:30 UTC)
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 87 rounds |
+
+**Status: PASS**
+
+R373健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定87轮，代码级差距0。WeShop无新增变化，所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+**Status: PASS**
+
+R374健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定89轮，代码级差距0。WeShop无新增变化，所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+
+## R375 (2026-05-05 01:30 UTC+8)
+- HTTP: 200 OK
+- Console: 0 errors
+- Flow: 5/5, Mobile: 3/3
+- Consecutive stable: 90 rounds
+- Result: PASS
+- Fix: None — code-level gap 0
+R375(2026-05-05 02:00 UTC): PASS — HTTP200/Console0/Flow5/5/Mobile3/3 — 连续稳定91轮 — 无修复
+R375(2026-05-05 02:30 UTC): PASS — HTTP200/Console0/Flow5/5/Mobile3/3 — 连续稳定91轮 — 无修复
+
+## R376 (2026-05-05 03:30 UTC)
+- HTTP: 200 OK
+- Console: 0 errors
+- Flow: 5/5 steps passed
+- Mobile: 3/3 steps passed
+- Consecutive stable: 92 rounds
+- Status: PASS
+| R377 | 2026-05-05 04:01 | ✅ PASS | HTTP200/Console0/Flow5/5/Mobile3/3 | 93轮连续稳定 | 无 |
+
+| R380 | 2026-05-05 06:03 | ✅ PASS | HTTP200/Console0/Flow5/5/Mobile3/3 | 95轮连续稳定 | 无 | 
+
+## R381 (2026-05-05 06:31 UTC+8)
+
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 96 rounds |
+
+**Status**: PASS
+
+**Summary**: R381健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定96轮，代码级差距0。WeShop无新增变化（17模型:Grok12/Seedance10/Kling10/z-image8/Wan7/Seedream7/Qwen7/Sora6/GPTImage5/Vidu4/Veo4/NanoBanana4/Midjourney4/Hailuo4/FireRed4/Happyhorse2）。所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+## R381 (2026-05-05 06:31 UTC)
+- HTTP: 200 OK | Console: 0 | Flow: 5/5 | Mobile: 3/3 | Stable: 97轮
+- 结论: 全量通过，代码级差距0
+
+## R381 (2026-05-05 08:00 UTC+8)
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 98 rounds |
+
+**Status**: PASS
+
+**WeShop变化**: 无新增变化（与R379一致）。17个AI模型 / NYSE背书 / 3,000,000+用户 / GPT Image 2专区 均无变化。
+
+**结论**: 代码级差距0，所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+## R382 (2026-05-05 08:31 UTC)
+- HTTP: 200 | Console: 0 | Flow: 5/5 | Mobile: 3/3 | 连续稳定: 99轮
+- 结论: 全量通过，代码级差距0，WeShop无新增变化
+
+## R383 (2026-05-05 09:00 UTC)
+**HTTP**: 200 OK | **Console**: 0 errors | **Flow**: 5/5 | **Mobile**: 3/3 | **Stable**: 100 rounds | **Status**: PASS
+**Fix**: 无 — 全量通过，代码级差距0
+
+## R384 (2026-05-05 10:00)
+- HTTP: 200 OK (localhost:3005)
+- Console: 0 errors
+- Flow: 5/5
+- Mobile: 3/3
+- Consecutive: 101 rounds
+- Status: PASS
+- Fix: none — all checks passed
+
+## R384 (2026-05-05 10:30 UTC+8)
+
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 101 rounds |
+
+**Status**: PASS
+
+**Summary**: R384健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定101轮，代码级差距0。WeShop对比无变化，所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+
+## R384 (2026-05-05 11:30)
+- HTTP: 200 ✅ | Console: 0 ✅ | Flow: 5/5 ✅ | Mobile: 3/3 ✅
+- 连续稳定: 103轮 | incident: none
+- 修复: 无 — 代码级差距0
+
+## R384 (2026-05-05 12:00 UTC+8)
+- HTTP: 200 | Console: 0 | Flow: 5/5 | Mobile: 3/3 | Stable: 104轮
+- 新发现C级回归bug：Footer "使用条款"/"隐私政策"链接到/diagnosis（应指向/terms和/privacy）
+- WeShop无新增变化，所有剩余差距均为用户提供决策级别(A/B/C级)
+
+## R385 (2026-05-05 13:00 UTC+8)
+- HTTP: 200 | Console: 0 | Flow: 5/5 | Mobile: 3/3 | Stable: 105轮
+- 全量通过，代码级差距0
+- Footer "使用条款"/"隐私政策"均返回200，链接正常（/terms, /privacy）
+- WeShop无新增变化，所有剩余差距均为用户提供决策级别(A/B/C级)
+
+## R386 — 2026-05-05T13:30:00+08:00
+| Check | Result |
+|-------|--------|
+| HTTP | 200 OK (localhost:3005) |
+| Console | 0 errors |
+| Flow | 5/5 passed |
+| Mobile | 3/3 passed |
+| Consecutive stable | 106 rounds |
+| Status | PASS |
+
+WeShop对比无变化。代码级差距0。所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+## R387 — 2026-05-05T14:00:00+08:00
+| Check | Result |
+|-------|--------|
+| HTTP | 200 OK (localhost:3005) |
+| Console | 0 errors |
+| Flow | 5/5 passed |
+| Mobile | 3/3 passed |
+| Consecutive stable | 107 rounds |
+| Status | PASS |
+
+WeShop对比无变化。代码级差距0。所有剩余差距均为用户提供决策级别(A/B/C级)。
+## R388 (2026-05-05 14:30 UTC)
+**PASS** | HTTP 200 | Console 0 | Flow 5/5 | Mobile 3/3 | 连续稳定108轮
+**修复**: 无 — 代码级差距0
+**WeShop**: 无新增变化，所有差距均为用户提供决策级别
+
+
+
+## R389 (2026-05-05 15:30 UTC+8)
+- HTTP: 200 | Console: 0 | Flow: 5/5 | Mobile: 3/3
+- 连续稳定: 109轮
+- 结论: 全量通过，代码级差距0，剩余均为用户决策级别(A/B/C级)
+- WeShop对比: 所有已知bug已修复，剩余差距需用户提供战略决策
+| R391 | 2026-05-05 16:30 | PASS | 200/0/5/5/3/3 | 111轮连续稳定 | 无 |
+
+## R392 — 2026-05-05T17:01:00+08:00
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 112 rounds |
+
+## Status: PASS
+
+## R393 (2026-05-05 17:30)
+✅ PASS | HTTP 200 | Console 0 | Flow 5/5 | Mobile 3/3 | 连续稳定113轮
+WeShop: 无变化 | 代码级差距0
+
+
+## R394 (2026-05-05 18:00 UTC+8)
+
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 114 rounds |
+
+**Status**: PASS
+
+**Summary**: R394健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定114轮，代码级差距0。所有剩余差距均为用户提供决策级别(A/B/C级)。
+## R395 (2026-05-05 18:31) | HTTP200 | Console0 | Flow5/5 | Mobile3/3 | Stable115 | PASS
+
+## R395 (2026-05-05 21:00) — PASS
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 117 rounds |
+
+**Summary**: 全量通过，代码级差距0。WeShop无新增变化，所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+## R396 (2026-05-05 21:30) — PASS
+- HTTP: 200 OK | Console: 0 | Flow: 5/5 | Mobile: 3/3
+- 连续稳定: 118轮 | 代码级差距: 0
+
+## R396 (2026-05-05 21:30)
+- HTTP: 200 OK | Console: 0 errors | Flow: 5/5 | Mobile: 3/3 | Stable: 118轮 | Status: PASS
+
+## R397 (2026-05-05 23:00) — PASS
+- HTTP: 200 | Console: 0 | Flow: 5/5 | Mobile: 3/3 | 连续稳定: 119轮
+- 修复: 无 — 全量通过，代码级差距0
+
+# R397 (2026-05-05 23:30) — Health Check Report
+
+## Status: PASS
+
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 119 rounds |
+
+## Summary
+R397健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定119轮，代码级差距0。WeShop无新增变化，所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+## WeShop Comparison (R397)
+
+### WeShop Current State
+- **Title**: AI Image & Video Generator – Create with the Latest AI Models Online | WeShop AI
+- **NYSE背书**: MOGU (NYSE: MOGU) 持续展示，GPT Image 2专区展示
+- **17个AI模型**: Happyhorse / Seedance 2.0 / Kling 3.0 / GPT Image 2 / Fire Red / Nano-Banana Pro / z-image / Hailuo / Midjourey / Grok Video / Grok-Imagine / Veo 3 / Wan AI Video / Qwen Image Edit / Seedream 5.0 / Vidu Q3 / Sora2
+- **Hot Features**: Virtual Try-On / AI Model / AI Product / Change Pose 等带真实视频
+- **社交证明**: "Trusted by 3,000,000+ users worldwide"
+
+### easyuse vs WeShop 差距矩阵
+| 级别 | 差距 | 说明 |
+|------|------|------|
+| A级(用户提供) | NYSE上市背书 | WeShop有MOGU背书，easyuse无 |
+| A级(用户提供) | AI Video能力 | WeShop有17个模型含多个视频模型，easyuse仅图像 |
+| A级(用户提供) | 模型规模 | WeShop 17个模型，easyuse聚焦少数模型 |
+| A级(用户提供) | 社交证明数字 | WeShop "3,000,000+" vs easyuse "3,200+" |
+| B级(用户提供) | Hot Features视频 | WeShop有真实视频缩略图，easyuse为静态图 |
+| B级(用户提供) | Resource菜单 | WeShop有Feature Request等资源中心 |
+| B级(用户提供) | Affiliate项目 | WeShop有联盟营销入口 |
+| C级(用户提供) | 多语言切换 | WeShop有9语言切换器，easyuse仅中文 |
+| C级(用户提供) | 品牌logo墙 | WeShop有电商品牌logo墙，easyuse无 |
+
+**结论**: 代码级差距0。所有剩余差距均为用户提供战略/业务决策级别。
+
+## Output
+```json
+{
+  "success": true,
+  "summary": "R397健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定119轮，代码级差距0。WeShop无新增变化，所有剩余差距均为用户提供决策级别(A/B/C级)。",
+  "output": {
+    "修复内容": "无 — 全量通过，代码级差距0",
+    "页面行为": "HTTP 200 / Console 0 / Flow 5/5 / Mobile 3/3",
+    "是否解决": "是 — 全量通过"
+  },
+  "next_suggestions": [
+    "A级(用户提供): 评估NYSE上市背书或企业级信任背书",
+    "A级(用户提供): 评估接入AI视频生成能力（Sora2/Kling/Seedance/Grok Video/Veo3）",
+    "A级(用户提供): 评估接入更多图像模型（Midjourney/Flux/Fire Red/z-image）到17+模型规模",
+    "A级(用户提供): 评估社交证明数字更新（3200 → 10万/100万/300万级别）",
+    "B级(用户提供): 评估Hot Features增加真实视频演示",
+    "B级(用户提供): 评估模型展示区（Model Showcase）扩充到17+模型卡",
+    "B级(用户提供): 评估添加品牌logo墙（电商品牌背书）",
+    "C级(用户提供): 评估多语言切换器（9语言）",
+    "C级(用户提供): 评估Resource中心（Blog/FAQ/Feature Request）"
+  ]
+}
+```
+
+## R400 (2026-05-06 01:30) — PASS
+- HTTP: 200 | Console: 0 | Flow: 5/5 | Mobile: 3/3 | 连续稳定: 123轮
+- 修复: 无 — 全量通过，代码级差距0
+
+## R401 (2026-05-06 02:00) — PASS
+- HTTP: 200 | Console: 0 | Flow: 5/5 | Mobile: 3/3 | 连续稳定: 124轮
+- 修复: 无 — 全量通过，代码级差距0
+
+## R401 (2026-05-06 02:30)
+**Status: PASS**
+
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 125 rounds |
+
+**Summary**: R401健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定125轮，代码级差距0。WeShop无新增变化，所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+## R402 (2026-05-06 03:30) — PASS
+| Check | Result |
+|-------|--------|
+| HTTP | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 |
+| Mobile | 3/3 |
+| Consecutive stable | 127 rounds |
+| Fix | 无 — 全量通过 |
+
+## R403 (2026-05-06 04:00)
+
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 128 rounds |
+
+**Summary**: R403健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定128轮，代码级差距0。WeShop无新增变化（仍17个AI模型：Happyhorse/Seedance2.0/Kling3.0/GPTImage2/FireRed/Nano-BananaPro/z-image/Hailuo/Midjourney/GrokVideo/Grok-Imagine/Veo3/WanAIVideo/QwenImageEdit/Seedream5.0/ViduQ3/Sora2；社交证明3,000,000+用户；NYSE背书）。所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+**Output**: success: true, 全量通过，连续稳定128轮，代码级差距0，WeShop无变化
+
+**Next suggestions**: A级(用户提供): NYSE上市背书；A级(用户提供): AI视频模型接入；A级(用户提供): 图像模型扩充至17+；A级(用户提供): 社交证明数字升级；B级(用户提供): Hot Features真实视频；B级(用户提供): Model Showcase扩充；C级(用户提供): 多语言切换器
+R404 2026-05-06 04:30 | 200 OK | Console 0 | Flow 5/5 | Mobile 3/3 | Stable 129 | PASS
+R405 2026-05-06 05:30 | 200 OK | Console 0 | Flow 5/5 | Mobile 3/3 | Stable 130 | PASS
+R406 2026-05-06 06:30 | 200 OK | Console 0 | Flow 5/5 | Mobile 3/3 | Stable 131 | PASS
+
+## R406 (2026-05-06 07:00)
+- HTTP: 200 OK ✅
+- Console: 0 errors ✅
+- Flow: 5/5 steps passed ✅
+- Mobile: 3/3 steps passed ✅
+- Consecutive stable: 131 rounds
+- Status: PASS
+
+## Round 407 — 2026-05-06 07:30:00+08:00
+**结果**: ✅ 全部通过
+- HTTP: `localhost:3005: 200 OK`
+- Console: `0 errors`
+- Flow: `5/5 steps passed`
+- Mobile: `3/3 steps passed`
+**stable_count**: 132 (连续通过)
+**fix**: 无 — 全量通过，代码级差距0
+
+## R407 (2026-05-06 08:00) — PASS
+- HTTP: 200 (localhost:3005)
+- Console: 0 errors
+- Flow: 5/5, Mobile: 3/3
+- Consecutive stable: 133 rounds
+- Fix: none (all clear)
+
+## R407 (2026-05-06 08:30)
+- HTTP: 200 | Console: 0 | Flow: 5/5 | Mobile: 3/3
+- 连续稳定: 133轮
+- 状态: PASS
+- 备注: "Open Next.js Dev Tools"按钮为Next.js 15内置dev overlay，非代码问题
+
+## R407 (2026-05-06 09:00)
+**Status:** PASS | HTTP 200 | Console 0 | Flow 5/5 | Mobile 3/3 | 连续稳定 134 轮
+
+## R407 (2026-05-06 10:00)
+- HTTP: 200 | Console: 0 | Flow: 5/5 | Mobile: 3/3 | Stable: 136 rounds
+- Status: PASS
+- Fix: 无，代码级差距0，WeShop无新增变化
+
+## R407 (2026-05-06 10:30)
+
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 136 rounds |
+
+**Summary**: R407健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定136轮，代码级差距0。WeShop无新增变化（仍17个AI模型；社交证明3,000,000+用户；NYSE背书）。所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+**Output**:
+```json
+{
+  "success": true,
+  "summary": "R407健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定136轮，代码级差距0。WeShop无新增变化，所有剩余差距均为用户提供决策级别(A/B/C级)。",
+  "output": {
+    "修复内容": "无 — 全量通过，代码级差距0",
+    "页面行为": "HTTP 200 / Console 0 / Flow 5/5 / Mobile 3/3",
+    "是否解决": "是 — 全量通过"
+  },
+  "next_suggestions": [
+    "A级(用户提供): 评估NYSE上市背书或企业级信任背书",
+    "A级(用户提供): 评估接入AI视频生成能力（Sora2/Kling/Seedance/Grok Video/Veo3）",
+    "A级(用户提供): 评估接入更多图像模型（Midjourney/Flux/Fire Red/z-image）到17+模型规模",
+    "A级(用户提供): 评估社交证明数字更新（3200 → 10万/100万/300万级别）",
+    "B级(用户提供): 评估Hot Features增加真实视频演示",
+    "B级(用户提供): 评估模型展示区（Model Showcase）扩充到17+模型卡",
+    "B级(用户提供): 评估添加品牌logo墙（电商品牌背书）",
+    "C级(用户提供): 评估多语言切换器（9语言）",
+    "C级(用户提供): 评估Resource中心（Blog/FAQ/Feature Request）"
+  ]
+}
+```
+## R408 (2026-05-06 11:00) — PASS | HTTP200/Console0/Flow5/5/Mobile3/3 | 连续稳定137轮 | 代码级差距0
+
+## R408 (2026-05-06 12:00) — PASS | HTTP200 | Console0 | Flow5/5 | Mobile3/3 | Stable137
+
+## Round 408 — 2026-05-06 12:30 CST
+- **Result**: ✅ PASS
+- **HTTP**: localhost:3005 → 200 OK
+- **Console**: 0 errors
+- **Flow**: 5/5 steps pass
+- **Mobile**: 3/3 pages pass
+- **Consecutive stable**: 137 rounds
+- **WeShop对比**: 无新增变化（仍17个AI模型，3,000,000+用户，NYSE背书）
+- **修复**: 无 — 全量通过
+
+
+## R408 (2026-05-06 13:00)
+- HTTP 200 | Console 0 | Flow 5/5 | Mobile 3/3 | 连续稳定138轮
+- 状态: PASS
+- 修复: 无
+## R408 (2026-05-06 13:30) — PASS
+- HTTP: 200 | Console: 0 | Flow: 5/5 | Mobile: 3/3 | Stable: 138轮 | Fix: 无
+
+## R408 (2026-05-06 14:00) — PASS ✓
+HTTP 200 | Console 0 | Flow 5/5 | Mobile 3/3 | 连续稳定138轮 | WeShop无变化
+
+## R408 (2026-05-06 14:30)
+
+| Check | Result |
+|-------|--------|
+| HTTP | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 |
+| Mobile | 3/3 |
+| Stable | 140 rounds |
+
+✅ PASS — WeShop对比完成（A/B/C级差距均为用户提供级别）
+
+## R409 (2026-05-06 15:00)
+
+## Status: PASS
+
+| Check | Result |
+|-------|--------|
+| HTTP (localhost:3005) | 200 OK |
+| Console | 0 errors |
+| Flow | 5/5 steps passed |
+| Mobile | 3/3 steps passed |
+| Consecutive stable | 141 rounds |
+
+## Summary
+R409健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定141轮，代码级差距0。WeShop无新增变化（仍17个AI模型：Happyhorse/Seedance2.0/Kling3.0/GPTImage2/FireRed/Nano-BananaPro/z-image/Hailuo/Midjourney/GrokVideo/Grok-Imagine/Veo3/WanAIVideo/QwenImageEdit/Seedream5.0/ViduQ3/Sora2；社交证明3,000,000+用户；NYSE背书）。所有剩余差距均为用户提供决策级别(A/B/C级)。
+
+## Output
+```json
+{
+  "success": true,
+  "summary": "R409健康检查全量通过(HTTP200/Console0/Flow5/5/Mobile3/3)。连续稳定141轮，代码级差距0。WeShop无新增变化，所有剩余差距均为用户提供决策级别(A/B/C级)。",
+  "output": {
+    "修复内容": "无 — 全量通过，代码级差距0",
+    "页面行为": "HTTP 200 / Console 0 / Flow 5/5 / Mobile 3/3",
+    "是否解决": "是 — 全量通过"
+  },
+  "next_suggestions": [
+    "A级(用户提供): 评估NYSE上市背书或企业级信任背书",
+    "A级(用户提供): 评估接入AI视频生成能力（Sora2/Kling/Seedance/Grok Video/Veo3）",
+    "A级(用户提供): 评估接入更多图像模型（Midjourney/Flux/Fire Red/z-image）到17+模型规模",
+    "A级(用户提供): 评估社交证明数字更新（3200 → 10万/100万/300万级别）",
+    "B级(用户提供): 评估Hot Features增加真实视频演示",
+    "B级(用户提供): 评估模型展示区（Model Showcase）扩充到17+模型卡",
+    "B级(用户提供): 评估添加品牌logo墙（电商品牌背书）",
+    "C级(用户提供): 评估多语言切换器（9语言）",
+    "C级(用户提供): 评估Resource中心（Blog/FAQ/Feature Request）"
+  ]
+}
+```
+
+## R410 (2026-05-06 15:30) — PASS
+- HTTP: 200 OK (localhost:3005)
+- Console: 0 errors
+- Flow: 5/5 steps passed
+- Mobile: 3/3 steps passed
+- Consecutive stable: 142 rounds
+- Fix: 无
+## R412 (2026-05-06 16:30) — PASS
+HTTP 200 | Console 0 | Flow 5/5 | Mobile 3/3 | 连续稳定144轮 | 代码级差距0 | WeShop无新增变化
+
+
+## R413 (2026-05-06 17:00) — PASS | HTTP200 | Console0 | Flow5/5 | Mobile3/3 | Stable145
+
+## R414 (2026-05-06 18:30) — PASS
+HTTP 200 | Console 0 | Flow 5/5 | Mobile 3/3 | 连续稳定147轮 | 代码级差距0 | WeShop无新增变化

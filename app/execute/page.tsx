@@ -408,9 +408,10 @@ function ExecuteContent() {
         // 新增：上传的产品图 base64
         productImageBase64: uploadedImage ?? undefined,
         // 如果有上传图片，覆盖 prompt
+        // prompt 为空时使用 bg_white 默认 prompt
         prompt: uploadedImage
           ? "Use the uploaded product image as the main subject"
-          : prompt,
+          : (prompt || "professional ecommerce product photo on pure white background, soft shadow, product unchanged"),
       };
 
       const res = await fetch("/api/execute/generate", {

@@ -33,8 +33,15 @@ export function getImageProviderForRequest(selectedProvider?: "nanobanana"): Ima
   // 优先使用 leads 流程确定的 provider
   if (selectedProvider) {
     const envValue = PROVIDER_MAP[selectedProvider];
-    if (envValue === "gemini-nanobanana" && process.env.GEMINI_API_KEY) {
-      return new GeminiNanobananaProvider();
+    // selectedProvider 明确指定但未配置对应 key时报错，而不是静默降级
+    if (!envValue) {
+      throw new Error(`[image provider] 未知的 selectedProvider: ${selectedProvider}`);
+    }
+    if (envValue === "gemini-nanobanana") {
+      if (process.env.GEMINI_API_KEY) {
+        return new GeminiNanobananaProvider();
+      }
+      throw new Error(`[image provider] selectedProvider=nanobanana 但未配置 GEMINI_API_KEY`);
     }
     // selectedProvider 指定但 key 未配置，降级到环境变量
   }

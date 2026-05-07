@@ -460,7 +460,7 @@ export async function POST(req: NextRequest) {
     if (action === "removebg_composite") {
       if (!effectiveRefUrl) {
         return NextResponse.json(
-          { error: "removebg_composite 需要 originalImageUrl 或 referenceImageUrl", code: "MISSING_IMAGE" },
+          { error: "IMAGE_MISSING", message: "originalImageUrl 不能为空" },
           { status: 400 }
         );
       }
