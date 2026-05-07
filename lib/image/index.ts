@@ -13,7 +13,7 @@ import fs from "fs";
 export type { ImageTaskInput, ImageTaskOutput, ImageProvider };
 export type { ImageTaskType } from "./types";
 
-const IMAGE_PROVIDER = process.env.IMAGE_PROVIDER ?? "mock";
+const IMAGE_PROVIDER = (process.env.IMAGE_PROVIDER && process.env.IMAGE_PROVIDER.trim() !== "") ? process.env.IMAGE_PROVIDER : "replicate";
 
 export function getImageProvider(): ImageProvider {
   return getImageProviderForRequest(undefined);
