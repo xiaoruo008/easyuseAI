@@ -414,16 +414,20 @@ function ExecuteContent() {
           : (prompt || "professional ecommerce product photo on pure white background, soft shadow, product unchanged"),
       };
 
+      console.log("[Execute] 📋 generate payload:", JSON.stringify(body, null, 2));
       const res = await fetch("/api/execute/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
+      console.log("[Execute] 📤 response status:", res.status);
       if (!res.ok) {
         const text = await res.text().catch(() => "unknown");
+        console.error("[Execute] ❌ generate error response:", text);
         throw new Error(`API_ERROR:${res.status}:${text}`);
       }
       const d = await res.json();
+      console.log("[Execute] ✅ generate response:", JSON.stringify(d, null, 2));
 
       // ── removebg_composite pipeline 处理 ─────────────────────────────
       // API 返回 pipeline_ready 时，客户端执行 Canvas 合成
@@ -497,8 +501,13 @@ function ExecuteContent() {
       if (!taskId) {
         // 没有 taskId（同步返回），直接使用结果
         if (d.taskCategory === "image") {
+          const resultImageUrl = d.result?.imageUrl;
+          if (!resultImageUrl) {
+            console.error("[Execute] ❌ sync result missing imageUrl:", JSON.stringify(d));
+            throw new Error("生成结果缺少 imageUrl，请稍后重试");
+          }
           setImageResult({ ...d.result, source: d.source ?? "mock", workflowLabel: d.workflowLabel ?? undefined });
-          saveToHistory(d.result.imageUrl);
+          saveToHistory(resultImageUrl);
         } else {
           setTextResult(d.result);
         }
@@ -531,8 +540,13 @@ function ExecuteContent() {
             timerRef.current = null;
             setWorking(false);
             if (d.taskCategory === "image" && task.outputData) {
-              setImageResult({ ...task.outputData, source: task.outputData.source ?? "ai", workflowLabel: d.workflowLabel ?? undefined });
-              saveToHistory(task.outputData.imageUrl);
+              const pollImageUrl = task.outputData.imageUrl;
+              if (!pollImageUrl) {
+                console.error("[Execute] ❌ poll result missing imageUrl:", JSON.stringify(task));
+              } else {
+                setImageResult({ ...task.outputData, source: task.outputData.source ?? "ai", workflowLabel: d.workflowLabel ?? undefined });
+                saveToHistory(pollImageUrl);
+              }
             } else if (task.outputData) {
               setTextResult(task.outputData);
             }

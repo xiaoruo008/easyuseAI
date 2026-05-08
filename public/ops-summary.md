@@ -600,3 +600,9 @@
 - **Mobile**: 3/3 pages (首页/diagnosis/result) ✅
 - **连续稳定**: 61轮
 - **本轮修复**: 例行健康检查，无异常
+
+## R422 (2026-05-08 00:00)
+- HTTP: 200 OK | Console: 0 | Flow: 5/5 | Mobile: 3/3
+- Consecutive stable: 158 rounds
+- Fix: None — all WeShop gaps are user decision级别 (A/B/C级), no code-level gaps
+- WeShop NYSE背书/3M用户/17+模型/AI视频 vs easyuse 3.2K用户/5工具/无视频 — 均为用户提供决策

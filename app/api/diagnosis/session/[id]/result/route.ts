@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSession, updateSession } from "@/lib/db";
+import { getSession, updateSession } from "@/lib/mock-db";
 import { calculateResult, DIAGNOSIS_QUESTIONS } from "@/lib/diagnosis";
 import type { AnswerValue } from "@/lib/diagnosis";
 import { extractFields, resolveWorkflow } from "@/lib/workflow";
@@ -17,7 +17,7 @@ export async function GET(
     const { id } = await params;
     const action = new URL(_req.url).searchParams.get("action") ?? "";
 
-    const session = await getSession(id);
+    const session = getSession(id);
     if (!session) {
       return NextResponse.json({ error: "Session 不存在" }, { status: 404 });
     }
@@ -25,7 +25,7 @@ export async function GET(
     const answers = session.answers as Record<string, AnswerValue>;
     const result = calculateResult(answers);
 
-    const updated = await updateSession(id, {
+    const updated = updateSession(id, {
       completed: true,
       resultType: result.type,
       confidence: result.confidence,
