@@ -1,17 +1,18 @@
 {
-  "round": 437,
-  "stable_count": 175,
-  "last_check": "2026-05-08T18:00:00.000000+00:00",
-  "last_result": "pass",
-  "consecutive_stable": 175,
+  "round": 460,
+  "timestamp": "2026-05-10T11:30:00+08:00",
   "status": "pass",
-  "notify_stable": false,
   "checks": {
-    "http_localhost_3005": "200 OK",
-    "console": "0 errors",
-    "flow": "5/5",
-    "mobile": "3/3"
+    "http_local": 200,
+    "console_errors": 0,
+    "flow": "5/5 steps",
+    "mobile": "3/3 steps"
   },
-  "this_round_fix": "无 — 全量通过，代码级差距0",
-  "incident": "none"
+  "stable_count": 7,
+  "notify_stable": true,
+  "port": 3005,
+  "local_server_note": "Orphan compiled next-server (pid=31477) serving correctly",
+  "production_status": "N/A - used local dev",
+  "execute_bug_status": "Resolved - flow passes 5/5 including execute page",
+  "code_level_gaps": 0
 }
