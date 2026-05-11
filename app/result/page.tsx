@@ -394,20 +394,14 @@ export default function ResultPage() {
     }
   }, []);
 
-  // 倒计时逻辑：每秒从 sessionStorage 读取截止时间，计算剩余秒数
+  // 倒计时逻辑：只在 mount 时读取一次 deadline，之后本地递减（避免每秒 parseInt sessionStorage）
   useEffect(() => {
     if (countdown <= 0) return;
     const interval = setInterval(() => {
-      const stored = sessionStorage.getItem("countdown_deadline");
-      if (!stored) {
-        setCountdown(0);
-        return;
-      }
-      const deadline = parseInt(stored, 10);
-      const remaining = Math.max(0, Math.floor((deadline - Date.now()) / 1000));
-      setCountdown(remaining);
+      setCountdown((prev) => Math.max(0, prev - 1));
     }, 1000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 格式化倒计时 MM:SS
