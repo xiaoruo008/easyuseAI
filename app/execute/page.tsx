@@ -736,19 +736,31 @@ function ExecuteContent() {
                     <p className="text-sm text-gray-500">点击或拖拽上传</p>
                   </div>
                   <input type="file" accept="image/*" className="hidden"
-                    onChange={(e) => {
+                    onChange={async (e) => {
                       const file = e.target.files?.[0];
                       if (!file) return;
-                      const reader = new FileReader();
-                      reader.onload = (ev) => {
-                        const base64 = ev.target?.result as string;
-                        setUploadedImage(base64);
-                        setUploadPreview(base64);
-                        // 写入 sessionStorage，供 handleCreate 读取
-                        sessionStorage.setItem("original_image_url", base64);
-                        console.log("[execute] write original_image_url =", base64.slice(0, 80));
-                      };
-                      reader.readAsDataURL(file);
+                      try {
+                        // ① 先用 FileReader 做本地预览
+                        const previewUrl = URL.createObjectURL(file);
+                        setUploadedImage(previewUrl);
+                        setUploadPreview(previewUrl);
+
+                        // ② 上传到 imgBB，获取真实 HTTPS URL
+                        const fd = new FormData();
+                        fd.append("file", file);
+                        const res = await fetch("/api/upload", { method: "POST", body: fd });
+                        if (!res.ok) throw new Error(`upload failed: ${res.status}`);
+                        const data = await res.json() as { url: string };
+                        if (!data.url) throw new Error("no url in response");
+
+                        // ③ 写入真实 HTTPS URL，供 generate API 使用
+                        sessionStorage.setItem("original_image_url", data.url);
+                        console.log("[execute] ✅ uploaded →", data.url.slice(0, 80));
+                      } catch (err) {
+                        console.error("[execute] ❌ upload error:", err);
+                        // 上传失败时清空，避免残留 data URL
+                        sessionStorage.removeItem("original_image_url");
+                      }
                     }} />
                 </label>
               )}
