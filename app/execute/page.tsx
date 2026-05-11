@@ -960,20 +960,41 @@ function ExecuteContent() {
                   : "AI生成效果 · 可直接使用"}
               </p>
               <div className="flex flex-col sm:flex-row gap-2.5">
-                {/* 下载原图 - 主按钮 */}
+                {/* 下载AI效果图 - 主按钮 */}
                 <button
                   onClick={handleDownload}
-                  className="flex-1 sm:flex-none px-4 py-2.5 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 font-semibold text-sm shadow-md"
+                  className="flex-1 sm:flex-none px-4 py-2.5 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 font-semibold text-sm shadow-md order-1"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                   </svg>
-                  下载原图
+                  下载AI效果图
                 </button>
-                {/* 复制图片链接 */}
+                {/* 用于 Listing - 次主按钮（商业转化） */}
+                <button
+                  onClick={() => router.push(`/submit?session=${sessionId}`)}
+                  className="flex-1 sm:flex-none px-4 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 text-sm font-semibold order-2"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
+                  用于 Listing
+                </button>
+                {/* 再生成一张 */}
+                <button
+                  onClick={handleCreate}
+                  disabled={working}
+                  className="flex-1 sm:flex-none px-4 py-2.5 border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 text-sm disabled:opacity-50 order-3"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  再生成一张
+                </button>
+                {/* 复制链接 */}
                 <button
                   onClick={copyLink}
-                  className="flex-1 sm:flex-none px-4 py-2.5 border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 text-sm"
+                  className="flex-1 sm:flex-none px-4 py-2.5 border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 text-sm order-4"
                 >
                   {copied ? (
                     <>
@@ -990,27 +1011,6 @@ function ExecuteContent() {
                       复制链接
                     </>
                   )}
-                </button>
-                {/* 再生成一张 */}
-                <button
-                  onClick={handleCreate}
-                  disabled={working}
-                  className="flex-1 sm:flex-none px-4 py-2.5 border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 text-sm disabled:opacity-50"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                  </svg>
-                  再生成一张
-                </button>
-                {/* 用于 Listing - 商业语义 */}
-                <button
-                  onClick={() => router.push(`/submit?session=${sessionId}`)}
-                  className="flex-1 sm:flex-none px-4 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 text-sm font-semibold"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                  </svg>
-                  用于 Listing
                 </button>
               </div>
             </div>
