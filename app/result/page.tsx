@@ -522,9 +522,13 @@ export default function ResultPage() {
               ⚡ 想立即体验？点下方「立即在线生成」，30秒出图，不用加微信不用留联系方式
             </p>
             {countdown > 0 && (
-              <div className="mb-4 flex items-center justify-center gap-1.5 bg-amber-100 border border-amber-200 rounded-lg px-3 py-2 text-amber-700 text-sm font-medium">
+              <div className={`mb-4 flex items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium border ${
+                countdown <= 60
+                  ? "bg-red-100 border-red-200 text-red-700"
+                  : "bg-amber-100 border-amber-200 text-amber-700"
+              }`}>
                 <span>⏰ 限时免费，还剩</span>
-                <span className="font-mono font-bold text-amber-800">{mm}:{ss}</span>
+                <span className={`font-mono font-bold ${countdown <= 60 ? "text-red-800" : "text-amber-800"}`}>{mm}:{ss}</span>
               </div>
             )}
             <div className="flex flex-col gap-2.5">
