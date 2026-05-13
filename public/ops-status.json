@@ -1,13 +1,12 @@
 {
-  "round": 555,
-  "timestamp": "2026-05-13T19:30:00.000000+08:00",
-  "status": "pass",
-  "stable_count": 109,
+  "round": 570,
+  "stable_count": 127,
   "notify_stable": false,
-  "checks": {
-    "http": 200,
-    "console_errors": 0,
-    "flow": "5/5",
-    "mobile": "3/3"
-  }
+  "last_check": "2026-05-13T21:04:21.592030+00:00",
+  "http": 200,
+  "console_errors": 0,
+  "flow_passed": 5,
+  "flow_total": 5,
+  "mobile_passed": 3,
+  "mobile_total": 3
 }
