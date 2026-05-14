@@ -5093,3 +5093,8 @@ R566(2026-05-14 02:01 UTC+8): HTTP200/Console0/Flow5/5/Mobile3/3 ✅ | Stable 12
 **Mobile**: 3/3 ✅  
 **Stable**: 127 consecutive passes  
 **Status**: ALL CHECKS PASSED
+
+## R571 (2026-05-14 05:30 UTC+8)
+- HTTP: 200 | Console: 0 | Flow: 5/5 | Mobile: 3/3 | Stable: 128 passes
+- Status: ✅ All clear
+R575 2026-05-14 07:30 | HTTP:200 | Console:0 | Flow:5/5 | Mobile:3/3 | Stable:132
